@@ -21,7 +21,7 @@ export default function Router() {
       <BrowserRouter>
         <Routes>
           <Route path="auth/">
-            <Route index element={<Navigate to="/login" />} />
+            <Route index element={<Navigate to="login" />} />
             <Route path="login/">
               <Route index element={<Login />} />
               {/* <Route path="successfull" element={<SuccessCallback />} /> */}
