@@ -1,3 +1,181 @@
+import { useState, useEffect } from "react";
+import style from "./login.module.css";
+
 export default function Login() {
-  return <div>Login</div>;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
+  useEffect(() => {
+    if (emailTouched) validateEmail();
+  }, [email]);
+
+  useEffect(() => {
+    if (passwordTouched) validatePassword();
+  }, [password]);
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    setEmailTouched(true);
+    setPasswordTouched(true);
+
+    const isEmailValid = validateEmail();
+    const isPasswordValid = validatePassword();
+
+    if (isEmailValid && isPasswordValid) {
+      sendAuthRequest(email, password);
+    }
+  };
+
+  const validateEmail = (): boolean => {
+    if (email.length === 0) {
+      setEmailError("email is required");
+      return false;
+    }
+
+    let emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+    if (!emailRegex.test(email)) {
+      setEmailError("invalid email pattern");
+      return false;
+    }
+
+    setEmailError("");
+    return true;
+  };
+
+  const validatePassword = (): boolean => {
+    if (password.length === 0) {
+      setPasswordError("password is required");
+      return false;
+    }
+
+    if (password.length < 8) {
+      setPasswordError("password length is too short");
+      return false;
+    }
+
+    setPasswordError("");
+    return true;
+  };
+
+  const handleEmailChange = (e: any) => {
+    setEmail(e.target.value);
+    setEmailTouched(true);
+  };
+
+  const handlePasswordChange = (e: any) => {
+    setPassword(e.target.value);
+    setPasswordTouched(true);
+  };
+
+  const sendAuthRequest = (email: string, password: string) => {
+    console.log(email, password);
+  };
+
+  return (
+    <>
+      <main>
+        <div className="container">
+          <section className="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div className="container">
+              <div className="row justify-content-center">
+                <div className="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                  <div className="d-flex justify-content-center py-4">
+                    <a
+                      href="index.html"
+                      className="logo d-flex align-items-center w-auto"
+                    >
+                      <img src="assets/img/logo.png" alt="" />
+                      <span className="d-none d-lg-block">Twinphy Admin</span>
+                    </a>
+                  </div>
+
+                  <div className="card mb-3">
+                    <div className="card-body">
+                      <div className="pt-4 pb-2">
+                        <h5 className="card-title text-center pb-0 fs-4">
+                          Login to Your Account
+                        </h5>
+                        <p className="text-center small">
+                          Enter your email & password to login
+                        </p>
+                      </div>
+
+                      <form
+                        onSubmit={onSubmit}
+                        className="row g-3 needs-validation"
+                      >
+                        <div className="col-12">
+                          <label htmlFor="email" className="form-label">
+                            Email
+                          </label>
+                          <div className="input-group has-validation">
+                            <input
+                              type="text"
+                              name="username"
+                              className={`form-control ${
+                                !emailTouched
+                                  ? ""
+                                  : emailError.length > 0
+                                  ? style.invalid
+                                  : style.valid
+                              }`}
+                              id="email"
+                              value={email}
+                              onChange={handleEmailChange}
+                            />
+                            {emailError.length > 0 && (
+                              <div className={style.error_text}>
+                                {emailError}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="col-12">
+                          <label htmlFor="password" className="form-label">
+                            Password
+                          </label>
+                          <input
+                            type="password"
+                            name="password"
+                            className={`form-control ${
+                              !passwordTouched
+                                ? ""
+                                : passwordError.length > 0
+                                ? style.invalid
+                                : style.valid
+                            }`}
+                            id="password"
+                            value={password}
+                            onChange={handlePasswordChange}
+                          />
+                          {passwordError.length > 0 && (
+                            <div className={style.error_text}>
+                              {passwordError}
+                            </div>
+                          )}
+                        </div>
+                        <div className="col-12">
+                          <button
+                            className="btn btn-primary w-100"
+                            type="submit"
+                          >
+                            Login
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </>
+  );
 }
