@@ -4,6 +4,7 @@ import { isLoggedIn } from "../services/auth";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/auth/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
+import { Layout } from "../layout";
 
 export default function Router() {
   // TODO: uncomment the following line after adding auth
@@ -34,9 +35,9 @@ export default function Router() {
               <Route
                 path="/dashboard"
                 element={
-                  // <MainLayout>
-                  <Dashboard />
-                  // </MainLayout>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
                 }
               />
 
