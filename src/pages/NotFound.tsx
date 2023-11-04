@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function NotFound() {
   return (
     <div>
@@ -5,9 +7,9 @@ export default function NotFound() {
         <section className="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
           <h1>404</h1>
           <h2>The page you are looking for doesn't exist.</h2>
-          <a className="btn" href="index.html">
+          <Link className="btn" to={'/dashboard'}>
             Back to home
-          </a>
+          </Link>
           <img
             src="/assets/img/not-found.svg"
             className="img-fluid py-5"
