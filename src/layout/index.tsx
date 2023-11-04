@@ -5,7 +5,13 @@ import Footer from "./Footer";
 import BreadCrumb from "./BreadCrumb";
 import { main } from "./main";
 
-export function Layout({ children }: { children: ReactNode }) {
+export function Layout({
+  children,
+  breadcrumb,
+}: {
+  children: ReactNode;
+  breadcrumb?: any;
+}) {
   useEffect(() => {
     main();
   }, []);
@@ -15,7 +21,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <Header />
       <Sidebar />
       <main id="main" className="main">
-        <BreadCrumb />
+        {breadcrumb && <BreadCrumb data={breadcrumb} />}
         {/* <!-- End Page Title --> */}
 
         <section className="section dashboard">

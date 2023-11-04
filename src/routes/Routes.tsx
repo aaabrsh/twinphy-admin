@@ -5,6 +5,7 @@ import NotFound from "../pages/NotFound";
 import Login from "../pages/auth/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import { Layout } from "../layout";
+import { breadcrumb } from "./breadcrumb_data";
 
 export default function Router() {
   // TODO: uncomment the following line after adding auth
@@ -35,7 +36,7 @@ export default function Router() {
               <Route
                 path="/dashboard"
                 element={
-                  <Layout>
+                  <Layout breadcrumb={breadcrumb.dashboard}>
                     <Dashboard />
                   </Layout>
                 }
