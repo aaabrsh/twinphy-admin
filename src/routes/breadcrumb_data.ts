@@ -6,4 +6,19 @@ export const breadcrumb = {
       { isLink: false, text: "Dashboard" },
     ],
   },
+  users: {
+    title: "Users",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Users" },
+    ],
+  },
+  profile: {
+    title: "Profile",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: true, to: "/users/list", text: "Users" },
+      { isLink: false, text: "Profile" },
+    ],
+  },
 };
