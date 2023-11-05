@@ -17,7 +17,7 @@ export const breadcrumb = {
     title: "Profile",
     path: [
       { isLink: true, to: "/dashboard", text: "Home" },
-      { isLink: true, to: "/users/list", text: "Users" },
+      { isLink: true, to: "/user/list", text: "Users" },
       { isLink: false, text: "Profile" },
     ],
   },

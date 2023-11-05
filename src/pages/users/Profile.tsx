@@ -71,16 +71,16 @@ export default function Profile() {
                 </div>
               </div>
             </div>
-            <div className="tw-flex bg-primary text-white">
-              <div className={style.tab}>
+            <div className="tw-flex text-white">
+              <div className={style.tab + " bg-primary"}>
                 <span>10</span>
                 <span>Posts</span>
               </div>
-              <div className={style.tab}>
+              <div className={style.tab + " bg-primary"}>
                 <span>1.5K</span>
                 <span>Followers</span>
               </div>
-              <div className={style.tab}>
+              <div className={style.tab + " bg-primary"}>
                 <span>55</span>
                 <span>Following</span>
               </div>
