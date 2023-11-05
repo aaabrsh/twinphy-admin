@@ -1,23 +1,14 @@
 import { ColumnFilterElementTemplateOptions } from "primereact/column";
 import { Tag } from "../../../../components/Tags";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { getStatusSeverity } from "../../../../utils/account-status";
 
-export const statuses: string[] = ["active", "suspended", "under review", "deleted"];
-
-export const getStatusSeverity = (status: string) => {
-  switch (status) {
-    case "active":
-      return "success";
-    case "suspended":
-      return "warning";
-    case "under review":
-      return "info";
-    case "deleted":
-      return "danger";
-    default:
-      return "";
-  }
-};
+export const statuses: string[] = [
+  "active",
+  "suspended",
+  "under review",
+  "deleted",
+];
 
 export const statusBodyTemplate = (rowData: any) => {
   return (
@@ -25,7 +16,9 @@ export const statusBodyTemplate = (rowData: any) => {
   );
 };
 
-export const statusFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
+export const statusFilterTemplate = (
+  options: ColumnFilterElementTemplateOptions
+) => {
   return (
     <Dropdown
       value={options.value}

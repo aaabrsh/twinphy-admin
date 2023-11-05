@@ -57,3 +57,22 @@ export function ProfileProviders({ provider }: { provider: any }) {
 
   return <>{getBadge(provider)}</>;
 }
+
+export function AccountCompletion({ is_complete }: { is_complete: any }) {
+  return <div
+    className={`tw-flex tw-gap-1 tw-items-center ${
+      is_complete.toString() === "true"
+        ? "tw-text-green-500"
+        : "tw-text-red-500"
+    }`}
+  >
+    <i
+      className={`bi ${
+        is_complete.toString() === "true"
+          ? "bi-bookmark-check-fill"
+          : "bi-bookmark-x-fill"
+      }  tw-text-2xl`}
+    ></i>
+    <span className="">{is_complete.toString()}</span>
+  </div>;
+}
