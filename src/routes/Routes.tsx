@@ -7,6 +7,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import { Layout } from "../layout";
 import { breadcrumb } from "./breadcrumb_data";
 import UsersList from "../pages/users/UsersList";
+import Profile from "../pages/users/Profile";
 
 export default function Router() {
   // TODO: uncomment the following line after adding auth
@@ -54,7 +55,7 @@ export default function Router() {
                 path="/user/:userId"
                 element={
                   <Layout breadcrumb={breadcrumb.profile}>
-                    {/* <Dashboard /> */}
+                    <Profile />
                   </Layout>
                 }
               />
