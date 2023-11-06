@@ -8,6 +8,7 @@ import { getDate } from "../../utils/time";
 import { Menu } from "primereact/menu";
 import { dummydata } from "./dummydata";
 import TruncatedText from "../../components/TurncatedText";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
 
 export default function Reported() {
   const [tableLoading, setTableLoading] = useState(false);
@@ -75,6 +76,16 @@ export default function Reported() {
     );
   };
 
+  const closeDialog = () => {
+    setSelectedReport(null);
+    setShowModal(false);
+  };
+
+  const dialogConfirmed = () => {
+    console.log("remove post", selectedReport);
+    closeDialog();
+  };
+
   return (
     <div className="card">
       {/* Table */}
@@ -121,23 +132,12 @@ export default function Reported() {
       </DataTable>
 
       {/* Modal */}
-      {/* <Dialog
-        header="Change Account Status"
-        visible={showModal}
-        onHide={clearNewStatus}
-        position="top"
-        style={{ width: "50vw" }}
-        footer={footerContent}
-        breakpoints={{ "960px": "75vw", "641px": "100vw" }}
-      >
-        <Dropdown
-          value={newStatus}
-          onChange={(e) => setNewStatus(e.value)}
-          options={statuses}
-          placeholder="Set Status"
-          className="tw-w-full tw-z-[9999]"
-        />
-      </Dialog> */}
+      <ConfirmationDialog
+        show={showModal}
+        header={"Do you want to remove the reported post"}
+        onClose={closeDialog}
+        onConfirmed={dialogConfirmed}
+      />
     </div>
   );
 }
