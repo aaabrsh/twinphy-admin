@@ -29,7 +29,7 @@ export default function Header() {
         </div>
         {/* <!-- End Logo --> */}
 
-        <div className="search-bar">
+        {/* <div className="search-bar">
           <form
             className="search-form d-flex align-items-center"
             method="POST"
@@ -45,12 +45,12 @@ export default function Header() {
               <i className="bi bi-search"></i>
             </button>
           </form>
-        </div>
+        </div> */}
         {/* <!-- End Search Bar --> */}
 
         <nav className="header-nav ms-auto">
           <ul className="d-flex align-items-center">
-            <li className="nav-item d-block d-lg-none">
+            {/* <li className="nav-item d-block d-lg-none">
               <a
                 className="nav-link nav-icon search-bar-toggle "
                 style={{ cursor: "pointer" }}
@@ -58,7 +58,7 @@ export default function Header() {
               >
                 <i className="bi bi-search"></i>
               </a>
-            </li>
+            </li> */}
             {/* <!-- End Search Icon--> */}
 
             <li className="nav-item dropdown">
