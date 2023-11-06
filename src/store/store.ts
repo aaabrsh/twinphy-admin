@@ -9,45 +9,6 @@ export const usePostStore = create<PostState>((set) => ({
   addToFeed: (posts: PostState["posts"]) =>
     set((state) => ({ posts: [...state.posts, ...posts] })),
 
-  togglePostLike: (id: string, liked: boolean) =>
-    set((state) => {
-      const postsCopy = state.posts.map((p) => {
-        if (p._id === id) {
-          p.likes_count = liked ? p.likes_count + 1 : p.likes_count - 1;
-          p.likes = liked ? [id] : [];
-        }
-        return p;
-      });
-
-      return { posts: postsCopy };
-    }),
-
-  incrementCommentsCount: (id: string) =>
-    set((state) => {
-      const postsCopy = state.posts.map((post) => {
-        if (post._id === id) {
-          if (post.comments_count) post.comments_count++;
-          else post.comments_count = 1;
-        }
-        return post;
-      });
-
-      return { posts: postsCopy };
-    }),
-
-  decrementCommentsCount: (id: string) =>
-    set((state) => {
-      const postsCopy = state.posts.map((post) => {
-        if (post._id === id) {
-          if (post.comments_count) post.comments_count--;
-          else post.comments_count = 0;
-        }
-        return post;
-      });
-
-      return { posts: postsCopy };
-    }),
-
   clearPosts: () => set({ posts: [] }),
 }));
 
@@ -75,18 +36,6 @@ export const useCommentsStore = create<CommentState>((set) => ({
       return { comments, commentsHash };
     }),
 
-  addNewComment: (comment: any) =>
-    set((state) => {
-      if (!state.commentsHash[comment._id]) {
-        return {
-          comments: [comment, ...state.comments],
-          commentsHash: { ...state.commentsHash, [comment._id]: true },
-        };
-      } else {
-        return { comments: state.comments, commentsHash: state.commentsHash };
-      }
-    }),
-
   setReplies: (replies: CommentState["comments"], parent_id: string) =>
     set((state) => {
       const { uniqueComments, updatedHash } = getUniqueComments(
@@ -106,48 +55,6 @@ export const useCommentsStore = create<CommentState>((set) => ({
       });
 
       return { comments: commentsCopy, commentsHash: updatedHash };
-    }),
-
-  toggleCommentLike: (
-    id: string,
-    comment_for: "post" | "comment",
-    isLike?: boolean,
-    parentId?: string
-  ) =>
-    set((state) => {
-      let updatedComments: any = [];
-      if (comment_for === "post") {
-        updatedComments = state.comments.map((comment) => {
-          if (comment._id === id) {
-            comment.is_liked =
-              isLike !== undefined ? isLike : !comment.is_liked;
-
-            comment.likes_count = comment.is_liked
-              ? comment.likes_count + 1
-              : comment.likes_count - 1;
-          }
-          return comment;
-        });
-      } else {
-        updatedComments = state.comments.map((comment) => {
-          if (comment._id === parentId) {
-            comment.comments = comment.comments.map((reply: any) => {
-              if (reply._id === id) {
-                reply.is_liked =
-                  isLike !== undefined ? isLike : !reply.is_liked;
-
-                reply.likes_count = reply.is_liked
-                  ? reply.likes_count + 1
-                  : reply.likes_count - 1;
-              }
-              return reply;
-            });
-          }
-          return comment;
-        });
-      }
-
-      return { comments: updatedComments };
     }),
 
   clearComments: () => set({ comments: [], commentsHash: {} }),
