@@ -1,97 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 import Comment from "../ui/Comment";
-// import BlinkingLoadingCircles from "../../../../components/BlinkingLoadingCircles";
-import { create, get } from "../../../../services/api";
-import { useCommentsStore, usePostStore } from "../../../../store/store";
-import { isLoggedIn as checkUserLoggedIn } from "../../../../services/auth";
-import { useNavigate } from "react-router-dom";
+import { get } from "../../../../services/api";
+import { useCommentsStore } from "../../../../store/store";
+import BlinkingLoadingCircles from "../../../../components/BlinkingLoadingCircles";
 
-export default function CommentsContainer({ post }: { post: any }) {
-  const [commentText, setCommentText] = useState("");
+export default function CommentsContainer({
+  post,
+  removeComment,
+}: {
+  post: any;
+  removeComment: (id: string) => void;
+}) {
   const [showRepliesFor, setShowRepliesFor] = useState("");
-  const [showCommentInputFor, setShowCommentInputFor] = useState("");
-  const [showNewCommentInput, setShowNewCommentInput] = useState(false);
   const [noMoreComments, setNoMoreComments] = useState(false);
   const [noMoreReplies, setNoMoreReplies] = useState(false);
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [replyLoading, setReplyLoading] = useState(false);
-  const [sendingComment, setSendingComment] = useState(false);
-  const componentRefs = useRef<{ [key: string]: HTMLLIElement }>({});
+  const componentRefs = useRef<{ [key: string]: HTMLElement }>({});
   const lastDate = useRef<string | null>(null);
   const lastCommentId = useRef<string | null>(null);
   const lastReplyDate = useRef<string | null>(null);
   const lastReplyId = useRef<string | null>(null);
   const comments = useCommentsStore((state) => state.comments);
   const addToComments = useCommentsStore((state) => state.addToComments);
-  const addNewComment = useCommentsStore((state) => state.addNewComment);
   const clearComments = useCommentsStore((state) => state.clearComments);
   const setReplies = useCommentsStore((state) => state.setReplies);
-  const toggleCommentLike_store = useCommentsStore(
-    (state) => state.toggleCommentLike
-  );
-  const incrementCommentsCount = usePostStore(
-    (state) => state.incrementCommentsCount
-  );
-  const decrementCommentsCount = usePostStore(
-    (state) => state.decrementCommentsCount
-  );
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchComments();
-    setIsLoggedIn(checkUserLoggedIn());
 
     return () => {
       clearComments();
     };
   }, []);
-
-  const sendComment = (
-    e: any,
-    {
-      comment_for,
-      parentId,
-      reply_for,
-    }: {
-      comment_for: "post" | "comment";
-      parentId: string;
-      reply_for?: "string";
-    }
-  ) => {
-    e.preventDefault();
-    if (commentText.length > 0) {
-      const content = commentText;
-      let payload: any = { content, comment_for, parentId };
-
-      if (comment_for === "comment") {
-        payload.reply_for = reply_for;
-      }
-
-      setSendingComment(true);
-      incrementCommentsCount(post._id);
-      create("comment/create", payload)
-        .then((res) => {
-          if (comment_for === "post") {
-            addNewComment(res.data);
-          } else {
-            setReplies([res.data], parentId);
-            if (showRepliesFor !== parentId) {
-              setShowRepliesFor(parentId);
-            }
-          }
-          setCommentText("");
-          setShowCommentInputFor("");
-          setSendingComment(false);
-          setShowNewCommentInput(false);
-        })
-        .catch((e) => {
-          console.log(e);
-          setSendingComment(false);
-          decrementCommentsCount(post._id);
-        });
-    }
-  };
 
   const fetchComments = () => {
     setCommentsLoading(true);
@@ -154,7 +95,6 @@ export default function CommentsContainer({ post }: { post: any }) {
   };
 
   const toggleShowRepliesButton = (id: string) => {
-    setShowNewCommentInput(false);
     if (showRepliesFor === id) {
       setShowRepliesFor("");
     } else {
@@ -162,140 +102,87 @@ export default function CommentsContainer({ post }: { post: any }) {
     }
   };
 
-  const toggleShowCommentInput = (id: string) => {
-    if (!isLoggedIn) return navigate("/auth");
-
-    setShowNewCommentInput(false);
-    if (showCommentInputFor === id) {
-      setShowCommentInputFor("");
-    } else {
-      setShowCommentInputFor(id);
-    }
-  };
-
-  const toggleNewCommentInput = () => {
-    setShowCommentInputFor("");
-    setShowRepliesFor("");
-    setShowNewCommentInput((s) => !s);
-  };
-
-  const toggleCommentLike = (
-    id: string,
-    comment_for: "comment" | "post",
-    isLike: boolean,
-    parentId?: string
-  ) => {
-    if (!isLoggedIn) return navigate("/auth");
-
-    toggleCommentLike_store(id, comment_for, isLike, parentId);
-
-    create("comment/" + (isLike ? "like" : "unlike") + "/" + id, {})
-      .then()
-      .catch((e) => {
-        console.log(e);
-        toggleCommentLike_store(id, comment_for, isLike, parentId);
-      });
-  };
-
   // display no comments if no comments are found
   if (comments.length === 0 && !commentsLoading) {
     return (
-      <div className="card bg-light p-3">
-        <h6 className="text-muted">No Comments</h6>
+      <div className="card bg-light p-3 !tw-w-full !tw-h-full">
+        <h6 className="text-muted tw-text-center tw-text-lg">No Comments</h6>
       </div>
     );
   }
 
   return (
-    <div className="card bg-light p-3">
+    <div className="card bg-light p-3 !tw-w-full !tw-h-full !tw-mb-0 tw-overflow-y-auto">
       <div className="d-flex align-items-center">
         <h6 className="flex-grow-1">Comments</h6>
-        <a
-          onClick={toggleNewCommentInput}
-          className="bell-icon bg-secondary me-1"
-          style={{ width: 40, height: 40, cursor: "pointer" }}
-          title="write comment"
-        >
-          {!showNewCommentInput && (
-            <i className="fa fa-plus fa-lg text-white"></i>
-          )}
-          {showNewCommentInput && (
-            <i className="fa fa-times fa-lg text-white"></i>
-          )}
-        </a>
       </div>
+      <hr />
       <div className="divider border-secondary mt-1"></div>
 
-      <ul className="dz-comments-list">
+      <div className="dz-comments-list">
         {comments.map((comment: any, i: number) => (
           <div key={i}>
-            <li
+            <div
               ref={(el) =>
-                (componentRefs.current[comment._id] = el as HTMLLIElement)
+                (componentRefs.current[comment._id] = el as HTMLElement)
               }
             >
               <Comment
                 comment={comment}
-                showCommentInput={showCommentInputFor}
                 showReplies={showRepliesFor}
-                toggleShowCommentInput={toggleShowCommentInput}
                 loadReplies={loadReplies}
                 type="comment"
-                likeStatusChange={(id, isLike) =>
-                  toggleCommentLike(id, "post", isLike)
-                }
+                removeComment={() => {
+                  removeComment(comment._id);
+                }}
               />
-            </li>
+            </div>
 
             {showRepliesFor === comment._id &&
               comment.comments?.map((reply: any, i: number) => (
                 <div key={i}>
-                  <li className="parent-list">
+                  <div className="tw-pl-10">
                     <Comment
                       comment={reply}
-                      showCommentInput={showCommentInputFor}
-                      toggleShowCommentInput={toggleShowCommentInput}
                       type="reply"
-                      likeStatusChange={(id, isLike) =>
-                        toggleCommentLike(id, "comment", isLike, comment._id)
-                      }
+                      removeComment={() => {
+                        removeComment(reply._id);
+                      }}
                     />
-                  </li>
+                  </div>
                 </div>
               ))}
 
             {showRepliesFor === comment._id &&
               !replyLoading &&
               !noMoreReplies && (
-                <li
-                  className="parent-list small"
+                <div
+                  className=" small"
                   style={{ cursor: "pointer" }}
                   onClick={() => fetchReplies(comment._id)}
                 >
-                  <i className="fa fa-refresh me-2" aria-hidden="true"></i>
+                  <i className="bi bi-arrow-repeat me-2" aria-hidden="true"></i>
                   <span>Show more replies</span>
-                </li>
+                </div>
               )}
             {showRepliesFor === comment._id && replyLoading && (
-              // TODO: loading indicator
-              <>Loading</>
-              // <BlinkingLoadingCircles />
+              <BlinkingLoadingCircles />
             )}
           </div>
         ))}
 
         {!commentsLoading && !noMoreComments && (
-          <li
-            className="small"
+          <div
+            className="small dark-blue"
             style={{ cursor: "pointer" }}
             onClick={() => fetchComments()}
           >
-            <i className="fa fa-refresh me-2" aria-hidden="true"></i>
+            <i className="bi bi-arrow-repeat me-2" aria-hidden="true"></i>
             <span>Show more comments</span>
-          </li>
+          </div>
         )}
-        {/* {commentsLoading && <BlinkingLoadingCircles />} */}
-      </ul>
+        {commentsLoading && <BlinkingLoadingCircles />}
+      </div>
     </div>
   );
 }

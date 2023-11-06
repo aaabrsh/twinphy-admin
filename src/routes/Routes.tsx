@@ -61,7 +61,7 @@ export default function Router() {
                 }
               />
               <Route
-                path="/user/:userId/post/:id"
+                path="/user/:userId/post/:postId"
                 element={
                   <Layout breadcrumb={breadcrumb.post}>
                     <Post />

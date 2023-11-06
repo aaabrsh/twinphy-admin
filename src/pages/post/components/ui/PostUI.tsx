@@ -1,47 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import timeAgo from "../../../../utils/time";
 import { env } from "../../../../utils/env";
+import { formatNumber } from "../../../../utils/number-formatting";
 
-export default function PostUI({
-  post,
-  toggleComment,
-  togglePostLike,
-}: {
-  post: any;
-  toggleComment: (id: string) => void;
-  togglePostLike: (id: string, liked: boolean) => void;
-}) {
-  const navigate = useNavigate();
-
+export default function PostUI({ post }: { post: any }) {
   return (
     <>
-      <div className="post-card">
-        <div className="top-meta">
-          <div className="d-flex justify-content-between align-items-start">
-            <a
-              onClick={() => navigate("/profile/" + post.author._id)}
-              className="media media-40"
-              style={{ cursor: "pointer" }}
-            >
-              {/* TODO: add default profile image incase profile image doesn't exist */}
-              <img className="rounded" src={post.author?.profile_img} alt="/" />
-            </a>
-            <div className="meta-content ms-3">
-              <h6 className="title mb-0">
-                <a
-                  onClick={() => navigate("/profile/" + post.author._id)}
-                  style={{ cursor: "pointer" }}
-                >
-                  {post.author?.first_name + " " + post.author?.last_name}
-                </a>
-              </h6>
-              <ul className="meta-list">
-                <li>{timeAgo(post.createdAt)}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <p className="text-black">{post.caption}</p>
+      <div className="tw-h-full">
+        <p className="text-black tw-pt-4 tw-pr-4 tw-text-justify">
+          {post.caption}
+        </p>
         <div className="dz-media">
           {post.media?.[0]?.type === "image" && (
             <img
@@ -81,39 +47,21 @@ export default function PostUI({
               />
             </video>
           )}
-          {/* <img src="/assets/images/post/pic1.png" alt="/" /> */}
-          <div className="post-meta-btn">
-            <ul>
-              <li>
-                <a
-                  onClick={() =>
-                    togglePostLike(post._id, !(post?.likes?.length > 0))
-                  }
-                  className={`action-btn bg-primary ${
-                    post?.likes?.length > 0 ? "active" : ""
-                  }`}
-                  style={{ cursor: "pointer" }}
-                >
-                  <i className="fa-regular fa-heart fill-icon"></i>
-                  <i className="fa-solid fa-heart fill-icon-2"></i>
-                  <h6 className="font-14 mb-0 ms-2" id="value1">
-                    {post.likes_count ?? 0}
-                  </h6>
-                </a>
-              </li>
-              <li>
-                <a
-                  onClick={() => toggleComment(post._id)}
-                  className="action-btn bg-secondary"
-                  style={{ cursor: "pointer" }}
-                >
-                  <i className="fa-solid fa-comment fill-icon"></i>
-                  <h6 className="font-14 mb-0 ms-2">
-                    {post.comments_count ?? 0}
-                  </h6>
-                </a>
-              </li>
-            </ul>
+          <div className="">
+            <div className="tw-flex tw-gap-2 tw-py-2">
+              <div className="tw-flex tw-justify-center tw-items-center tw-rounded-2xl tw-h-7 tw-px-4 tw-min-w-[50px] tw-bg-orange-200">
+                <i className="bi bi-heart-fill tw-text-orange-600"></i>
+                <div className="font-14 mb-0 ms-2" id="value1">
+                  {formatNumber(post.likes_count ?? 0)}
+                </div>
+              </div>
+              <div className="tw-flex tw-justify-center tw-items-center tw-rounded-2xl tw-h-7 tw-px-4 tw-min-w-[50px] tw-bg-teal-200">
+                <i className="bi bi-chat-fill tw-text-teal-600"></i>
+                <div className="font-14 mb-0 ms-2">
+                  {formatNumber(post.comments_count ?? 0)}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

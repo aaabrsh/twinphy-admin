@@ -20,7 +20,7 @@ export default function Post() {
   }, []);
 
   const fetchPost = () => {
-    get("post/" + params.id)
+    get("post/" + params.postId)
       .then((res) => {
         addToFeed([res.data]);
         setPageLoading(false);
@@ -33,18 +33,14 @@ export default function Post() {
 
   if (pageLoading) {
     // return <PageLoading />;
+    // TODO:
     return <>Show Skeleton Loading</>;
   }
 
   return (
     <>
-
-      <div className="page-content min-vh-100">
-        <div className="content-inner pt-0">
-          <div className="container bottom-content">
-            <PostsContainer feed={posts} />
-          </div>
-        </div>
+      <div className="tw-w-full">
+        <PostsContainer feed={posts} />
       </div>
     </>
   );

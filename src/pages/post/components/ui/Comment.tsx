@@ -1,73 +1,87 @@
+import { Menu } from "primereact/menu";
 import { getName } from "../../../../utils/getName";
 import timeAgo from "../../../../utils/time";
+import { useRef } from "react";
 
 export default function Comment({
   comment,
-  showCommentInput,
   showReplies,
   type,
-  toggleShowCommentInput,
-  likeStatusChange,
+  removeComment,
   loadReplies,
 }: {
   comment: any;
-  showCommentInput: string;
   showReplies?: string;
   type: "comment" | "reply";
-  toggleShowCommentInput: (id: string) => void;
-  likeStatusChange: (id: string, isLike: boolean) => void;
+  removeComment: () => void;
   loadReplies?: (id: string) => void;
 }) {
+  const actionRef = useRef<any>();
+
+  const actions = [
+    {
+      label: "Remove",
+      icon: "bi bi-x-octagon",
+      command: () => {
+        removeComment();
+      },
+    },
+  ];
+
   return (
     <>
-      <div className="list-content">
-        <img src={comment?.author?.profile_img} alt="/" />
-        <div>
-          <h6 className="font-14 mb-1">{getName(comment?.author)}</h6>
-          <p className="mb-2">{comment.content}</p>
-          <ul className="bottom-item">
-            <li className="text-light">{comment.likes_count} Likes</li>
-            <li
-              className="text-light"
-              style={{ cursor: "pointer" }}
-              onClick={() => toggleShowCommentInput(comment._id)}
-            >
-              {showCommentInput === comment._id ? "Cancel" : "Reply"}
-            </li>
-            <li className="text-light">{timeAgo(comment.createdAt)}</li>
-          </ul>
-          {type === "comment" && comment.has_reply && (
-            <div
-              className="text-light py-1 small text-secondary-hover"
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={() => (loadReplies ? loadReplies(comment._id) : null)}
-            >
-              {showReplies !== comment._id && (
-                <span>
-                  <span className="me-1">Show replies</span>
-                  <i className="fa fa-angle-down" aria-hidden="true"></i>
-                </span>
-              )}
-              {showReplies === comment._id && (
-                <span>
-                  <span className="me-1">Hide replies</span>
-                  <i className="fa fa-angle-up" aria-hidden="true"></i>
-                </span>
-              )}
+      <div className="tw-flex tw-py-2">
+        <div className="tw-flex tw-gap-2">
+          <img
+            src={comment?.author?.profile_img}
+            alt="/"
+            className="tw-rounded-[50%]"
+            style={{ width: "30px", height: "30px" }}
+          />
+          <div>
+            <div className="font-14 tw-font-semibold tw-m-0">
+              {getName(comment?.author)}
             </div>
-          )}
+            <p className="mb-0 tw-text-zinc-800">{comment.content}</p>
+            <div className="tw-text-sm tw-flex tw-gap-2 tw-text-zinc-600">
+              <div className="">{comment.likes_count} Likes</div>
+              <div className="">{timeAgo(comment.createdAt)}</div>
+            </div>
+            {type === "comment" && comment.has_reply && (
+              <div
+                className="py- tw-font-semibold text-primary small text-primary-hover"
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() => (loadReplies ? loadReplies(comment._id) : null)}
+              >
+                {showReplies !== comment._id && (
+                  <span>
+                    <span className="me-1">Show replies</span>
+                    <i className="bi bi-chevron-down" aria-hidden="true"></i>
+                  </span>
+                )}
+                {showReplies === comment._id && (
+                  <span>
+                    <span className="me-1">Hide replies</span>
+                    <i className="bi bi-chevron-up" aria-hidden="true"></i>
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="ms-auto">
-        {/* TODO: like/unlike animation */}
-        <div
-          onClick={() => likeStatusChange(comment._id, !comment.is_liked)}
-          className={`like-button ${comment.is_liked ? "active" : ""}`}
-          style={{ cursor: "pointer" }}
-        >
-          <i className="fa-regular fa-heart ms-auto"></i>
+        <div className="ms-auto">
+          <Menu model={actions} popup ref={actionRef} className="" />
+          <button
+            style={{ cursor: "pointer" }}
+            className="btn dark-blue !tw-font-bold btn-md !tw-py-2"
+            onClick={(event) => {
+              actionRef.current.toggle(event);
+            }}
+          >
+            <i className="bi bi-arrow-down-circle tw-mr-1"></i>
+          </button>
         </div>
       </div>
     </>
