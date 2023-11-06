@@ -9,6 +9,7 @@ import { Menu } from "primereact/menu";
 import { dummydata } from "./dummydata";
 import TruncatedText from "../../components/TurncatedText";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
+import { get } from "../../services/api";
 
 export default function Reported() {
   const [tableLoading, setTableLoading] = useState(false);
@@ -26,9 +27,16 @@ export default function Reported() {
       items: [
         {
           label: "Remove Post",
-          icon: "bi bi-gear-fill",
+          icon: "bi bi-x-circle",
           command: () => {
             setShowModal(true);
+          },
+        },
+        {
+          label: "Ignore",
+          icon: "bi bi-check-circle",
+          command: () => {
+            // setShowModal(true);
           },
         },
       ],
@@ -54,7 +62,22 @@ export default function Reported() {
 
   useEffect(() => {
     setReports(dummydata);
+    fetchReport();
   }, []);
+
+  const fetchReport = () => {
+    // setTableLoading(true);
+    // get("report")
+    //   .then((res) => {
+    //     // TODO: set pagination info too
+    //     setReports(res.reports);
+    //     setTableLoading(false);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //     setTableLoading(false);
+    //   });
+  };
 
   const actionButtons = (rowData: any) => {
     return (
