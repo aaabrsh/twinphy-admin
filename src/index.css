@@ -624,12 +624,19 @@ h6 {
   }
 }
 
+#main * {
+  scrollbar-width: thin;
+  scrollbar-color: #aab7cf transparent;
+}
+
+#main *::-webkit-scrollbar,
 .sidebar::-webkit-scrollbar {
   width: 5px;
   height: 8px;
   background-color: #fff;
 }
 
+#main *::-webkit-scrollbar-thumb,
 .sidebar::-webkit-scrollbar-thumb {
   background-color: #aab7cf;
 }
@@ -1240,4 +1247,9 @@ h6 {
 .p-dropdown-items-wrapper ul,
 .p-dropdown-items-wrapper ol {
   padding-left: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.dark-blue {
+  color: #012970 !important;
 }
