@@ -30,4 +30,11 @@ export const breadcrumb = {
       { isLink: false, text: "Post" },
     ],
   },
+  report: {
+    title: "Reported Posts",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Reported" },
+    ],
+  },
 };

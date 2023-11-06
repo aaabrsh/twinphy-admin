@@ -9,6 +9,7 @@ import { breadcrumb } from "./breadcrumb_data";
 import UsersList from "../pages/users/UsersList";
 import Profile from "../pages/users/Profile";
 import Post from "../pages/post/Post";
+import Reported from "../pages/reported/Reported";
 
 export default function Router() {
   // TODO: uncomment the following line after adding auth
@@ -71,10 +72,9 @@ export default function Router() {
               <Route
                 path="/report/list"
                 element={
-                  <></>
-                  // <Layout breadcrumb={breadcrumb.dashboard}>
-                  //   <Dashboard />
-                  // </Layout>
+                  <Layout breadcrumb={breadcrumb.report}>
+                    <Reported />
+                  </Layout>
                 }
               />
 
