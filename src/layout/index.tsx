@@ -8,9 +8,11 @@ import { main } from "./main";
 export function Layout({
   children,
   breadcrumb,
+  activeLinks,
 }: {
   children: ReactNode;
   breadcrumb?: any;
+  activeLinks?: string[];
 }) {
   useEffect(() => {
     main();
@@ -19,7 +21,7 @@ export function Layout({
   return (
     <>
       <Header />
-      <Sidebar />
+      <Sidebar activeLinks={activeLinks ?? []} />
       <main id="main" className="main">
         {breadcrumb && <BreadCrumb data={breadcrumb} />}
         {/* <!-- End Page Title --> */}

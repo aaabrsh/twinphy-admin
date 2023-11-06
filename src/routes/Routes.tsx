@@ -40,7 +40,10 @@ export default function Router() {
               <Route
                 path="/dashboard"
                 element={
-                  <Layout breadcrumb={breadcrumb.dashboard}>
+                  <Layout
+                    breadcrumb={breadcrumb.dashboard}
+                    activeLinks={["dashboard"]}
+                  >
                     <Dashboard />
                   </Layout>
                 }
@@ -48,7 +51,10 @@ export default function Router() {
               <Route
                 path="/user/list"
                 element={
-                  <Layout breadcrumb={breadcrumb.users}>
+                  <Layout
+                    breadcrumb={breadcrumb.users}
+                    activeLinks={["user", "appUser"]}
+                  >
                     <UsersList />
                   </Layout>
                 }
@@ -56,7 +62,10 @@ export default function Router() {
               <Route
                 path="/user/:userId"
                 element={
-                  <Layout breadcrumb={breadcrumb.profile}>
+                  <Layout
+                    breadcrumb={breadcrumb.profile}
+                    activeLinks={["user", "appUser"]}
+                  >
                     <Profile />
                   </Layout>
                 }
@@ -64,7 +73,10 @@ export default function Router() {
               <Route
                 path="/user/:userId/post/:postId"
                 element={
-                  <Layout breadcrumb={breadcrumb.post}>
+                  <Layout
+                    breadcrumb={breadcrumb.post}
+                    activeLinks={["user", "appUser"]}
+                  >
                     <Post />
                   </Layout>
                 }
@@ -72,7 +84,10 @@ export default function Router() {
               <Route
                 path="/report/list"
                 element={
-                  <Layout breadcrumb={breadcrumb.report}>
+                  <Layout
+                    breadcrumb={breadcrumb.report}
+                    activeLinks={["report"]}
+                  >
                     <Reported />
                   </Layout>
                 }
