@@ -59,7 +59,7 @@ export default function PostsContainer({ feed }: PostContainerProps) {
         closeDialog();
         return;
     }
-    closeDialog()
+    closeDialog();
   };
 
   const removePost = (id: string) => {
@@ -69,7 +69,6 @@ export default function PostsContainer({ feed }: PostContainerProps) {
   const removeComment = (id: string) => {
     console.log("remove comment clicked", id);
   };
-
 
   const closeDialog = () => {
     setObjectToDelete(undefined);
@@ -128,7 +127,7 @@ export default function PostsContainer({ feed }: PostContainerProps) {
                 </button>
               </div>
             </div>
-            <div className="tw-flex tw-min-h-[500px] tw-max-h-[650px] tw-flex-col md:tw-flex-row">
+            <div className="tw-flex md:tw-gap-3 tw-min-h-[500px] tw-max-h-[650px] tw-flex-col md:tw-flex-row">
               <div className="md:tw-w-[70%]">
                 <PostUI post={post} />
               </div>

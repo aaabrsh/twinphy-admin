@@ -5,9 +5,7 @@ export default function PostUI({ post }: { post: any }) {
   return (
     <>
       <div className="tw-h-full">
-        <p className="text-black tw-pt-4 tw-pr-4 tw-text-justify">
-          {post.caption}
-        </p>
+        <p className="text-black tw-pt-4 tw-text-justify">{post.caption}</p>
         <div className="dz-media">
           {post.media?.[0]?.type === "image" && (
             <img
