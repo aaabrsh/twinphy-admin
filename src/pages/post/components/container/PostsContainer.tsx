@@ -1,0 +1,70 @@
+import { useState, useRef } from "react";
+import PostUI from "../ui/PostUI";
+import CommentsContainer from "./CommentsContainer";
+import { create } from "../../../../services/api";
+// import NoPostsFound from "../../../../components/NoPostsFound";
+import { isLoggedIn } from "../../../../services/auth";
+import { useNavigate } from "react-router-dom";
+import { usePostStore } from "../../../../store/store";
+
+interface PostContainerProps {
+  feed: any[];
+}
+
+export default function PostsContainer({ feed }: PostContainerProps) {
+  const [visibleComment, setVisibleComment] = useState<string | null>();
+  const componentRefs = useRef<{ [key: string]: HTMLElement }>({});
+  const togglePostLike = usePostStore((state) => state.togglePostLike);
+  const navigate = useNavigate();
+
+  const toggleComment = (id: string) => {
+    if (visibleComment === id) {
+      setVisibleComment(null);
+      if (componentRefs.current[id])
+        componentRefs.current[id].scrollIntoView({ behavior: "smooth" });
+    } else {
+      setVisibleComment(id);
+    }
+  };
+
+  const likePost = (id: string, liked: boolean) => {
+    if (!isLoggedIn()) return navigate("/auth");
+
+    togglePostLike(id, liked);
+    if (liked) {
+      create("post/like/" + id, {}).catch((e) => {
+        console.log(e);
+        togglePostLike(id, false);
+      });
+    } else {
+      create("post/unlike/" + id, {}).catch((e) => {
+        console.log(e);
+        togglePostLike(id, true);
+      });
+    }
+  };
+
+  // if (feed.length === 0) {
+  //   return <NoPostsFound showBtn={true} />;
+  // }
+
+  return (
+    <>
+      <div className="post-area">
+        {feed.map((post, i) => (
+          <div
+            key={i}
+            ref={(el) => (componentRefs.current[post._id] = el as HTMLElement)}
+          >
+            <PostUI
+              post={post}
+              toggleComment={toggleComment}
+              togglePostLike={likePost}
+            />
+            {visibleComment === post._id && <CommentsContainer post={post} />}
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
