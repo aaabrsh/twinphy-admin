@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { dummydata } from "./dummy_data";
 import { getDate } from "../../utils/time";
@@ -16,6 +15,7 @@ import {
   statuses,
 } from "./components/ui/StatusBodyTemplate";
 import { profileCompletionTemplate } from "./components/ui/ProfileCompletionTemplate";
+import SearchHeader from "../../components/SearchHeader";
 
 export default function UsersList() {
   const [tableLoading, setTableLoading] = useState(false);
@@ -84,25 +84,6 @@ export default function UsersList() {
     );
   };
 
-  const renderHeader = () => {
-    return (
-      <span className="p-input-icon-left">
-        <i className="bi bi-search tw-top-[43%]" />
-        <InputText
-          type="search"
-          value={searchInput}
-          onChange={(e) => {
-            console.log(e);
-          }}
-          placeholder="Search"
-          className="tw-w-full"
-        />
-      </span>
-    );
-  };
-
-  const header = renderHeader();
-
   const saveNewStatus = () => {
     console.log(newStatus);
     setShowModal(false);
@@ -133,7 +114,14 @@ export default function UsersList() {
         value={users}
         paginator
         rows={rowsNum}
-        header={header}
+        header={
+          <SearchHeader
+            text={searchInput}
+            textChange={(e) => {
+              setSearchInput(e.target.value);
+            }}
+          />
+        }
         selectionMode="single"
         emptyMessage="No users found."
         tableStyle={{ minWidth: "50rem" }}
