@@ -15,9 +15,9 @@ export default function NotFound() {
             className="img-fluid py-5"
             alt="Page Not Found"
           />
-          <div className="credits">
+          {/* <div className="credits">
             Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-          </div>
+          </div> */}
         </section>
       </div>
     </div>
