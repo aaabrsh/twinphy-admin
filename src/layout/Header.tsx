@@ -62,17 +62,17 @@ export default function Header() {
             {/* <!-- End Search Icon--> */}
 
             <li className="nav-item dropdown">
-              <a
+              {/* <a
                 className="nav-link nav-icon"
                 href="#"
                 data-bs-toggle="dropdown"
               >
                 <i className="bi bi-bell"></i>
                 <span className="badge bg-primary badge-number">4</span>
-              </a>
+              </a> */}
               {/* <!-- End Notification Icon --> */}
 
-              <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+              {/* <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                 <li className="dropdown-header">
                   You have 4 new notifications
                   <a href="#">
@@ -139,23 +139,23 @@ export default function Header() {
                 <li className="dropdown-footer">
                   <a href="#">Show all notifications</a>
                 </li>
-              </ul>
+              </ul> */}
               {/* <!-- End Notification Dropdown Items --> */}
             </li>
             {/* <!-- End Notification Nav --> */}
 
             <li className="nav-item dropdown">
-              <a
+              {/* <a
                 className="nav-link nav-icon"
                 href="#"
                 data-bs-toggle="dropdown"
               >
                 <i className="bi bi-chat-left-text"></i>
                 <span className="badge bg-success badge-number">3</span>
-              </a>
+              </a> */}
               {/* <!-- End Messages Icon --> */}
 
-              <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+              {/* <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
                 <li className="dropdown-header">
                   You have 3 new messages
                   <a href="#">
@@ -234,7 +234,7 @@ export default function Header() {
                 <li className="dropdown-footer">
                   <a href="#">Show all messages</a>
                 </li>
-              </ul>
+              </ul> */}
               {/* <!-- End Messages Dropdown Items --> */}
             </li>
             {/* <!-- End Messages Nav --> */}
@@ -259,7 +259,7 @@ export default function Header() {
               <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
                   <h6>Kevin Anderson</h6>
-                  <span>Web Designer</span>
+                  <span>Admin</span>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
@@ -291,7 +291,7 @@ export default function Header() {
                   <hr className="dropdown-divider" />
                 </li>
 
-                <li>
+                {/* <li>
                   <a
                     className="dropdown-item d-flex align-items-center"
                     href="pages-faq.html"
@@ -299,7 +299,7 @@ export default function Header() {
                     <i className="bi bi-question-circle"></i>
                     <span>Need Help?</span>
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <hr className="dropdown-divider" />
                 </li>

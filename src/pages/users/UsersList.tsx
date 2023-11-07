@@ -22,7 +22,7 @@ export default function UsersList() {
   const [showModal, setShowModal] = useState(false);
   const [newStatus, setNewStatus] = useState<any>();
   const [total, setTotal] = useState(0);
-  const [limit, setLimit] = useState(2);
+  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [query, setQuery] = useState<any>();
   const navigate = useNavigate();
