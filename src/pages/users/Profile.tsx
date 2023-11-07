@@ -10,6 +10,7 @@ import style from "./profile.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { getName } from "../../utils/getName";
 import { getDate } from "../../utils/time";
+import { Skeleton } from "primereact/skeleton";
 
 export default function Profile() {
   const [profile, setProfileData] = useState<any>(null);
@@ -34,9 +35,15 @@ export default function Profile() {
       });
   };
 
-  // TODO: add page loading
   if (pageLoading) {
-    return <>Show Skeleton Loading</>;
+    return (
+      <>
+        <div className="tw-flex tw-gap-5">
+          <Skeleton className="!tw-block !tw-w-[150px] !tw-h-[150px] tw-rounded-[50%]"/>
+          <Skeleton className="!tw-h-[150px]" />
+        </div>
+      </>
+    );
   }
 
   return (
