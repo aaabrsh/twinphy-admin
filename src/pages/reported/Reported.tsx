@@ -1,7 +1,6 @@
 import { DataTable } from "primereact/datatable";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchHeader from "../../components/SearchHeader";
 import { Column } from "primereact/column";
 import { profileTemplate } from "../users/components/ui/ProfileTemplate";
 import { getDate } from "../../utils/time";
@@ -10,17 +9,18 @@ import TruncatedText from "../../components/TurncatedText";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { get } from "../../services/api";
 import { toast } from "react-toastify";
+import ReportTypesSelector from "./components/ui/ReportTypesSelector";
 
 export default function Reported() {
   const [tableLoading, setTableLoading] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
   const [reports, setReports] = useState<any[]>([]);
   const [selectedReport, setSelectedReport] = useState<any>(null);
+  const [status, setStatus] = useState("pending");
   const [showModal, setShowModal] = useState(false);
   const [total, setTotal] = useState(0);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-  const [query, setQuery] = useState<any>();
+  const [query, setQuery] = useState<any>({ status: "pending" });
   const actionBtnRef = useRef<any>();
   const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ export default function Reported() {
   ];
 
   useEffect(() => {
-    fetchReports(0, limit);
+    fetchReports(0, limit, query);
   }, []);
 
   const fetchReports = (page: number, limit: number, query?: any) => {
@@ -88,13 +88,23 @@ export default function Reported() {
       })
       .catch((e) => {
         console.log(e);
-        toast.error("Error! couldn't load reported posts");
+        toast.error(
+          e.response?.data?.message ?? "Error! couldn't load reported posts"
+        );
         setTableLoading(false);
       });
   };
 
   const onPageChange = (event: any) => {
     fetchReports(event.page, event.rows, query);
+  };
+
+  const setFilter = (status: string) => {
+    if (status) {
+      setStatus(status);
+      setQuery({ status });
+      fetchReports(0, limit, { status: status });
+    }
   };
 
   const actionButtons = (rowData: any) => {
@@ -141,15 +151,7 @@ export default function Reported() {
         first={(page - 1) * limit}
         rowsPerPageOptions={[5, 10, 25, 50]}
         onPage={onPageChange}
-        header={
-          // TODO: header should be buttons for ignored, resolved and pending reports
-          <SearchHeader
-            text={searchInput}
-            textChange={(e) => {
-              setSearchInput(e.target.value);
-            }}
-          />
-        }
+        header={<ReportTypesSelector status={status} setFilter={setFilter} />}
         selectionMode="single"
         emptyMessage="No users found."
         tableStyle={{ minWidth: "50rem" }}
