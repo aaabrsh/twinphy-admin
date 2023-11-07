@@ -12,7 +12,8 @@ import { statusBodyTemplate } from "./components/ui/StatusBodyTemplate";
 import { profileCompletionTemplate } from "./components/ui/ProfileCompletionTemplate";
 import UsersTableFilters from "./components/container/UsersTableFilters";
 import { statuses } from "./data/data";
-import { get } from "../../services/api";
+import { create, get } from "../../services/api";
+import { toast } from "react-toastify";
 
 export default function UsersList() {
   const [tableLoading, setTableLoading] = useState(false);
@@ -36,6 +37,9 @@ export default function UsersList() {
   };
 
   const fetchUsers = (page: number, limit: number, query: any) => {
+    if (page >= Math.ceil(total / limit) && total && limit)
+      page = Math.ceil(total / limit) - 1;
+
     let queryParams = {
       page: page + 1,
       limit: limit,
@@ -54,6 +58,7 @@ export default function UsersList() {
       })
       .catch((e) => {
         console.log(e);
+        toast.error("Error! couldn't load users");
         setTableLoading(false);
       });
   };
@@ -103,6 +108,7 @@ export default function UsersList() {
           <button
             className="btn btn-primary btn-sm tw-w-[75px] !tw-py-1"
             onClick={(event) => {
+              setNewStatus(null);
               setSelectedUser(rowData);
               actionRef.current.toggle(event);
             }}
@@ -116,8 +122,33 @@ export default function UsersList() {
   };
 
   const saveNewStatus = () => {
-    console.log(newStatus);
+    if (!newStatus) {
+      return;
+    }
+    setTableLoading(true);
+    create("user/status", { id: selectedUser._id, status: newStatus })
+      .then((res) => {
+        updateState(res.data);
+        setTableLoading(false);
+        toast.success(res.message);
+      })
+      .catch((e) => {
+        console.log(e);
+        setTableLoading(false);
+        toast.error(e.response?.data?.message);
+      });
     setShowModal(false);
+  };
+
+  const updateState = (newState: any) => {
+    const usersCopy = users.map((user) => {
+      if (user._id === newState._id) {
+        user = newState;
+      }
+      return user;
+    });
+
+    setUsers(usersCopy);
   };
 
   const clearNewStatus = () => {
