@@ -9,14 +9,18 @@ import { Menu } from "primereact/menu";
 import TruncatedText from "../../components/TurncatedText";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { get } from "../../services/api";
+import { toast } from "react-toastify";
 
 export default function Reported() {
   const [tableLoading, setTableLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [reports, setReports] = useState<any[]>([]);
-  const [rowsNum, setRowsNum] = useState(10);
   const [selectedReport, setSelectedReport] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(0);
+  const [query, setQuery] = useState<any>();
   const actionBtnRef = useRef<any>();
   const navigate = useNavigate();
 
@@ -60,21 +64,37 @@ export default function Reported() {
   ];
 
   useEffect(() => {
-    fetchReport();
+    fetchReports(0, limit);
   }, []);
 
-  const fetchReport = () => {
+  const fetchReports = (page: number, limit: number, query?: any) => {
+    if (page >= Math.ceil(total / limit) && total && limit)
+      page = Math.ceil(total / limit) - 1;
+
+    let queryParams = {
+      page: page + 1,
+      limit: limit,
+    };
+    if (query) queryParams = { ...queryParams, ...query };
+
     setTableLoading(true);
-    get("report")
+    get("report", queryParams)
       .then((res) => {
-        // TODO: set pagination info too
-        setReports(res.reports);
+        setReports(res.data);
+        setPage(res.page);
+        setTotal(res.totalCount);
+        setLimit(res.limit);
         setTableLoading(false);
       })
       .catch((e) => {
         console.log(e);
+        toast.error("Error! couldn't load reported posts");
         setTableLoading(false);
       });
+  };
+
+  const onPageChange = (event: any) => {
+    fetchReports(event.page, event.rows, query);
   };
 
   const actionButtons = (rowData: any) => {
@@ -115,8 +135,14 @@ export default function Reported() {
         loading={tableLoading}
         value={reports}
         paginator
-        rows={rowsNum}
+        rows={limit}
+        totalRecords={total}
+        lazy={true}
+        first={(page - 1) * limit}
+        rowsPerPageOptions={[5, 10, 25, 50]}
+        onPage={onPageChange}
         header={
+          // TODO: header should be buttons for ignored, resolved and pending reports
           <SearchHeader
             text={searchInput}
             textChange={(e) => {

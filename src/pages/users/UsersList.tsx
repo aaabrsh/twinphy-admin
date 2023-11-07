@@ -178,7 +178,7 @@ export default function UsersList() {
         totalRecords={total}
         lazy={true}
         first={(page - 1) * limit}
-        rowsPerPageOptions={[2, 5, 10, 25, 50]}
+        rowsPerPageOptions={[5, 10, 25, 50]}
         onPage={onPageChange}
         header={<UsersTableFilters filterTable={filterTable} />}
         selectionMode="single"
