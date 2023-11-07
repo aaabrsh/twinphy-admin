@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import style from "./login.module.css";
+import { create } from "../../services/api";
+import { toast } from "react-toastify";
+import { setUser, setUserId } from "../../services/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,6 +12,9 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [apiError, setApiError] = useState();
+  const [sendingData, setSendingData] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (emailTouched) validateEmail();
@@ -26,6 +33,7 @@ export default function Login() {
     const isPasswordValid = validatePassword();
 
     if (isEmailValid && isPasswordValid) {
+      setApiError(undefined);
       sendAuthRequest(email, password);
     }
   };
@@ -72,7 +80,24 @@ export default function Login() {
   };
 
   const sendAuthRequest = (email: string, password: string) => {
-    console.log(email, password);
+    setSendingData(true);
+    create("auth/admin/login", { email, password })
+      .then((res) => {
+        if (res.success) {
+          setApiError(undefined);
+          setUser(res.data);
+          setUserId(res.data._id);
+          navigate("/dashboard");
+        } else {
+          setApiError(res.message);
+        }
+        setSendingData(false);
+      })
+      .catch((e) => {
+        setSendingData(false);
+        console.log(e);
+        toast.error("Error! login failed");
+      });
   };
 
   return (
@@ -99,9 +124,16 @@ export default function Login() {
                         <h5 className="card-title text-center pb-0 fs-4">
                           Login to Your Account
                         </h5>
-                        <p className="text-center small">
-                          Enter your email & password to login
-                        </p>
+                        {!apiError && (
+                          <p className="text-center tw-mb-0 small">
+                            Enter your email & password to login
+                          </p>
+                        )}
+                        {apiError && (
+                          <p className="text-center text-danger tw-font-bold small">
+                            {apiError}
+                          </p>
+                        )}
                       </div>
 
                       <form
@@ -163,6 +195,7 @@ export default function Login() {
                           <button
                             className="btn btn-primary w-100"
                             type="submit"
+                            disabled={sendingData}
                           >
                             Login
                           </button>
