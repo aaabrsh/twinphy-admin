@@ -12,10 +12,12 @@ import { profileProviderTemplate } from "./components/ui/ProfileProviderTemplate
 import {
   statusBodyTemplate,
   statusFilterTemplate,
-  statuses,
 } from "./components/ui/StatusBodyTemplate";
 import { profileCompletionTemplate } from "./components/ui/ProfileCompletionTemplate";
 import SearchHeader from "../../components/SearchHeader";
+import UsersTableFilters from "./components/container/UsersTableFilters";
+import { statuses } from "./data/data";
+import { get } from "../../services/api";
 
 export default function UsersList() {
   const [tableLoading, setTableLoading] = useState(false);
@@ -25,11 +27,42 @@ export default function UsersList() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
   const [newStatus, setNewStatus] = useState<any>();
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUsers(dummydata);
+    // setUsers(dummydata);
+    fetchUsers();
   }, []);
+
+  const filterTable = (query: any) => {
+    fetchUsers(1, query);
+  };
+
+  const fetchUsers = (pageNum?: number, query?: any) => {
+    let queryParams = {
+      page: pageNum ? (pageNum < 1 ? 1 : pageNum) : page + 1,
+      limit,
+    };
+
+    if (query) queryParams = { ...queryParams, ...query };
+
+    setTableLoading(true);
+    get("user/list", queryParams)
+      .then((res) => {
+        setUsers(res.data);
+        setPage(res.page);
+        setTotal(res.total);
+        setLimit(res.limit);
+        setTableLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setTableLoading(false);
+      });
+  };
 
   const dateTemplate = (dateStr: string) => {
     return <>{getDate(dateStr)}</>;
@@ -114,14 +147,7 @@ export default function UsersList() {
         value={users}
         paginator
         rows={rowsNum}
-        header={
-          <SearchHeader
-            text={searchInput}
-            textChange={(e) => {
-              setSearchInput(e.target.value);
-            }}
-          />
-        }
+        header={<UsersTableFilters filterTable={filterTable} />}
         selectionMode="single"
         emptyMessage="No users found."
         tableStyle={{ minWidth: "50rem" }}
@@ -133,8 +159,8 @@ export default function UsersList() {
           sortable
           sortField="first_name"
         ></Column>
-        <Column field="email" header="email" sortable></Column>
-        <Column field="whatsapp" header="whatsapp" sortable></Column>
+        <Column field="email" header="Email" sortable></Column>
+        <Column field="whatsapp" header="WhatsApp" sortable></Column>
         <Column
           header="Profile Provider"
           body={profileProviderTemplate}
