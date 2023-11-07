@@ -1,4 +1,14 @@
+import { useEffect, useState } from "react";
+import { getUser } from "../services/auth";
+import { getName } from "../utils/getName";
+
 export default function Header() {
+  const [currentUser, setCurrentUser] = useState<any>();
+
+  useEffect(() => {
+    setCurrentUser(getUser());
+  }, []);
+
   const toggleSideBar = () => {
     (document.getElementById("root") as HTMLElement).classList.toggle(
       "toggle-sidebar"
@@ -246,19 +256,19 @@ export default function Header() {
                 data-bs-toggle="dropdown"
               >
                 <img
-                  src="/assets/img/profile-img.jpg"
-                  alt="Profile"
+                  src={currentUser?.profile_img}
+                  alt=""
                   className="rounded-circle"
                 />
                 <span className="d-none d-md-block dropdown-toggle ps-2">
-                  K. Anderson
+                  {getName(currentUser)}
                 </span>
               </a>
               {/* <!-- End Profile Iamge Icon --> */}
 
               <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
-                  <h6>Kevin Anderson</h6>
+                  <h6>{getName(currentUser)}</h6>
                   <span>Admin</span>
                 </li>
                 <li>
