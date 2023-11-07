@@ -1,14 +1,43 @@
+import { useEffect, useState } from "react";
 import {
   AccountCompletion,
   ProfileProviders,
   Tag,
 } from "../../components/Tags";
+import { get } from "../../services/api";
 import { getStatusSeverity } from "../../utils/account-status";
 import style from "./profile.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getName } from "../../utils/getName";
+import { getDate } from "../../utils/time";
 
 export default function Profile() {
+  const [profile, setProfileData] = useState<any>(null);
+  const [pageLoading, setPageLoading] = useState(true);
+  const params = useParams();
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (params.userId) fetchProfileInfo(params.userId);
+  }, []);
+
+  const fetchProfileInfo = (id: string) => {
+    get("user/profileInfo/" + id)
+      .then((res) => {
+        setProfileData(res.data);
+        setPageLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setPageLoading(false);
+      });
+  };
+
+  // TODO: add page loading
+  if (pageLoading) {
+    return <>Show Skeleton Loading</>;
+  }
 
   return (
     <>
@@ -20,7 +49,7 @@ export default function Profile() {
             style={{ borderRight: "4px solid var(--primary-color)" }}
           >
             <img
-              src="https://xsgames.co/randomusers/avatar.php?g=male"
+              src={profile.profile_img}
               alt=""
               className="tw-rounded-[50%]"
               style={{ widows: "150px", height: "150px" }}
@@ -31,19 +60,19 @@ export default function Profile() {
               <div className="tw-flex tw-flex-grow tw-flex-col">
                 <div className={style.textContainer}>
                   <span className={style.label}>Full Name: </span>
-                  <span>John Doe</span>
+                  <span>{getName(profile)}</span>
                 </div>
                 <div className={style.textContainer}>
                   <span className={style.label}>Email: </span>
-                  <span>test@gmail.com</span>
+                  <span>{profile.email ?? "-"}</span>
                 </div>
                 <div className={style.textContainer}>
                   <span className={style.label}>WhatsApp: </span>
-                  <span>+82779827732</span>
+                  <span>{profile.whatsapp ?? "-"}</span>
                 </div>
                 <div className={style.textContainer}>
                   <span className={style.label}>Joined On: </span>
-                  <span>21/11/2023</span>
+                  <span>{getDate(profile.createdAt)}</span>
                 </div>
               </div>
               <div className="tw-flex">
@@ -60,28 +89,28 @@ export default function Profile() {
                 </div>
                 <div className="tw-flex tw-flex-col tw-items-center">
                   <span className={style.textContainer}>
-                    <Tag type={getStatusSeverity("active")}>active</Tag>
+                    <Tag type={getStatusSeverity(profile.status)}>active</Tag>
                   </span>
                   <span className={style.textContainer}>
-                    <ProfileProviders provider={"instagram"} />
+                    <ProfileProviders provider={profile.provider} />
                   </span>
                   <span className={style.textContainer}>
-                    <AccountCompletion is_complete={true} />
+                    <AccountCompletion is_complete={profile.is_complete} />
                   </span>
                 </div>
               </div>
             </div>
             <div className="tw-flex text-white">
               <div className={style.tab + " bg-primary"}>
-                <span>10</span>
+                <span>{profile.posts_count}</span>
                 <span>Posts</span>
               </div>
               <div className={style.tab + " bg-primary"}>
-                <span>1.5K</span>
+                <span>{profile.followers_count}</span>
                 <span>Followers</span>
               </div>
               <div className={style.tab + " bg-primary"}>
-                <span>55</span>
+                <span>{profile.following_count}</span>
                 <span>Following</span>
               </div>
             </div>
@@ -89,12 +118,7 @@ export default function Profile() {
         </div>
         <div className="p-2">
           <span className={style.label}>Bio: </span>
-          <span>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis harum
-            qui nam reiciendis temporibus illo, eum dicta facere animi explicabo
-            voluptatum fugiat. Atque est adipisci dolor ullam, facere nam
-            dolore?
-          </span>
+          <span>{profile.bio}</span>
         </div>
       </div>
 
