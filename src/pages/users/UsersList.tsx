@@ -2,49 +2,43 @@ import { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
-import { dummydata } from "./dummy_data";
 import { getDate } from "../../utils/time";
 import { Menu } from "primereact/menu";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
 import { profileTemplate } from "./components/ui/ProfileTemplate";
 import { profileProviderTemplate } from "./components/ui/ProfileProviderTemplate";
-import {
-  statusBodyTemplate,
-  statusFilterTemplate,
-} from "./components/ui/StatusBodyTemplate";
+import { statusBodyTemplate } from "./components/ui/StatusBodyTemplate";
 import { profileCompletionTemplate } from "./components/ui/ProfileCompletionTemplate";
-import SearchHeader from "../../components/SearchHeader";
 import UsersTableFilters from "./components/container/UsersTableFilters";
 import { statuses } from "./data/data";
 import { get } from "../../services/api";
 
 export default function UsersList() {
   const [tableLoading, setTableLoading] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState<any[]>([]);
-  const [rowsNum, setRowsNum] = useState(10);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
   const [newStatus, setNewStatus] = useState<any>();
   const [total, setTotal] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(2);
   const [page, setPage] = useState(0);
+  const [query, setQuery] = useState<any>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // setUsers(dummydata);
-    fetchUsers();
+    fetchUsers(page, limit, {});
   }, []);
 
   const filterTable = (query: any) => {
-    fetchUsers(1, query);
+    setQuery(query);
+    fetchUsers(0, limit, query);
   };
 
-  const fetchUsers = (pageNum?: number, query?: any) => {
+  const fetchUsers = (page: number, limit: number, query: any) => {
     let queryParams = {
-      page: pageNum ? (pageNum < 1 ? 1 : pageNum) : page + 1,
-      limit,
+      page: page + 1,
+      limit: limit,
     };
 
     if (query) queryParams = { ...queryParams, ...query };
@@ -62,6 +56,10 @@ export default function UsersList() {
         console.log(e);
         setTableLoading(false);
       });
+  };
+
+  const onPageChange = (event: any) => {
+    fetchUsers(event.page, event.rows, query);
   };
 
   const dateTemplate = (dateStr: string) => {
@@ -141,12 +139,16 @@ export default function UsersList() {
   return (
     <div className="card">
       {/* Table */}
-
       <DataTable
         loading={tableLoading}
         value={users}
         paginator
-        rows={rowsNum}
+        rows={limit}
+        totalRecords={total}
+        lazy={true}
+        first={(page - 1) * limit}
+        rowsPerPageOptions={[2, 5, 10, 25, 50]}
+        onPage={onPageChange}
         header={<UsersTableFilters filterTable={filterTable} />}
         selectionMode="single"
         emptyMessage="No users found."
@@ -165,35 +167,23 @@ export default function UsersList() {
           header="Profile Provider"
           body={profileProviderTemplate}
           sortable
-          filter
-          filterElement={statusFilterTemplate}
-          filterMenuStyle={{ width: "14rem" }}
         ></Column>
         <Column
           header="Profile Completion"
           body={profileCompletionTemplate}
           sortable
-          filter
-          filterElement={statusFilterTemplate}
-          filterMenuStyle={{ width: "14rem" }}
         ></Column>
         <Column
           field="status"
           header="Status"
           body={statusBodyTemplate}
           sortable
-          filter
-          filterElement={statusFilterTemplate}
-          filterMenuStyle={{ width: "14rem" }}
         ></Column>
         <Column
           field="createdAt"
           header="Joined In"
           body={(row) => dateTemplate(row.createdAt)}
           sortable
-          filter
-          filterElement={statusFilterTemplate}
-          filterMenuStyle={{ width: "14rem" }}
         ></Column>
         <Column header="Actions" body={actionButtons}></Column>
       </DataTable>
