@@ -17,9 +17,9 @@ export default function TruncatedText({
 
   return (
     <div>
-      <p>
+      <div>
         {truncatedText} {isTruncated && text.length > maxLength && "..."}
-      </p>
+      </div>
       {text.length > maxLength && (
         <button className="btn btn-secondary btn-sm" onClick={toggleTruncate}>
           {isTruncated ? "Read More" : "Read Less"}

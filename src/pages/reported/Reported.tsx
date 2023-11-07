@@ -7,7 +7,7 @@ import { getDate } from "../../utils/time";
 import { Menu } from "primereact/menu";
 import TruncatedText from "../../components/TurncatedText";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
-import { get } from "../../services/api";
+import { create, get } from "../../services/api";
 import { toast } from "react-toastify";
 import ReportTypesSelector from "./components/ui/ReportTypesSelector";
 
@@ -21,6 +21,7 @@ export default function Reported() {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [query, setQuery] = useState<any>({ status: "pending" });
+  const [newStatus, setNewStatus] = useState<"resolved" | "ignored">();
   const actionBtnRef = useRef<any>();
   const navigate = useNavigate();
 
@@ -32,14 +33,16 @@ export default function Reported() {
           label: "Remove Post",
           icon: "bi bi-x-circle",
           command: () => {
+            setNewStatus("resolved");
             setShowModal(true);
           },
         },
         {
-          label: "Ignore",
+          label: "Ignore Report",
           icon: "bi bi-check-circle",
           command: () => {
-            // setShowModal(true);
+            setNewStatus("ignored");
+            setShowModal(true);
           },
         },
       ],
@@ -133,8 +136,62 @@ export default function Reported() {
   };
 
   const dialogConfirmed = () => {
-    console.log("remove post", selectedReport);
+    switch (newStatus) {
+      case "resolved":
+        resolveReport(selectedReport._id);
+        break;
+      case "ignored":
+        ignoreReport(selectedReport._id);
+        break;
+    }
     closeDialog();
+  };
+
+  const resolveReport = (id: string) => {
+    setTableLoading(true);
+    create("report/remove/" + id, {})
+      .then((res) => {
+        toast.success(res.message);
+        removeReport(selectedReport._id);
+        setTableLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! failed to remove post"
+        );
+        setTableLoading(false);
+      });
+  };
+
+  const ignoreReport = (id: string) => {
+    setTableLoading(true);
+    create("report/ignore/" + id, {})
+      .then((res) => {
+        toast.success(res.message);
+        removeReport(selectedReport._id);
+        setTableLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! failed to update report"
+        );
+        setTableLoading(false);
+      });
+  };
+
+  const removeReport = (id: string) => {
+    const reportsCopy: any = [];
+
+    for (let i = 0; i < reports.length; i++) {
+      if (reports[i]._id !== id) {
+        reportsCopy.push(reports[i]);
+      }
+    }
+
+    setReports(reportsCopy);
+    setSelectedReport(null);
   };
 
   return (
@@ -153,7 +210,7 @@ export default function Reported() {
         onPage={onPageChange}
         header={<ReportTypesSelector status={status} setFilter={setFilter} />}
         selectionMode="single"
-        emptyMessage="No users found."
+        emptyMessage="No reports found."
         tableStyle={{ minWidth: "50rem" }}
       >
         <Column
@@ -171,13 +228,16 @@ export default function Reported() {
           //   body={LongTextTemplate}
           sortable
         ></Column>
+        <Column field="status" header="Status" sortable></Column>
         <Column
           field="createdAt"
           header="Reported On"
           body={(row) => getDate(row.createdAt)}
           sortable
         ></Column>
-        <Column header="Actions" body={actionButtons}></Column>
+        {status === "pending" && (
+          <Column header="Actions" body={actionButtons}></Column>
+        )}
       </DataTable>
 
       {/* Modal */}
