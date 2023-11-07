@@ -11,16 +11,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getName } from "../../utils/getName";
 import { getDate } from "../../utils/time";
 import { Skeleton } from "primereact/skeleton";
+import { env } from "../../utils/env";
+import BlinkingLoadingCircles from "../../components/BlinkingLoadingCircles";
 
 export default function Profile() {
   const [profile, setProfileData] = useState<any>(null);
   const [pageLoading, setPageLoading] = useState(true);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [lastDate, setLastDate] = useState();
+  const [lastPostId, setLastPostId] = useState();
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [noMorePosts, setNoMorePosts] = useState(false);
   const params = useParams();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (params.userId) fetchProfileInfo(params.userId);
+    if (params.userId) {
+      fetchProfileInfo(params.userId);
+      fetchPosts();
+    }
   }, []);
 
   const fetchProfileInfo = (id: string) => {
@@ -35,11 +45,46 @@ export default function Profile() {
       });
   };
 
+  const fetchPosts = () => {
+    setPostsLoading(true);
+    const pageSize = 15;
+    return get("post/timeline/" + params.userId, {
+      pageSize,
+      lastDate,
+      lastPostId,
+    })
+      .then((res) => {
+        if (res.data.length === 0 || res.data.length < pageSize) {
+          setPostsLoading(false);
+          setNoMorePosts(true);
+        }
+        const photos = res.data.map((data: any) => {
+          if (data.media.length > 0) {
+            const media = data.media[0];
+            if (media?.type === "video") {
+              data.src = `${env.VITE_API_URL}/media/${media?.thumbnail?.filename}`;
+            } else {
+              data.src = `${env.VITE_API_URL}/media/${media?.filename}`;
+            }
+          }
+          return data;
+        });
+        setPosts((p) => [...p, ...photos]);
+        setLastDate(res.lastDate);
+        setLastPostId(res.lastPostId);
+        setPostsLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setPostsLoading(false);
+      });
+  };
+
   if (pageLoading) {
     return (
       <>
         <div className="tw-flex tw-gap-5">
-          <Skeleton className="!tw-block !tw-w-[150px] !tw-h-[150px] tw-rounded-[50%]"/>
+          <Skeleton className="!tw-block !tw-w-[150px] !tw-h-[150px] tw-rounded-[50%]" />
           <Skeleton className="!tw-h-[150px]" />
         </div>
       </>
@@ -138,22 +183,22 @@ export default function Profile() {
         <hr />
         <section className="section tw-py-2">
           <div className="row">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((val: any, i: number) => (
+            {posts.map((post: any, i: number) => (
               <div
                 key={i}
                 className="col-lg-6"
                 style={{ cursor: "pointer" }}
-                onClick={() => navigate("post/" + val)}
+                onClick={() => navigate("post/" + post._id)}
               >
                 <div className="card">
                   <div className="card-body tw-h-[200px] !tw-p-0">
                     <img
-                      src="https://xsgames.co/randomusers/avatar.php?g=male"
+                      src={post.src}
                       alt=""
                       style={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "scale-down",
+                        objectFit: "cover",
                       }}
                     />
                   </div>
@@ -162,12 +207,18 @@ export default function Profile() {
             ))}
           </div>
         </section>
-        <div className="tw-flex tw-justify-center">
-          <button className="btn btn-primary tw-w-full tw-max-w-[500px]">
-            <i className="bi bi-arrow-clockwise tw-mr-2 tw-text-lg"></i>
-            <span>Show More</span>
-          </button>
-        </div>
+        {!noMorePosts && !postsLoading && (
+          <div className="tw-flex tw-justify-center">
+            <button
+              onClick={fetchPosts}
+              className="btn btn-primary tw-w-full tw-max-w-[500px]"
+            >
+              <i className="bi bi-arrow-clockwise tw-mr-2 tw-text-lg"></i>
+              <span>Show More</span>
+            </button>
+          </div>
+        )}
+        {postsLoading && <BlinkingLoadingCircles />}
       </div>
     </>
   );
