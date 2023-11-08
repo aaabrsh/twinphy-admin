@@ -243,7 +243,11 @@ export default function Reported() {
       {/* Modal */}
       <ConfirmationDialog
         show={showModal}
-        header={"Do you want to remove the reported post"}
+        header={
+          newStatus === "resolved"
+            ? "Do you want to remove the reported post"
+            : "Would you like to take no action on the reported post"
+        }
         onClose={closeDialog}
         onConfirmed={dialogConfirmed}
       />

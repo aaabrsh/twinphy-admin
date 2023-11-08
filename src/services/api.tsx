@@ -43,7 +43,7 @@ export const update = async (url: string, data: any) => {
 
 export const remove = async (url: string) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/${url}/`, {
+    const response = await axios.delete(`${BASE_URL}/${url}`, {
       withCredentials: true,
     });
     return response.data;

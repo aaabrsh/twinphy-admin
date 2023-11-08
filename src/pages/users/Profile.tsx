@@ -49,7 +49,7 @@ export default function Profile() {
   const fetchPosts = () => {
     setPostsLoading(true);
     const pageSize = 15;
-    return get("post/timeline/" + params.userId, {
+    return get("post/userPosts/" + params.userId, {
       pageSize,
       lastDate,
       lastPostId,
@@ -148,13 +148,13 @@ export default function Profile() {
                 </div>
                 <div className="tw-flex tw-flex-col tw-items-center">
                   <span className={style.textContainer}>
-                    <Tag type={getStatusSeverity(profile.status)}>active</Tag>
+                    <Tag type={getStatusSeverity(profile.status ?? "")}>active</Tag>
                   </span>
                   <span className={style.textContainer}>
-                    <ProfileProviders provider={profile.provider} />
+                    <ProfileProviders provider={profile.provider ?? ""} />
                   </span>
                   <span className={style.textContainer}>
-                    <AccountCompletion is_complete={profile.is_complete} />
+                    <AccountCompletion is_complete={profile?.is_complete ?? ""} />
                   </span>
                 </div>
               </div>
@@ -193,7 +193,7 @@ export default function Profile() {
             {posts.map((post: any, i: number) => (
               <div
                 key={i}
-                className="col-lg-6"
+                className="col-md-4"
                 style={{ cursor: "pointer" }}
                 onClick={() => navigate("post/" + post._id)}
               >
