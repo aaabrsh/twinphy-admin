@@ -5,6 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Menu } from "primereact/menu";
 import timeAgo from "../../../../utils/time";
 import ConfirmationDialog from "../../../../components/ConfirmationDialog";
+import { remove } from "../../../../services/api";
+import { toast } from "react-toastify";
+import { useCommentsStore, usePostStore } from "../../../../store/store";
 
 interface PostContainerProps {
   feed: any[];
@@ -19,7 +22,12 @@ export default function PostsContainer({ feed }: PostContainerProps) {
   const actionRef = useRef<any>();
   const params = useParams();
   const [postId, setPostId] = useState("");
+  const [postRemoved, setPostRemoved] = useState(false);
   const [userId, setUserId] = useState("");
+  const deleteComment = useCommentsStore((state) => state.deleteComment);
+  const decrementCommentsCount = usePostStore(
+    (state) => state.decrementCommentsCount
+  );
 
   useEffect(() => {
     setUserId(params.userId ?? "");
@@ -63,16 +71,37 @@ export default function PostsContainer({ feed }: PostContainerProps) {
   };
 
   const removePost = (id: string) => {
-    console.log("remove post clicked", id);
+    remove("post/remove/" + id)
+      .then((res) => {
+        toast.success(res.message ?? "post removed");
+        setPostRemoved(true);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! couldn't remove post"
+        );
+      });
   };
 
   const removeComment = (id: string) => {
-    console.log("remove comment clicked", id);
+    remove("comment/remove/" + postId + "/" + id)
+      .then((res) => {
+        toast.success(res.message ?? "comment removed");
+        deleteComment(id);
+        decrementCommentsCount(postId);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! couldn't remove post"
+        );
+      });
   };
 
   const closeDialog = () => {
-    setObjectToDelete(undefined);
     setConfirmationDialog(false);
+    setObjectToDelete(undefined);
   };
 
   return (
@@ -114,17 +143,29 @@ export default function PostsContainer({ feed }: PostContainerProps) {
                 </div>
               </div>
               <div className="tw-flex tw-items-center tw-mr-4">
-                <Menu model={actions} popup ref={actionRef} className="" />
-                <button
-                  style={{ cursor: "pointer" }}
-                  className="btn dark-blue !tw-font-bold btn-md !tw-py-2"
-                  onClick={(event) => {
-                    actionRef.current.toggle(event);
-                  }}
-                >
-                  <i className="bi bi-arrow-down-circle tw-mr-1"></i>
-                  <span>Actions</span>
-                </button>
+                {!postRemoved && !post.is_deleted ? (
+                  <>
+                    <Menu model={actions} popup ref={actionRef} className="" />
+                    <button
+                      style={{ cursor: "pointer" }}
+                      className="btn dark-blue !tw-font-bold btn-md !tw-py-2"
+                      onClick={(event) => {
+                        actionRef.current.toggle(event);
+                      }}
+                    >
+                      <i className="bi bi-arrow-down-circle tw-mr-1"></i>
+                      <span>Actions</span>
+                    </button>
+                  </>
+                ) : (
+                  <div
+                    style={{ cursor: "pointer" }}
+                    className="btn btn-danger-outline !tw-text-red-600 !tw-border-red-600 !tw-font-bold btn-md !tw-py-2"
+                  >
+                    <i className="bi bi-x-octagon tw-mr-1"></i>
+                    <span>Post Removed</span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="tw-flex md:tw-gap-3 tw-min-h-[500px] tw-max-h-[650px] tw-flex-col md:tw-flex-row">
