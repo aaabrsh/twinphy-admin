@@ -4,6 +4,7 @@ import PostsContainer from "./components/container/PostsContainer";
 import { usePostStore } from "../../store/store";
 import { get } from "../../services/api";
 import { Skeleton } from "primereact/skeleton";
+import { toast } from "react-toastify";
 
 export default function Post() {
   const posts = usePostStore((state) => state.posts);
@@ -28,6 +29,7 @@ export default function Post() {
       })
       .catch((e) => {
         console.log(e);
+        toast.error(e?.response?.data?.message ?? "Error! Post Not Found");
         setPageLoading(false);
       });
   };
@@ -46,6 +48,21 @@ export default function Post() {
           <Skeleton className="!tw-h-full !tw-w-full !md:tw-w-[70%]" />
           <Skeleton className="!tw-h-full !tw-w-[30%] tw-hidden md:tw-block" />
         </div>
+      </div>
+    );
+  }
+
+  if (posts.length < 1) {
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-flex-col tw-bg-zinc-200 tw-rounded-2xl tw-w-full">
+        <img
+          src="/assets/img/not-found.svg"
+          className="img-fluid py-5"
+          style={{ width: "300px", height: "300px" }}
+        />
+        <span className="dark-blue tw-opacity-80 tw-pb-10 tw-font-bold tw-text-3xl">
+          No Post Found
+        </span>
       </div>
     );
   }
