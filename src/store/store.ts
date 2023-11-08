@@ -9,6 +9,19 @@ export const usePostStore = create<PostState>((set) => ({
   addToFeed: (posts: PostState["posts"]) =>
     set((state) => ({ posts: [...state.posts, ...posts] })),
 
+  decrementCommentsCount: (id: string) =>
+    set(({ posts }) => {
+      const postsCopy = posts.map((post) => {
+        if (post._id === id) {
+          post.comments_count =
+            post.comments_count > 0 ? post.comments_count - 1 : 0;
+        }
+        return post;
+      });
+
+      return { posts: postsCopy };
+    }),
+
   clearPosts: () => set({ posts: [] }),
 }));
 
@@ -55,6 +68,20 @@ export const useCommentsStore = create<CommentState>((set) => ({
       });
 
       return { comments: commentsCopy, commentsHash: updatedHash };
+    }),
+
+  deleteComment: (id: string) =>
+    set(({ comments }) => {
+      const newComments = [];
+
+      for (let i = 0; i < comments.length; i++) {
+        if (comments[i]._id === id) {
+          continue;
+        }
+        newComments.push(comments[i]);
+      }
+
+      return { comments: newComments };
     }),
 
   clearComments: () => set({ comments: [], commentsHash: {} }),
