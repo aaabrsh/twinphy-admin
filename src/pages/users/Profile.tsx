@@ -84,10 +84,27 @@ export default function Profile() {
     return (
       <>
         <div className="tw-flex tw-gap-5">
-          <Skeleton className="!tw-block !tw-w-[150px] !tw-h-[150px] tw-rounded-[50%]" />
-          <Skeleton className="!tw-h-[150px]" />
+          <Skeleton className="!tw-w-[150px] !tw-h-[150px] tw-rounded-[50%]" />
+          <div className=" tw-h-full tw-flex-grow">
+            <Skeleton className="!tw-h-full" />
+          </div>
         </div>
       </>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-flex-col tw-bg-zinc-200 tw-rounded-2xl tw-w-full">
+        <img
+          src="/assets/img/not-found.svg"
+          className="img-fluid py-5"
+          style={{ width: "300px", height: "300px" }}
+        />
+        <span className="dark-blue tw-opacity-80 tw-pb-10 tw-font-bold tw-text-3xl">
+          User Not Found
+        </span>
+      </div>
     );
   }
 
