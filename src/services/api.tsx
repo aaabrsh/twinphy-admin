@@ -1,5 +1,6 @@
 import axios from "axios";
 import { env } from "../utils/env";
+import { toast } from "react-toastify";
 
 const BASE_URL = env.VITE_API_URL;
 
@@ -11,7 +12,7 @@ export const get = async (url: string, params?: any) => {
     );
     return response.data;
   } catch (error: any) {
-    handleStatusCodes(error.response.status);
+    handleStatusCodes(error);
     throw error;
   }
 };
@@ -23,7 +24,7 @@ export const create = async (url: string, data: any) => {
     });
     return response.data;
   } catch (error: any) {
-    handleStatusCodes(error.response.status);
+    handleStatusCodes(error);
     throw error;
   }
 };
@@ -35,7 +36,7 @@ export const update = async (url: string, data: any) => {
     });
     return response.data;
   } catch (error: any) {
-    handleStatusCodes(error.response.status);
+    handleStatusCodes(error);
     throw error;
   }
 };
@@ -47,7 +48,7 @@ export const remove = async (url: string) => {
     });
     return response.data;
   } catch (error: any) {
-    handleStatusCodes(error.response.status);
+    handleStatusCodes(error);
     throw error;
   }
 };
@@ -67,13 +68,17 @@ export const upload = async (
     });
     return response.data;
   } catch (error: any) {
-    handleStatusCodes(error.response.status);
+    handleStatusCodes(error);
     throw error;
   }
 };
 
-function handleStatusCodes(status: number) {
-  switch (status) {
+function handleStatusCodes(error: any) {
+  if (!error.response) {
+    return toast.error("couldn't connect with the server!");
+  }
+
+  switch (error.response.status) {
     case 401:
       window.location.replace("/auth/login");
   }
