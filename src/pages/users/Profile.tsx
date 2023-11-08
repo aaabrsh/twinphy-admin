@@ -13,6 +13,7 @@ import { getDate } from "../../utils/time";
 import { Skeleton } from "primereact/skeleton";
 import { env } from "../../utils/env";
 import BlinkingLoadingCircles from "../../components/BlinkingLoadingCircles";
+import NotFoundMessage from "../../components/NotFoundMessage";
 
 export default function Profile() {
   const [profile, setProfileData] = useState<any>(null);
@@ -94,18 +95,7 @@ export default function Profile() {
   }
 
   if (!profile) {
-    return (
-      <div className="tw-flex tw-justify-center tw-items-center tw-flex-col tw-bg-zinc-200 tw-rounded-2xl tw-w-full">
-        <img
-          src="/assets/img/not-found.svg"
-          className="img-fluid py-5"
-          style={{ width: "300px", height: "300px" }}
-        />
-        <span className="dark-blue tw-opacity-80 tw-pb-10 tw-font-bold tw-text-3xl">
-          User Not Found
-        </span>
-      </div>
-    );
+    return <NotFoundMessage message="User Not Found" />;
   }
 
   return (
