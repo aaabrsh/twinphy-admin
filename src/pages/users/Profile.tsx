@@ -14,6 +14,7 @@ import { Skeleton } from "primereact/skeleton";
 import { env } from "../../utils/env";
 import BlinkingLoadingCircles from "../../components/BlinkingLoadingCircles";
 import NotFoundMessage from "../../components/NotFoundMessage";
+import { formatNumber } from "../../utils/number-formatting";
 
 export default function Profile() {
   const [profile, setProfileData] = useState<any>(null);
@@ -161,15 +162,15 @@ export default function Profile() {
             </div>
             <div className="tw-flex text-white">
               <div className={style.tab + " bg-primary"}>
-                <span>{profile.posts_count}</span>
+                <span>{formatNumber(profile.posts_count)}</span>
                 <span>Posts</span>
               </div>
               <div className={style.tab + " bg-primary"}>
-                <span>{profile.followers_count}</span>
+                <span>{formatNumber(profile.followers_count)}</span>
                 <span>Followers</span>
               </div>
               <div className={style.tab + " bg-primary"}>
-                <span>{profile.following_count}</span>
+                <span>{formatNumber(profile.following_count)}</span>
                 <span>Following</span>
               </div>
             </div>
