@@ -11,10 +11,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getName } from "../../utils/getName";
 import { getDate } from "../../utils/time";
 import { Skeleton } from "primereact/skeleton";
-import { env } from "../../utils/env";
 import BlinkingLoadingCircles from "../../components/BlinkingLoadingCircles";
 import NotFoundMessage from "../../components/NotFoundMessage";
 import { formatNumber } from "../../utils/number-formatting";
+import {
+  defaultPost,
+  defaultThumbnail,
+  formatResourceURL,
+  handlePostImageError,
+  handleProfileImageError,
+} from "../../utils/asset-paths";
+import PlayBtn from "../../components/PlayBtn";
 
 export default function Profile() {
   const [profile, setProfileData] = useState<any>(null);
@@ -64,9 +71,13 @@ export default function Profile() {
           if (data.media.length > 0) {
             const media = data.media[0];
             if (media?.type === "video") {
-              data.src = `${env.VITE_API_URL}/media/${media?.thumbnail?.filename}`;
+              data.src = media?.thumbnail?.filename
+                ? formatResourceURL(media?.thumbnail?.filename)
+                : null;
             } else {
-              data.src = `${env.VITE_API_URL}/media/${media?.filename}`;
+              data.src = media?.filename
+                ? formatResourceURL(media?.filename)
+                : null;
             }
           }
           return data;
@@ -109,7 +120,8 @@ export default function Profile() {
             style={{ borderRight: "4px solid var(--primary-color)" }}
           >
             <img
-              src={profile.profile_img}
+              src={formatResourceURL(profile.profile_img)}
+              onError={handleProfileImageError}
               alt=""
               className="tw-rounded-[50%]"
               style={{ widows: "150px", height: "150px" }}
@@ -149,13 +161,17 @@ export default function Profile() {
                 </div>
                 <div className="tw-flex tw-flex-col tw-items-center">
                   <span className={style.textContainer}>
-                    <Tag type={getStatusSeverity(profile.status ?? "")}>active</Tag>
+                    <Tag type={getStatusSeverity(profile.status ?? "")}>
+                      active
+                    </Tag>
                   </span>
                   <span className={style.textContainer}>
                     <ProfileProviders provider={profile.provider ?? ""} />
                   </span>
                   <span className={style.textContainer}>
-                    <AccountCompletion is_complete={profile?.is_complete ?? ""} />
+                    <AccountCompletion
+                      is_complete={profile?.is_complete ?? ""}
+                    />
                   </span>
                 </div>
               </div>
@@ -201,7 +217,13 @@ export default function Profile() {
                 <div className="card">
                   <div className="card-body tw-h-[200px] !tw-p-0">
                     <img
-                      src={post.src}
+                      src={
+                        post.src ??
+                        (post.media?.[0]?.type === "video"
+                          ? defaultThumbnail
+                          : defaultPost)
+                      }
+                      onError={handlePostImageError}
                       alt=""
                       style={{
                         width: "100%",
@@ -209,6 +231,7 @@ export default function Profile() {
                         objectFit: "cover",
                       }}
                     />
+                    {post.media?.[0]?.type === "video" && <PlayBtn />}
                   </div>
                 </div>
               </div>

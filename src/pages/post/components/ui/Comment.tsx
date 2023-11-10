@@ -2,6 +2,10 @@ import { Menu } from "primereact/menu";
 import { getName } from "../../../../utils/getName";
 import timeAgo from "../../../../utils/time";
 import { useRef } from "react";
+import {
+  formatResourceURL,
+  handleProfileImageError,
+} from "../../../../utils/asset-paths";
 
 export default function Comment({
   comment,
@@ -33,7 +37,8 @@ export default function Comment({
       <div className="tw-flex tw-py-2">
         <div className="tw-flex tw-gap-2">
           <img
-            src={comment?.author?.profile_img}
+            src={formatResourceURL(comment?.author?.profile_img)}
+            onError={handleProfileImageError}
             alt="/"
             className="tw-rounded-[50%]"
             style={{ width: "30px", height: "30px" }}

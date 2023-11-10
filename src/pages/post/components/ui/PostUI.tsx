@@ -1,4 +1,4 @@
-import { env } from "../../../../utils/env";
+import { formatResourceURL } from "../../../../utils/asset-paths";
 import { formatNumber } from "../../../../utils/number-formatting";
 
 export default function PostUI({ post }: { post: any }) {
@@ -17,7 +17,7 @@ export default function PostUI({ post }: { post: any }) {
                 maxHeight: "600px",
                 objectFit: "contain",
               }}
-              src={`${env.VITE_API_URL}/media/${post.media?.[0]?.filename}`}
+              src={formatResourceURL(post.media?.[0]?.filename)}
               alt="/"
             />
           )}
@@ -25,7 +25,7 @@ export default function PostUI({ post }: { post: any }) {
             <video
               poster={
                 post.media?.[0]?.thumbnail?.filename
-                  ? `${env.VITE_API_URL}/media/${post.media?.[0]?.thumbnail?.filename}`
+                  ? formatResourceURL(post.media?.[0]?.thumbnail?.filename)
                   : undefined
               }
               id="videoPlayer"
@@ -40,7 +40,7 @@ export default function PostUI({ post }: { post: any }) {
               controls
             >
               <source
-                src={`${env.VITE_API_URL}/media/${post.media?.[0]?.filename}`}
+                src={formatResourceURL(post.media?.[0]?.filename)}
                 type={post.media?.[0]?.contentType}
               />
             </video>

@@ -8,6 +8,10 @@ import ConfirmationDialog from "../../../../components/ConfirmationDialog";
 import { remove } from "../../../../services/api";
 import { toast } from "react-toastify";
 import { useCommentsStore, usePostStore } from "../../../../store/store";
+import {
+  formatResourceURL,
+  handleProfileImageError,
+} from "../../../../utils/asset-paths";
 
 interface PostContainerProps {
   feed: any[];
@@ -119,10 +123,10 @@ export default function PostsContainer({ feed }: PostContainerProps) {
                   onClick={() => navigate("/user/" + post.author._id)}
                   style={{ cursor: "pointer" }}
                 >
-                  {/* TODO: add default profile image incase profile image doesn't exist */}
                   <img
                     className="tw-rounded-[50%]"
-                    src={post.author?.profile_img}
+                    src={formatResourceURL(post.author?.profile_img)}
+                    onError={handleProfileImageError}
                     style={{ width: "50px", height: "50px" }}
                     alt="/"
                   />

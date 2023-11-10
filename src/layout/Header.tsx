@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { getUser } from "../services/auth";
 import { getName } from "../utils/getName";
+import {
+  formatResourceURL,
+  handleProfileImageError,
+} from "../utils/asset-paths";
 
 export default function Header() {
   const [currentUser, setCurrentUser] = useState<any>();
@@ -256,7 +260,8 @@ export default function Header() {
                 data-bs-toggle="dropdown"
               >
                 <img
-                  src={currentUser?.profile_img}
+                  src={formatResourceURL(currentUser?.profile_img)}
+                  onError={handleProfileImageError}
                   alt=""
                   className="rounded-circle"
                 />
