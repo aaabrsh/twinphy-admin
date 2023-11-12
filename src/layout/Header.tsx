@@ -19,11 +19,11 @@ export default function Header() {
     );
   };
 
-  const toggleSearchBar = () => {
-    (document.querySelector(".search-bar") as HTMLElement).classList.toggle(
-      "search-bar-show"
-    );
-  };
+  // const toggleSearchBar = () => {
+  //   (document.querySelector(".search-bar") as HTMLElement).classList.toggle(
+  //     "search-bar-show"
+  //   );
+  // };
 
   return (
     <>

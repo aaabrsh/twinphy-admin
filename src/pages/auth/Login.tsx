@@ -3,7 +3,6 @@ import style from "./login.module.css";
 import { create } from "../../services/api";
 import { toast } from "react-toastify";
 import { setUser, setUserId } from "../../services/auth";
-import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +13,6 @@ export default function Login() {
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [apiError, setApiError] = useState();
   const [sendingData, setSendingData] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (emailTouched) validateEmail();

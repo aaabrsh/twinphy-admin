@@ -27,14 +27,12 @@ export default function PostsContainer({ feed }: PostContainerProps) {
   const params = useParams();
   const [postId, setPostId] = useState("");
   const [postRemoved, setPostRemoved] = useState(false);
-  const [userId, setUserId] = useState("");
   const deleteComment = useCommentsStore((state) => state.deleteComment);
   const decrementCommentsCount = usePostStore(
     (state) => state.decrementCommentsCount
   );
 
   useEffect(() => {
-    setUserId(params.userId ?? "");
     setPostId(params.postId ?? "");
   }, []);
 
