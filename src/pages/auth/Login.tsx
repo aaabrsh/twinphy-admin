@@ -87,7 +87,7 @@ export default function Login() {
           setApiError(undefined);
           setUser(res.data);
           setUserId(res.data._id);
-          navigate("/dashboard");
+          window.location.replace("/dashboard");
         } else {
           setApiError(res.message);
         }

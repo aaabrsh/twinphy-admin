@@ -20,6 +20,17 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
 
           {/* Users */}
           <li className="nav-item">
+            <Link
+              className={`nav-link ${
+                activeLinks.includes("user") ? "" : "collapsed"
+              }`}
+              to="/user/list"
+            >
+              <i className="bi bi-people"></i>
+              <span>Users</span>
+            </Link>
+          </li>
+          {/* <li className="nav-item">
             <a
               className={`nav-link ${
                 activeLinks.includes("user") ? "" : "collapsed"
@@ -59,7 +70,7 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
                 </Link>
               </li>
             </ul>
-          </li>
+          </li> */}
 
           {/* Reported Posts */}
           <li className="nav-item">

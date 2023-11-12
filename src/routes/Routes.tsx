@@ -12,13 +12,10 @@ import Post from "../pages/post/Post";
 import Reported from "../pages/reported/Reported";
 
 export default function Router() {
-  // TODO: uncomment the following line after adding auth
-  // let loggedIn = isLoggedIn();
-  let loggedIn = true;
+  let loggedIn = isLoggedIn();
 
   useEffect(() => {
-    // TODO: uncomment the following line after adding auth
-    // loggedIn = isLoggedIn();
+    loggedIn = isLoggedIn();
   }, []);
 
   return (
