@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
-import { getUser } from "../services/auth";
+import { clearAuth, getUser } from "../services/auth";
 import { getName } from "../utils/getName";
 import {
   formatResourceURL,
   handleProfileImageError,
 } from "../utils/asset-paths";
+import { get } from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Header() {
   const [currentUser, setCurrentUser] = useState<any>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentUser(getUser());
@@ -17,6 +21,18 @@ export default function Header() {
     (document.getElementById("root") as HTMLElement).classList.toggle(
       "toggle-sidebar"
     );
+  };
+
+  const logout = () => {
+    clearAuth()
+    get("auth/logout")
+      .then(() => {
+        navigate("/auth/login");
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(e?.response?.data?.message ?? "Error! Couldn't Logout");
+      });
   };
 
   // const toggleSearchBar = () => {
@@ -322,7 +338,8 @@ export default function Header() {
                 <li>
                   <a
                     className="dropdown-item d-flex align-items-center"
-                    href="#"
+                    style={{ cursor: "pointer" }}
+                    onClick={logout}
                   >
                     <i className="bi bi-box-arrow-right"></i>
                     <span>Sign Out</span>
