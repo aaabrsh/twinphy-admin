@@ -6,7 +6,7 @@ export const profileTemplate = (rowData: any) => {
     <div className="flex align-items-center gap-2">
       <img
         alt=""
-        src={formatResourceURL(rowData.profile_img + "as")}
+        src={formatResourceURL(rowData.profile_img)}
         onError={handleProfileImageError}
         className="tw-w-[32px] tw-h-[32px] tw-rounded-[50%] tw-mb-2 tw-block"
       />
