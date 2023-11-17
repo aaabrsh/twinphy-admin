@@ -11,6 +11,7 @@ export default function UsersTableFilters({
 }) {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [provider, setProvider] = useState("");
@@ -20,6 +21,7 @@ export default function UsersTableFilters({
   const clearFilters = () => {
     setFirstName("");
     setLastName("");
+    setUsername("");
     setEmail("");
     setWhatsapp("");
     setProvider("");
@@ -27,7 +29,7 @@ export default function UsersTableFilters({
     setIsComplete("");
     setStatus("");
 
-    filterTable()
+    filterTable();
   };
 
   const onFilterClick = () => {
@@ -38,6 +40,10 @@ export default function UsersTableFilters({
 
     if (last_name) {
       query.last_name = last_name;
+    }
+
+    if (username) {
+      query.username = username;
     }
 
     if (email) {
@@ -86,6 +92,17 @@ export default function UsersTableFilters({
             className={last_name ? "tw-border-[#4154f1]" : ""}
           />
           <label htmlFor="last_name">Last Name</label>
+        </span>
+
+        {/* Username */}
+        <span className="p-float-label tw-mt-5">
+          <InputText
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className={username ? "tw-border-[#4154f1]" : ""}
+          />
+          <label htmlFor="username">Username</label>
         </span>
 
         {/* Email */}

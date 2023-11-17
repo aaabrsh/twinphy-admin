@@ -192,6 +192,12 @@ export default function UsersList() {
           sortable
           sortField="first_name"
         ></Column>
+        <Column
+          field="username"
+          header="Username"
+          body={(data) => <>@{data.username}</>}
+          sortable
+        ></Column>
         <Column field="email" header="Email" sortable></Column>
         <Column field="whatsapp" header="WhatsApp" sortable></Column>
         <Column
