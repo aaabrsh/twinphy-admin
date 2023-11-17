@@ -56,7 +56,7 @@ export default function Reported() {
           command: () => {
             navigate(
               "/user/" +
-                selectedReport.reported_by._id +
+                selectedReport.reported_by.username +
                 "/post/" +
                 selectedReport.post
             );

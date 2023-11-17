@@ -93,7 +93,7 @@ export default function UsersList() {
           label: "View Profile",
           icon: "bi bi-person-circle",
           command: () => {
-            navigate("/user/" + selectedUser._id);
+            navigate("/user/" + selectedUser.username);
           },
         },
       ],
