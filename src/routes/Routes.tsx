@@ -10,6 +10,7 @@ import UsersList from "../pages/users/UsersList";
 import Profile from "../pages/users/Profile";
 import Post from "../pages/post/Post";
 import Reported from "../pages/reported/Reported";
+import StaticPages from "../pages/static pages/StaticPages";
 
 export default function Router() {
   let loggedIn = isLoggedIn();
@@ -57,7 +58,7 @@ export default function Router() {
                 }
               />
               <Route
-                path="/user/:userId"
+                path="/user/:username"
                 element={
                   <Layout
                     breadcrumb={breadcrumb.profile}
@@ -68,7 +69,7 @@ export default function Router() {
                 }
               />
               <Route
-                path="/user/:userId/post/:postId"
+                path="/user/:username/post/:postId"
                 element={
                   <Layout
                     breadcrumb={breadcrumb.post}
@@ -86,6 +87,28 @@ export default function Router() {
                     activeLinks={["report"]}
                   >
                     <Reported />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/static-page/privacy-policy"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.privacyPolicy}
+                    activeLinks={["static-pages", "privacy-policy"]}
+                  >
+                    <StaticPages pageKey="privacy-policy" />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/static-page/terms-and-conditions"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.termsAndConditions}
+                    activeLinks={["static-pages", "terms-and-conditions"]}
+                  >
+                    <StaticPages pageKey="terms-and-conditions" />
                   </Layout>
                 }
               />

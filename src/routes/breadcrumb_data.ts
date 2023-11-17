@@ -37,4 +37,20 @@ export const breadcrumb = {
       { isLink: false, text: "Reported" },
     ],
   },
+  privacyPolicy: {
+    title: "Privacy Policy",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Static pages" },
+      { isLink: false, text: "Privacy Policy" },
+    ],
+  },
+  termsAndConditions: {
+    title: "Terms and Conditions",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Static pages" },
+      { isLink: false, text: "Terms and Conditions" },
+    ],
+  },
 };

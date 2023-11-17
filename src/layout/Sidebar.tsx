@@ -86,6 +86,49 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
           </li>
 
           {/* <li className="nav-heading">Pages</li> */}
+          <li className="nav-item">
+            <a
+              className={`nav-link ${
+                activeLinks.includes("static-pages") ? "" : "collapsed"
+              }`}
+              data-bs-target="#static-pages-nav"
+              data-bs-toggle="collapse"
+            >
+              <i className="bi bi-file-earmark"></i>
+              <span>Static Pages</span>
+              <i className="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul
+              id="static-pages-nav"
+              className={`nav-content ${
+                activeLinks.includes("static-pages") ? "show" : "collapse"
+              }`}
+              data-bs-parent="#sidebar-nav"
+            >
+              <li>
+                <Link
+                  to="/static-page/privacy-policy"
+                  className={`${
+                    activeLinks.includes("privacy-policy") ? "active" : ""
+                  }`}
+                >
+                  <i className="bi bi-circle"></i>
+                  <span>Privacy Policy</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/static-page/terms-and-conditions"
+                  className={`${
+                    activeLinks.includes("terms-and-conditions") ? "active" : ""
+                  }`}
+                >
+                  <i className="bi bi-circle"></i>
+                  <span>Terms and Conditions</span>
+                </Link>
+              </li>
+            </ul>
+          </li>
         </ul>
       </aside>
     </>
