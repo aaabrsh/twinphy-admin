@@ -36,8 +36,8 @@ export default function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (params.userId) {
-      fetchProfileInfo(params.userId);
+    if (params.username) {
+      fetchProfileInfo(params.username);
       fetchPosts();
     }
   }, []);
@@ -57,7 +57,7 @@ export default function Profile() {
   const fetchPosts = () => {
     setPostsLoading(true);
     const pageSize = 15;
-    return get("post/userPosts/" + params.userId, {
+    return get("post/userPosts/" + params.username, {
       pageSize,
       lastDate,
       lastPostId,
@@ -91,6 +91,28 @@ export default function Profile() {
         console.log(e);
         setPostsLoading(false);
       });
+  };
+
+  const getAddress = (address: any) => {
+    let res = "";
+
+    if (address.country) {
+      res += address.country;
+    }
+
+    if (address.state) {
+      res += ", " + address.state;
+    }
+
+    if (address.city) {
+      res += ", " + address.city;
+    }
+
+    if (address.address_line) {
+      res += ", " + address.address_line;
+    }
+
+    return res.trim();
   };
 
   if (pageLoading) {
@@ -195,6 +217,10 @@ export default function Profile() {
         <div className="p-2">
           <span className={style.label}>Bio: </span>
           <span>{profile.bio}</span>
+        </div>
+        <div className="p-2">
+          <span className={style.label}>Address: </span>
+          <span>{getAddress(profile.address)}</span>
         </div>
       </div>
 
