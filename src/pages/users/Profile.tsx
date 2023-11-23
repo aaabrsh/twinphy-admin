@@ -22,6 +22,7 @@ import {
   handleProfileImageError,
 } from "../../utils/asset-paths";
 import PlayBtn from "../../components/PlayBtn";
+import SocialMediaLinks from "./components/ui/SocialMediaLinks";
 
 export default function Profile() {
   const [profile, setProfileData] = useState<any>(null);
@@ -221,6 +222,9 @@ export default function Profile() {
         <div className="p-2">
           <span className={style.label}>Address: </span>
           <span>{getAddress(profile.address)}</span>
+        </div>
+        <div className="w-100 d-flex justify-content-center">
+          <SocialMediaLinks social_links={profile.social_links} />
         </div>
       </div>
 

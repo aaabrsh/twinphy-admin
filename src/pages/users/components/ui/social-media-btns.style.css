@@ -1,0 +1,63 @@
+.btn-icon {
+  width: 40px !important;
+  min-width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.btn {
+  transform: scale(1);
+  transition: transform 0.3s ease !important;
+}
+
+.btn:hover {
+  transform: scale(1.15);
+}
+
+.btn-facebook {
+  background: #3b5998 !important;
+  border-color: #3b5998 !important;
+  color: #fff !important;
+}
+
+.btn-twitter {
+  background: #1da1f2 !important;
+  border-color: #1da1f2 !important;
+  color: #fff !important;
+}
+
+.btn-linkedin {
+  background: #007bb6 !important;
+  border-color: #007bb6 !important;
+  color: #fff !important;
+}
+
+.btn-whatsapp {
+  background: #25d366 !important;
+  border-color: #25d366 !important;
+  color: #fff !important;
+}
+
+.btn-snapchat {
+  background: #fffc00 !important;
+  border-color: #000 !important;
+  color: #000 !important;
+}
+.btn-snapchat-svg {
+  color: #fff;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-instagram {
+  background: #c13584 !important;
+  border-color: #c13584 !important;
+  color: #fff !important;
+}
