@@ -9,12 +9,12 @@
   align-items: center !important;
 }
 
-.btn {
+.btn-social {
   transform: scale(1);
   transition: transform 0.3s ease !important;
 }
 
-.btn:hover {
+.btn-social:hover {
   transform: scale(1.15);
 }
 

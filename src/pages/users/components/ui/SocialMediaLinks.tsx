@@ -20,7 +20,7 @@ export default function SocialMediaLinks({
             <a
               href={social_links.facebook}
               target="_blank"
-              className="mb-2 me-2 btn btn-icon btn-facebook"
+              className="mb-2 me-2 btn-social btn btn-icon btn-facebook"
             >
               <i style={{ lineHeight: "0px" }} className="bi bi-facebook"></i>
             </a>
@@ -31,7 +31,7 @@ export default function SocialMediaLinks({
             <a
               href={social_links.instagram}
               target="_blank"
-              className="mb-2 me-2 btn btn-icon btn-instagram"
+              className="mb-2 me-2 btn-social btn btn-icon btn-instagram"
             >
               <i style={{ lineHeight: "0px" }} className="bi bi-instagram"></i>
             </a>
@@ -42,7 +42,7 @@ export default function SocialMediaLinks({
             <a
               href={social_links.twitter}
               target="_blank"
-              className="mb-2 me-2 btn btn-icon btn-twitter"
+              className="mb-2 me-2 btn-social btn btn-icon btn-twitter"
             >
               <i style={{ lineHeight: "0px" }} className="bi bi-twitter"></i>
             </a>
@@ -53,7 +53,7 @@ export default function SocialMediaLinks({
             <a
               href={social_links.snapchat}
               target="_blank"
-              className="mb-2 me-2 btn btn-icon btn-snapchat"
+              className="mb-2 me-2 btn-social btn btn-icon btn-snapchat"
               style={{
                 display: "flex",
                 justifyContent: "center",
@@ -78,7 +78,7 @@ export default function SocialMediaLinks({
             <a
               href={social_links.linkedin}
               target="_blank"
-              className="mb-2 me-2 btn btn-icon btn-linkedin"
+              className="mb-2 me-2 btn-social btn btn-icon btn-linkedin"
             >
               <i style={{ lineHeight: "0px" }} className="bi bi-linkedin"></i>
             </a>
@@ -89,7 +89,7 @@ export default function SocialMediaLinks({
             <a
               href={social_links.whatsapp}
               target="_blank"
-              className="mb-2 me-2 btn btn-icon btn-whatsapp"
+              className="mb-2 me-2 btn-social btn btn-icon btn-whatsapp"
             >
               <i style={{ lineHeight: "0px" }} className="bi bi-whatsapp"></i>
             </a>
