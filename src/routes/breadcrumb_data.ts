@@ -53,4 +53,18 @@ export const breadcrumb = {
       { isLink: false, text: "Terms and Conditions" },
     ],
   },
+  competition: {
+    title: "Competitions",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Competitions" },
+    ],
+  },
+  competition_posts: {
+    title: "Competition Posts",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Competition Posts" },
+    ],
+  },
 };

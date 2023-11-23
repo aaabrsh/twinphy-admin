@@ -11,6 +11,8 @@ import Profile from "../pages/users/Profile";
 import Post from "../pages/post/Post";
 import Reported from "../pages/reported/Reported";
 import StaticPages from "../pages/static pages/StaticPages";
+import Competitions from "../pages/competitions/Competitions";
+import CompetitionPosts from "../pages/competitions/CompetitionPosts";
 
 export default function Router() {
   let loggedIn = isLoggedIn();
@@ -109,6 +111,28 @@ export default function Router() {
                     activeLinks={["static-pages", "terms-and-conditions"]}
                   >
                     <StaticPages pageKey="terms-and-conditions" />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/competition"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.competition}
+                    activeLinks={["competition"]}
+                  >
+                    <Competitions />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/competition/:id/posts"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.competition}
+                    activeLinks={["competition"]}
+                  >
+                    <CompetitionPosts />
                   </Layout>
                 }
               />

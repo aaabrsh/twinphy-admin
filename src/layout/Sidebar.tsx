@@ -129,6 +129,19 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
               </li>
             </ul>
           </li>
+
+          {/* Competitions */}
+          <li className="nav-item">
+            <Link
+              className={`nav-link ${
+                activeLinks.includes("competition") ? "" : "collapsed"
+              }`}
+              to="/competition"
+            >
+              <i className="bi bi-trophy"></i>
+              <span>Competitions</span>
+            </Link>
+          </li>
         </ul>
       </aside>
     </>
