@@ -8,18 +8,18 @@ export default function ReportTypesSelector({
   status: string;
   setFilter: (status: string) => void;
 }) {
-  const [sizeOptions] = useState([
+  const [typeOptions] = useState([
     { label: "Pending", value: "pending" },
     { label: "Resolved", value: "resolved" },
     { label: "Ignored", value: "ignored" },
   ]);
 
   return (
-    <div className="flex justify-content-center mb-4">
+    <div className="flex justify-content-center">
       <SelectButton
         value={status}
         onChange={(e) => setFilter(e.value)}
-        options={sizeOptions}
+        options={typeOptions}
       />
     </div>
   );
