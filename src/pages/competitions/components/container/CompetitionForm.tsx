@@ -1,20 +1,27 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Competition, INITIAL_DATA } from "../../data";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Calendar } from "primereact/calendar";
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from "primereact/inputnumber";
+import { Dropdown } from "primereact/dropdown";
 
 export default function CompetitionForm({
   onSubmit,
   onCancel,
 }: {
-  onSubmit: (data: Competition) => void;
+  onSubmit: (data: { image?: File; formData: Competition }) => void;
   onCancel: () => void;
 }) {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
+  const [image, setImage] = useState<File>();
   const [error, setError] = useState<any>({});
+  const imageInputRef = useRef<any>();
+
+  useEffect(() => {
+    if (imageInputRef.current) imageInputRef.current.value = null;
+  }, [image]);
 
   const onFormInputChange = (
     key: string,
@@ -29,7 +36,7 @@ export default function CompetitionForm({
 
   const submitForm = () => {
     if (validateForm()) {
-      onSubmit(formData);
+      onSubmit({ image, formData });
     }
   };
 
@@ -91,6 +98,10 @@ export default function CompetitionForm({
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
     return tomorrow;
+  };
+
+  const handleImageChange = (event: any) => {
+    setImage(event.target.files[0]);
   };
 
   return (
@@ -170,6 +181,19 @@ export default function CompetitionForm({
           </div>
 
           <div>
+            <span className="p-float-label">
+              <Dropdown
+                inputId="type"
+                value={formData.type}
+                onChange={(e) => onFormInputChange("type", e.value)}
+                options={["any", "image", "video"]}
+                className={`tw-w-full ${error.type ? "p-invalid" : ""}`}
+              />
+              <label htmlFor="type">Allowed Post Types</label>
+            </span>
+          </div>
+
+          <div>
             <span className="flex align-items-center">
               <Checkbox
                 inputId="is_paid"
@@ -207,6 +231,45 @@ export default function CompetitionForm({
               )}
             </div>
           )}
+        </div>
+        <div>
+          <div className="input-group my-3">
+            <input
+              type="file"
+              className="imageuplodify"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={handleImageChange}
+              multiple={false}
+              style={{ display: "none" }}
+            />
+            <div className="tw-w-full tw-border-2 tw-border-dashed !tw-rounded-lg">
+              <button
+                type="button"
+                className="btn !tw-text-gray-500 !tw-font-bold tw-w-full !tw-py-3"
+                style={{ background: "white", color: "rgb(58, 160, 255)" }}
+                onClick={() => imageInputRef.current?.click()}
+              >
+                Add Image +
+              </button>
+              {image && (
+                <div className="m-3 tw-w-fit tw-relative">
+                  <img
+                    style={{ maxWidth: "100%" }}
+                    src={URL.createObjectURL(image)}
+                  />
+                  <div
+                    className="tw-w-10 tw-h-10 tw-m-2 tw-absolute tw-top-0 tw-right-0 rounded-circle bg-danger tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
+                    onClick={() => {
+                      setImage(undefined);
+                    }}
+                  >
+                    <i className="bi bi-x-lg text-white"></i>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
         <div className="tw-p-2 tw-flex tw-justify-end tw-gap-2 tw-mt-1">
           <button className="btn btn-secondary" type="reset">

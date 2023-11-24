@@ -3,7 +3,10 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { create, get } from "../../services/api";
 import { toast } from "react-toastify";
-import { handleCompetitionImageError } from "../../utils/asset-paths";
+import {
+  formatResourceURL,
+  handleCompetitionImageError,
+} from "../../utils/asset-paths";
 import { getDate } from "../../utils/time";
 import TruncatedText from "../../components/TurncatedText";
 import { Menu } from "primereact/menu";
@@ -112,23 +115,23 @@ export default function Competitions() {
   const imageBodyTemplate = (rowData: any) => {
     return (
       <img
-        src={rowData.image}
+        src={formatResourceURL(rowData.image)}
         onError={handleCompetitionImageError}
-        className="w-6rem shadow-2 border-round"
+        className="tw-w-40 tw-shadow-lg tw-rounded-lg"
       />
     );
   };
 
   const paymentAmountTemplate = (rowData: any) => {
     if (rowData.is_paid) {
-      return <div>Free</div>;
+      return <div>{rowData.amount}</div>;
     } else {
-      return <div>{rowData.amount}$</div>;
+      return <div>Free</div>;
     }
   };
 
   const onPageChange = (event: any) => {
-    fetchCompetitions(event.page, event.rows);
+    fetchCompetitions(event.page, event.rows, query);
   };
 
   const actionButtons = (rowData: any) => {
@@ -174,7 +177,7 @@ export default function Competitions() {
     create(url, {})
       .then((res) => {
         toast.success(res.message ?? "competition status updated");
-        fetchCompetitions(0, limit, { status: status });
+        setFilter(status);
       })
       .catch((e) => {
         console.log(e);
@@ -193,8 +196,33 @@ export default function Competitions() {
     setShowCompetitionFormModal(false);
   };
 
-  const createCompetition = (data: Competition) => {
-    console.log(data);
+  const createCompetition = ({
+    formData,
+    image,
+  }: {
+    formData: Competition;
+    image?: File;
+  }) => {
+    const fd = new FormData();
+
+    fd.append("data", JSON.stringify(formData));
+    if (image) fd.append("file", image);
+
+    closeCompetitionFormModal();
+    setTableLoading(true);
+    create("competition/create", fd)
+      .then((res) => {
+        console.log(res);
+        fetchCompetitions(page, limit, { status: status });
+        toast.success("competition created successfully");
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! couldn't create competition"
+        );
+        setTableLoading(false);
+      });
   };
 
   return (
@@ -222,8 +250,8 @@ export default function Competitions() {
         <Column header="Image" body={imageBodyTemplate}></Column>
         <Column field="name" header="Name" sortable sortField="name"></Column>
         <Column
-          field="comment"
-          header="Comment"
+          field="description"
+          header="Description"
           body={(rowData: any) => (
             <TruncatedText text={rowData.description} maxLength={100} />
           )}
@@ -257,7 +285,7 @@ export default function Competitions() {
         header={
           newStatus === "started"
             ? "Do you want to start this competition now?"
-            : "Do you want to stop this competition now?"
+            : "Do you want to end this competition now?"
         }
         onClose={closeDialog}
         onConfirmed={dialogConfirmed}

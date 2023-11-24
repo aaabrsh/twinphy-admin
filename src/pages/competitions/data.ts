@@ -5,6 +5,7 @@ export interface Competition {
   end_date: Date | null;
   is_paid: boolean;
   amount: number;
+  type: "image" | "video" | "any";
 }
 
 export const INITIAL_DATA: Competition = {
@@ -14,4 +15,5 @@ export const INITIAL_DATA: Competition = {
   end_date: null,
   is_paid: false,
   amount: 0,
+  type: "any",
 };
