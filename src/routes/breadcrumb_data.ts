@@ -64,7 +64,8 @@ export const breadcrumb = {
     title: "Competition Posts",
     path: [
       { isLink: true, to: "/dashboard", text: "Home" },
-      { isLink: false, text: "Competition Posts" },
+      { isLink: true, to: "/competition", text: "Competitions" },
+      { isLink: false, text: "Posts" },
     ],
   },
 };

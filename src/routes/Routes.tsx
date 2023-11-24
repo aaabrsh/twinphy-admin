@@ -129,7 +129,7 @@ export default function Router() {
                 path="/competition/:id/posts"
                 element={
                   <Layout
-                    breadcrumb={breadcrumb.competition}
+                    breadcrumb={breadcrumb.competition_posts}
                     activeLinks={["competition"]}
                   >
                     <CompetitionPosts />
