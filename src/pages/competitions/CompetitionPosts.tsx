@@ -30,9 +30,9 @@ export default function CompetitionPosts() {
           command: () => {
             navigate(
               "/user/" +
-                selectedPost.reported_by.username +
+                selectedPost.author.username +
                 "/post/" +
-                selectedPost.post
+                selectedPost._id
             );
           },
         },
@@ -58,7 +58,7 @@ export default function CompetitionPosts() {
       .then((res) => {
         setPosts(res.data);
         setPage(res.page);
-        setTotal(res.totalCount);
+        setTotal(res.total);
         setLimit(res.limit);
         setTableLoading(false);
       })
@@ -120,7 +120,7 @@ export default function CompetitionPosts() {
           field="caption"
           header="Caption"
           body={(rowData: any) => (
-            <TruncatedText text={rowData.comment} maxLength={100} />
+            <TruncatedText text={rowData.caption} maxLength={100} />
           )}
           sortable
         ></Column>
