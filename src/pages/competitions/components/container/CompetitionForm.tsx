@@ -250,7 +250,7 @@ export default function CompetitionForm({
                 style={{ background: "white", color: "rgb(58, 160, 255)" }}
                 onClick={() => imageInputRef.current?.click()}
               >
-                Add Image +
+                Add Image (optional) +
               </button>
               {image && (
                 <div className="m-3 tw-w-fit tw-relative">
