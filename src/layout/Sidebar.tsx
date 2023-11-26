@@ -85,6 +85,19 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
             </Link>
           </li>
 
+          {/* Competitions */}
+          <li className="nav-item">
+            <Link
+              className={`nav-link ${
+                activeLinks.includes("competition") ? "" : "collapsed"
+              }`}
+              to="/competition"
+            >
+              <i className="bi bi-trophy"></i>
+              <span>Competitions</span>
+            </Link>
+          </li>
+
           {/* <li className="nav-heading">Pages</li> */}
           <li className="nav-item">
             <a
@@ -128,19 +141,6 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
                 </Link>
               </li>
             </ul>
-          </li>
-
-          {/* Competitions */}
-          <li className="nav-item">
-            <Link
-              className={`nav-link ${
-                activeLinks.includes("competition") ? "" : "collapsed"
-              }`}
-              to="/competition"
-            >
-              <i className="bi bi-trophy"></i>
-              <span>Competitions</span>
-            </Link>
           </li>
         </ul>
       </aside>
