@@ -13,6 +13,7 @@ import Reported from "../pages/reported/Reported";
 import StaticPages from "../pages/static pages/StaticPages";
 import Competitions from "../pages/competitions/Competitions";
 import CompetitionPosts from "../pages/competitions/CompetitionPosts";
+import CompetitionForm from "../pages/competitions/components/container/CompetitionForm";
 
 export default function Router() {
   let loggedIn = isLoggedIn();
@@ -126,7 +127,18 @@ export default function Router() {
                 }
               />
               <Route
-                path="/competition/:id/posts"
+                path="/competition/create"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.competition}
+                    activeLinks={["competition"]}
+                  >
+                    <CompetitionForm />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/competition/:id/user/list"
                 element={
                   <Layout
                     breadcrumb={breadcrumb.competition_posts}

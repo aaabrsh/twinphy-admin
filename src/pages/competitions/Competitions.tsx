@@ -13,9 +13,6 @@ import { Menu } from "primereact/menu";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 import CompetitionStatusSelector from "./components/ui/CompetitionStatusSelector";
-import { Competition } from "./data";
-import { Dialog } from "primereact/dialog";
-import CompetitionForm from "./components/container/CompetitionForm";
 
 export default function Competitions() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -30,8 +27,6 @@ export default function Competitions() {
   const [query, setQuery] = useState<any>({ status: "scheduled" });
   const [showModal, setShowModal] = useState(false);
   const [selectedCompetition, setSelectedCompetition] = useState<any>(null);
-  const [showCompetitionFormModal, setShowCompetitionFormModal] =
-    useState(false);
 
   const actionBtnRef = useRef<any>();
   const navigate = useNavigate();
@@ -188,43 +183,6 @@ export default function Competitions() {
       });
   };
 
-  const openCompetitionFormModal = () => {
-    setShowCompetitionFormModal(true);
-  };
-
-  const closeCompetitionFormModal = () => {
-    setShowCompetitionFormModal(false);
-  };
-
-  const createCompetition = ({
-    formData,
-    image,
-  }: {
-    formData: Competition;
-    image?: File;
-  }) => {
-    const fd = new FormData();
-
-    fd.append("data", JSON.stringify(formData));
-    if (image) fd.append("file", image);
-
-    closeCompetitionFormModal();
-    setTableLoading(true);
-    create("competition/create", fd)
-      .then((res) => {
-        console.log(res);
-        fetchCompetitions(page, limit, { status: status });
-        toast.success("competition created successfully");
-      })
-      .catch((e) => {
-        console.log(e);
-        toast.error(
-          e?.response?.data?.message ?? "Error! couldn't create competition"
-        );
-        setTableLoading(false);
-      });
-  };
-
   return (
     <div className="card">
       <DataTable
@@ -238,11 +196,7 @@ export default function Competitions() {
         rowsPerPageOptions={[5, 10, 25, 50]}
         onPage={onPageChange}
         header={
-          <CompetitionStatusSelector
-            status={status}
-            setFilter={setFilter}
-            newCompetitionClicked={openCompetitionFormModal}
-          />
+          <CompetitionStatusSelector status={status} setFilter={setFilter} />
         }
         emptyMessage="No competitions found."
         tableStyle={{ minWidth: "50rem" }}
@@ -290,20 +244,6 @@ export default function Competitions() {
         onClose={closeDialog}
         onConfirmed={dialogConfirmed}
       />
-
-      {/* Competition Form Modal */}
-      <Dialog
-        header="New Competition"
-        visible={showCompetitionFormModal}
-        onHide={closeCompetitionFormModal}
-        style={{ width: "50vw" }}
-        breakpoints={{ "960px": "75vw", "641px": "100vw" }}
-      >
-        <CompetitionForm
-          onCancel={closeCompetitionFormModal}
-          onSubmit={createCompetition}
-        />
-      </Dialog>
     </div>
   );
 }

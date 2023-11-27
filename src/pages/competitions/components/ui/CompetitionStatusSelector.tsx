@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { SelectButton } from "primereact/selectbutton";
+import { useNavigate } from "react-router-dom";
 
 export default function CompetitionStatusSelector({
   status,
   setFilter,
-  newCompetitionClicked,
 }: {
   status: "scheduled" | "started" | "ended";
   setFilter: (status: "scheduled" | "started" | "ended") => void;
-  newCompetitionClicked: () => void;
 }) {
+  const navigate = useNavigate();
   const [statusOptions] = useState([
     { label: "Scheduled", value: "scheduled" },
     { label: "Started", value: "started" },
@@ -28,7 +28,7 @@ export default function CompetitionStatusSelector({
       <div className="">
         <button
           className="btn btn-primary !tw-flex tw-items-center tw-justify-center"
-          onClick={newCompetitionClicked}
+          onClick={() => navigate("/competition/create")}
         >
           <i className="bi bi-plus tw-text-3xl"></i>
           <span>New Competition</span>

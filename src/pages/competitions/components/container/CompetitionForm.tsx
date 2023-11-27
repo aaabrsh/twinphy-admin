@@ -6,18 +6,17 @@ import { Calendar } from "primereact/calendar";
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
+import { create } from "../../../../services/api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-export default function CompetitionForm({
-  onSubmit,
-  onCancel,
-}: {
-  onSubmit: (data: { image?: File; formData: Competition }) => void;
-  onCancel: () => void;
-}) {
+export default function CompetitionForm() {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
   const [image, setImage] = useState<File>();
   const [error, setError] = useState<any>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const imageInputRef = useRef<any>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (imageInputRef.current) imageInputRef.current.value = null;
@@ -36,8 +35,36 @@ export default function CompetitionForm({
 
   const submitForm = () => {
     if (validateForm()) {
-      onSubmit({ image, formData });
+      createCompetition({ image, formData });
     }
+  };
+
+  const createCompetition = ({
+    formData,
+    image,
+  }: {
+    formData: Competition;
+    image?: File;
+  }) => {
+    const fd = new FormData();
+
+    fd.append("data", JSON.stringify(formData));
+    if (image) fd.append("file", image);
+
+    setLoading(true);
+    create("competition/create", fd)
+      .then((res) => {
+        console.log(res);
+        toast.success("competition created successfully");
+        navigate("/competition");
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! couldn't create competition"
+        );
+        setLoading(false);
+      });
   };
 
   const validateForm = () => {
@@ -89,8 +116,7 @@ export default function CompetitionForm({
   };
 
   const resetForm = () => {
-    setFormData(INITIAL_DATA);
-    onCancel();
+    navigate("/competition");
   };
 
   const getTomorrow = () => {
@@ -275,8 +301,14 @@ export default function CompetitionForm({
           <button className="btn btn-secondary" type="reset">
             Cancel
           </button>
-          <button className="btn btn-primary" type="submit">
-            Submit
+          <button disabled={loading} className="btn btn-primary" type="submit">
+            {!loading ? (
+              <span>Submit</span>
+            ) : (
+              <div className="spinner-border spinner-border-sm" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
           </button>
         </div>
       </form>
