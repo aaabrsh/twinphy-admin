@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Competition, INITIAL_DATA } from "../../data";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -9,18 +9,14 @@ import { Dropdown } from "primereact/dropdown";
 import { create } from "../../../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import UploadImageInput from "../ui/UploadImageInput";
 
 export default function CompetitionForm() {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
-  const [image, setImage] = useState<File>();
+  const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const imageInputRef = useRef<any>();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (imageInputRef.current) imageInputRef.current.value = null;
-  }, [image]);
 
   const onFormInputChange = (
     key: string,
@@ -44,7 +40,7 @@ export default function CompetitionForm() {
     image,
   }: {
     formData: Competition;
-    image?: File;
+    image: File | null;
   }) => {
     const fd = new FormData();
 
@@ -126,13 +122,14 @@ export default function CompetitionForm() {
     return tomorrow;
   };
 
-  const handleImageChange = (event: any) => {
-    setImage(event.target.files[0]);
+  const handleImageChange = (file: File | null) => {
+    setImage(file);
   };
 
   return (
     <>
       <form
+        className="mb-5"
         onSubmit={(e) => {
           e.preventDefault();
           submitForm();
@@ -259,43 +256,7 @@ export default function CompetitionForm() {
           )}
         </div>
         <div>
-          <div className="input-group my-3">
-            <input
-              type="file"
-              className="imageuplodify"
-              accept="image/*"
-              ref={imageInputRef}
-              onChange={handleImageChange}
-              multiple={false}
-              style={{ display: "none" }}
-            />
-            <div className="tw-w-full tw-border-2 tw-border-dashed !tw-rounded-lg">
-              <button
-                type="button"
-                className="btn !tw-text-gray-500 !tw-font-bold tw-w-full !tw-py-3"
-                style={{ background: "white", color: "rgb(58, 160, 255)" }}
-                onClick={() => imageInputRef.current?.click()}
-              >
-                Add Image (optional) +
-              </button>
-              {image && (
-                <div className="m-3 tw-w-fit tw-relative">
-                  <img
-                    style={{ maxWidth: "100%" }}
-                    src={URL.createObjectURL(image)}
-                  />
-                  <div
-                    className="tw-w-10 tw-h-10 tw-m-2 tw-absolute tw-top-0 tw-right-0 rounded-circle bg-danger tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
-                    onClick={() => {
-                      setImage(undefined);
-                    }}
-                  >
-                    <i className="bi bi-x-lg text-white"></i>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          <UploadImageInput image={image} onImageChange={handleImageChange} />
         </div>
         <div className="tw-p-2 tw-flex tw-justify-end tw-gap-2 tw-mt-1">
           <button className="btn btn-secondary" type="reset">
