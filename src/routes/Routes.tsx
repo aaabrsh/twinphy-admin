@@ -130,7 +130,7 @@ export default function Router() {
                 path="/competition/create"
                 element={
                   <Layout
-                    breadcrumb={breadcrumb.competition}
+                    breadcrumb={breadcrumb.competition_form}
                     activeLinks={["competition"]}
                   >
                     <CompetitionForm />
