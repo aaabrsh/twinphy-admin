@@ -7,12 +7,12 @@ import {
   formatResourceURL,
   handleCompetitionImageError,
 } from "../../utils/asset-paths";
-import { getDate } from "../../utils/time";
 import TruncatedText from "../../components/TurncatedText";
 import { Menu } from "primereact/menu";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 import CompetitionStatusSelector from "./components/ui/CompetitionStatusSelector";
+import { CompetitionChangedStatus, CompetitionStatus } from "./data";
 
 export default function Competitions() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -20,10 +20,8 @@ export default function Competitions() {
   const [total, setTotal] = useState(0);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-  const [status, setStatus] = useState<"scheduled" | "started" | "ended">(
-    "scheduled"
-  );
-  const [newStatus, setNewStatus] = useState<"started" | "ended">();
+  const [status, setStatus] = useState<CompetitionStatus>("scheduled");
+  const [newStatus, setNewStatus] = useState<CompetitionChangedStatus>();
   const [query, setQuery] = useState<any>({ status: "scheduled" });
   const [showModal, setShowModal] = useState(false);
   const [selectedCompetition, setSelectedCompetition] = useState<any>(null);
@@ -31,28 +29,37 @@ export default function Competitions() {
   const actionBtnRef = useRef<any>();
   const navigate = useNavigate();
 
+  const getActionItemButtons = () => {
+    const buttons = [];
+    if (status === "scheduled") {
+      buttons.push({
+        label: "Start Competition",
+        icon: "bi play-circle",
+        command: () => {
+          setNewStatus("started");
+          setShowModal(true);
+        },
+      });
+    }
+
+    if (status !== "cancelled" && status !== "ended") {
+      buttons.push({
+        label: "Cancel Competition",
+        icon: "bi stop-circle",
+        command: () => {
+          setNewStatus("cancelled");
+          setShowModal(true);
+        },
+      });
+    }
+
+    return buttons;
+  };
+
   const actionItems: any[] = [
-    (status === "scheduled" || status === "started") && {
+    getActionItemButtons().length > 0 && {
       label: "Options",
-      items: [
-        status === "scheduled"
-          ? {
-              label: "Start Competition",
-              icon: "bi play-circle",
-              command: () => {
-                setNewStatus("started");
-                setShowModal(true);
-              },
-            }
-          : {
-              label: "End Competition",
-              icon: "bi stop-circle",
-              command: () => {
-                setNewStatus("ended");
-                setShowModal(true);
-              },
-            },
-      ],
+      items: getActionItemButtons(),
     },
     {
       label: "Navigate",
@@ -99,7 +106,7 @@ export default function Competitions() {
       });
   };
 
-  const setFilter = (status: "scheduled" | "started" | "ended") => {
+  const setFilter = (status: CompetitionStatus) => {
     if (status) {
       setStatus(status);
       setQuery({ status });
@@ -159,15 +166,32 @@ export default function Competitions() {
       case "started":
         updateCompetitionStatus(selectedCompetition._id, "started");
         break;
-      case "ended":
-        updateCompetitionStatus(selectedCompetition._id, "ended");
+      case "cancelled":
+        updateCompetitionStatus(selectedCompetition._id, "cancelled");
         break;
+      // case "ended":
+      //   updateCompetitionStatus(selectedCompetition._id, "ended");
+      //   break;
     }
     closeDialog();
   };
 
-  const updateCompetitionStatus = (id: string, status: "started" | "ended") => {
-    let url = `competition/${status === "started" ? "start" : "end"}/${id}`;
+  const mapStatusToAPI = (status: CompetitionChangedStatus) => {
+    switch (status) {
+      case "started":
+        return "start";
+      case "ended":
+        return "end";
+      case "cancelled":
+        return "cancel";
+    }
+  };
+
+  const updateCompetitionStatus = (
+    id: string,
+    status: CompetitionChangedStatus
+  ) => {
+    let url = `competition/${mapStatusToAPI(status)}/${id}`;
     setTableLoading(true);
     create(url, {})
       .then((res) => {
@@ -181,6 +205,17 @@ export default function Competitions() {
         );
         setTableLoading(false);
       });
+  };
+
+  const getModalMessage = (status: CompetitionChangedStatus) => {
+    switch (status) {
+      case "started":
+        return "Do you want to start this competition now?";
+      case "ended":
+        return "Do you want to end this competition now?";
+      case "cancelled":
+        return "Do you want to cancel this competition now?";
+    }
   };
 
   return (
@@ -211,18 +246,9 @@ export default function Competitions() {
           )}
           sortable
         ></Column>
-        <Column
-          field="start_date"
-          header="Start Date"
-          sortable
-          body={(row) => getDate(row.start_date)}
-        ></Column>
-        <Column
-          field="end_date"
-          header="End Date"
-          sortable
-          body={(row) => getDate(row.end_date)}
-        ></Column>
+        <Column field="current_round" header="Current Round" sortable></Column>
+        <Column field="rounds_count" header="Total Rounds" sortable></Column>
+        <Column field="type" header="Post Types" sortable></Column>
         <Column field="status" header="Status" sortable></Column>
         <Column
           header="Payment Amount"
@@ -236,11 +262,7 @@ export default function Competitions() {
       {/* Modal */}
       <ConfirmationDialog
         show={showModal}
-        header={
-          newStatus === "started"
-            ? "Do you want to start this competition now?"
-            : "Do you want to end this competition now?"
-        }
+        header={() => newStatus && getModalMessage(newStatus)}
         onClose={closeDialog}
         onConfirmed={dialogConfirmed}
       />

@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { SelectButton } from "primereact/selectbutton";
 import { useNavigate } from "react-router-dom";
+import { CompetitionStatus } from "../../data";
 
 export default function CompetitionStatusSelector({
   status,
   setFilter,
 }: {
-  status: "scheduled" | "started" | "ended";
-  setFilter: (status: "scheduled" | "started" | "ended") => void;
+  status: CompetitionStatus;
+  setFilter: (status: CompetitionStatus) => void;
 }) {
   const navigate = useNavigate();
   const [statusOptions] = useState([
     { label: "Scheduled", value: "scheduled" },
     { label: "Started", value: "started" },
     { label: "Ended", value: "ended" },
+    { label: "Cancelled", value: "cancelled" },
   ]);
 
   return (

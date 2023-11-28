@@ -21,3 +21,6 @@ export const INITIAL_DATA: Competition = {
   type: "any",
   rounds: [],
 };
+
+export type CompetitionStatus = "scheduled" | "started" | "ended" | "cancelled";
+export type CompetitionChangedStatus = "started" | "ended" | "cancelled";
