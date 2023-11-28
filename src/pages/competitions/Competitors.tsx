@@ -11,8 +11,8 @@ import { toast } from "react-toastify";
 
 export default function Competitors() {
   const [tableLoading, setTableLoading] = useState(false);
-  const [posts, setPosts] = useState<any[]>([]);
-  const [selectedPost, setSelectedPost] = useState<any>(null);
+  const [competitors, setCompetitors] = useState<any[]>([]);
+  const [selectedUser, setSelecteduser] = useState<any>(null);
   const [total, setTotal] = useState(0);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -25,14 +25,14 @@ export default function Competitors() {
       label: "Navigate",
       items: [
         {
-          label: "View Post ",
+          label: "View Post",
           icon: "bi bi-collection-play-fill",
           command: () => {
             navigate(
               "/user/" +
-                selectedPost.author.username +
+                selectedUser.author.username +
                 "/post/" +
-                selectedPost._id
+                selectedUser._id
             );
           },
         },
@@ -54,9 +54,9 @@ export default function Competitors() {
     };
 
     setTableLoading(true);
-    get("competition/post/list/" + params.id, queryParams)
+    get("competition/user/list/" + params.id, queryParams)
       .then((res) => {
-        setPosts(res.data);
+        setCompetitors(res.data);
         setPage(res.page);
         setTotal(res.total);
         setLimit(res.limit);
@@ -81,7 +81,7 @@ export default function Competitors() {
           <button
             className="btn btn-primary btn-sm tw-w-[75px] !tw-py-1"
             onClick={(event) => {
-              setSelectedPost(rowData);
+              setSelecteduser(rowData);
               actionBtnRef.current.toggle(event);
             }}
           >
@@ -98,7 +98,7 @@ export default function Competitors() {
       {/* Table */}
       <DataTable
         loading={tableLoading}
-        value={posts}
+        value={competitors}
         paginator
         rows={limit}
         totalRecords={total}
