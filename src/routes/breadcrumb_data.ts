@@ -68,12 +68,12 @@ export const breadcrumb = {
       { isLink: false, text: "form" },
     ],
   },
-  competition_posts: {
-    title: "Competition Posts",
+  competitors: {
+    title: "Competitors",
     path: [
       { isLink: true, to: "/dashboard", text: "Home" },
       { isLink: true, to: "/competition", text: "Competitions" },
-      { isLink: false, text: "Posts" },
+      { isLink: false, text: "competitors" },
     ],
   },
 };

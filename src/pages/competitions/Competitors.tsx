@@ -9,7 +9,7 @@ import TruncatedText from "../../components/TurncatedText";
 import { get } from "../../services/api";
 import { toast } from "react-toastify";
 
-export default function CompetitionPosts() {
+export default function Competitors() {
   const [tableLoading, setTableLoading] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const [selectedPost, setSelectedPost] = useState<any>(null);

@@ -12,7 +12,7 @@ import Post from "../pages/post/Post";
 import Reported from "../pages/reported/Reported";
 import StaticPages from "../pages/static pages/StaticPages";
 import Competitions from "../pages/competitions/Competitions";
-import CompetitionPosts from "../pages/competitions/CompetitionPosts";
+import Competitors from "../pages/competitions/Competitors";
 import CompetitionForm from "../pages/competitions/components/container/CompetitionForm";
 
 export default function Router() {
@@ -141,10 +141,10 @@ export default function Router() {
                 path="/competition/:id/user/list"
                 element={
                   <Layout
-                    breadcrumb={breadcrumb.competition_posts}
+                    breadcrumb={breadcrumb.competitors}
                     activeLinks={["competition"]}
                   >
-                    <CompetitionPosts />
+                    <Competitors />
                   </Layout>
                 }
               />
