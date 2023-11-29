@@ -97,23 +97,23 @@ export default function Profile() {
   const getAddress = (address: any) => {
     let res = "";
 
-    if (address.country) {
+    if (address?.country) {
       res += address.country;
     }
 
-    if (address.state) {
+    if (address?.state) {
       res += ", " + address.state;
     }
 
-    if (address.city) {
+    if (address?.city) {
       res += ", " + address.city;
     }
 
-    if (address.address_line) {
+    if (address?.address_line) {
       res += ", " + address.address_line;
     }
 
-    return res.trim();
+    return res ? res.trim() : "-";
   };
 
   if (pageLoading) {
@@ -147,7 +147,7 @@ export default function Profile() {
               onError={handleProfileImageError}
               alt=""
               className="tw-rounded-[50%]"
-              style={{ widows: "150px", height: "150px" }}
+              style={{ width: "150px", height: "150px", objectFit: "cover" }}
             />
           </div>
           <div className="tw-flex tw-flex-col tw-w-full tw-px-2">

@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { getDate } from "../../utils/time";
 import { Menu } from "primereact/menu";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
 import { profileTemplate } from "./components/ui/ProfileTemplate";
 import { profileProviderTemplate } from "./components/ui/ProfileProviderTemplate";
@@ -195,7 +195,9 @@ export default function UsersList() {
         <Column
           field="username"
           header="Username"
-          body={(data) => <>@{data.username}</>}
+          body={(data) => (
+            <Link to={"/user/" + data.username}>@{data.username}</Link>
+          )}
           sortable
         ></Column>
         <Column field="email" header="Email" sortable></Column>

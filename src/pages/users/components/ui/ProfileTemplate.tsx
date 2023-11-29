@@ -1,9 +1,13 @@
-import { formatResourceURL, handleProfileImageError } from "../../../../utils/asset-paths";
+import { Link } from "react-router-dom";
+import {
+  formatResourceURL,
+  handleProfileImageError,
+} from "../../../../utils/asset-paths";
 import { getName } from "../../../../utils/getName";
 
 export const profileTemplate = (rowData: any) => {
   return (
-    <div className="flex align-items-center gap-2">
+    <Link to={"/user/" + rowData.username} className="flex align-items-center gap-2">
       <img
         alt=""
         src={formatResourceURL(rowData.profile_img)}
@@ -11,6 +15,6 @@ export const profileTemplate = (rowData: any) => {
         className="tw-w-[32px] tw-h-[32px] tw-rounded-[50%] tw-mb-2 tw-block"
       />
       <span>{getName(rowData)}</span>
-    </div>
+    </Link>
   );
 };
