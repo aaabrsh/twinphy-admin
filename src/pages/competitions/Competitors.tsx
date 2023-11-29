@@ -3,9 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Column } from "primereact/column";
 import { profileTemplate } from "../users/components/ui/ProfileTemplate";
-import { getDate } from "../../utils/time";
 import { Menu } from "primereact/menu";
-import TruncatedText from "../../components/TurncatedText";
 import { get } from "../../services/api";
 import { toast } from "react-toastify";
 
@@ -30,9 +28,9 @@ export default function Competitors() {
           command: () => {
             navigate(
               "/user/" +
-                selectedUser.author.username +
+                selectedUser.user.username +
                 "/post/" +
-                selectedUser._id
+                selectedUser.post_id
             );
           },
         },
@@ -93,6 +91,25 @@ export default function Competitors() {
     );
   };
 
+  const getCompetitorStatusBadge = (rowData: any) => {
+    switch (rowData?.status) {
+      case "playing":
+        if (rowData?.competition?.status === "scheduled") {
+          return <span className="badge bg-warning">Joined</span>;
+        } else {
+          return <span className="badge bg-primary">Playing</span>;
+        }
+      case "won":
+        return <span className="badge bg-success">Won</span>;
+      case "lost":
+        return <span className="badge bg-secondary">Lost</span>;
+      case "removed":
+        return <span className="badge bg-danger">Removed</span>;
+      case "left":
+        return <span className="badge bg-dark">Left</span>;
+    }
+  };
+
   return (
     <div className="card">
       {/* Table */}
@@ -114,10 +131,19 @@ export default function Competitors() {
           header="Name"
           body={(rowData) => profileTemplate(rowData.user)}
           sortable
-          sortField="user.first_name"
+          sortField="user.first_name" //TODO: check if this sorting works
         ></Column>
-        <Column field="status" header="Status" sortable></Column>
-        <Column field="likes_count" header="Post Likes" sortable></Column>
+        <Column
+          field="status"
+          header="Status"
+          body={(rowData) => getCompetitorStatusBadge(rowData)}
+          sortable
+        ></Column>
+        <Column
+          header="Post Likes"
+          sortable
+          body={(rowData) => <>{rowData.post?.likes_count ?? "No Post"}</>}
+        ></Column>
         <Column header="Actions" body={actionButtons}></Column>
       </DataTable>
     </div>
