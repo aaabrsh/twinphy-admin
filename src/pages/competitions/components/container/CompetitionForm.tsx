@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Competition, INITIAL_DATA } from "../../data";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
@@ -10,6 +9,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import UploadImageInput from "../ui/UploadImageInput";
 import RoundInput from "../ui/RoundInput";
+import ReactQuill from "react-quill";
 
 export default function CompetitionForm() {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
@@ -201,17 +201,20 @@ export default function CompetitionForm() {
 
           <div>
             <span className="p-float-label">
-              <InputTextarea
-                id="description"
+              <label
+                htmlFor="description"
+                style={{
+                  top: "-0.75rem",
+                  fontSize: "12px",
+                }}
+              >
+                Description
+              </label>
+              <ReactQuill
+                theme="snow"
                 value={formData.description}
-                onChange={(e) =>
-                  onFormInputChange("description", e.target.value)
-                }
-                rows={2}
-                cols={30}
-                className={`tw-w-full ${error.description ? "p-invalid" : ""}`}
+                onChange={(value) => onFormInputChange("description", value)}
               />
-              <label htmlFor="description">Description</label>
             </span>
             {error.description && (
               <small className="tw-text-red-500">{error.description}</small>
@@ -247,7 +250,12 @@ export default function CompetitionForm() {
           {/* Rounds */}
           <div>
             <fieldset>
-              <legend className="dark-blue" style={{textDecoration: "underline"}}>Rounds</legend>
+              <legend
+                className="dark-blue"
+                style={{ textDecoration: "underline" }}
+              >
+                Rounds
+              </legend>
               {roundsArray.map((_, i) => (
                 <RoundInput
                   key={i}
@@ -289,8 +297,9 @@ export default function CompetitionForm() {
                   value={formData.amount}
                   onChange={(e) => onFormInputChange("amount", e.value)}
                   mode="currency"
-                  currency="USD"
-                  locale="en-US"
+                  currency="INR"
+                  currencyDisplay="code"
+                  locale="en-IN"
                   className={`tw-w-full ${error.amount ? "p-invalid" : ""}`}
                 />
                 <label htmlFor="amount">Amount</label>

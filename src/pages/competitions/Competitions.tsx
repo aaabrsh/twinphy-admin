@@ -126,7 +126,12 @@ export default function Competitions() {
 
   const paymentAmountTemplate = (rowData: any) => {
     if (rowData.is_paid) {
-      return <div>{rowData.amount}</div>;
+      return (
+        <div>
+          <i className="bi bi-currency-rupee"></i>
+          <span>{rowData.amount}</span>
+        </div>
+      );
     } else {
       return <div>Free</div>;
     }
