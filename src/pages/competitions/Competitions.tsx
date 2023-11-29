@@ -7,12 +7,12 @@ import {
   formatResourceURL,
   handleCompetitionImageError,
 } from "../../utils/asset-paths";
-import TruncatedText from "../../components/TurncatedText";
 import { Menu } from "primereact/menu";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 import CompetitionStatusSelector from "./components/ui/CompetitionStatusSelector";
 import { CompetitionChangedStatus, CompetitionStatus } from "./data";
+import TruncatedHTML from "../../components/TurncatedHTML";
 
 export default function Competitions() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -110,6 +110,7 @@ export default function Competitions() {
     if (status) {
       setStatus(status);
       setQuery({ status });
+      setCompetitions([]);
       fetchCompetitions(0, limit, { status: status });
     }
   };
@@ -247,7 +248,7 @@ export default function Competitions() {
           field="description"
           header="Description"
           body={(rowData: any) => (
-            <TruncatedText text={rowData.description} maxLength={100} />
+            <TruncatedHTML text={rowData.description} maxHeight={100} />
           )}
           sortable
         ></Column>
