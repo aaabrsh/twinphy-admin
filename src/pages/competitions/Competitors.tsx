@@ -111,27 +111,13 @@ export default function Competitors() {
         tableStyle={{ minWidth: "50rem" }}
       >
         <Column
-          header="Post By"
-          body={(rowData) => profileTemplate(rowData.author)}
+          header="Name"
+          body={(rowData) => profileTemplate(rowData.user)}
           sortable
-          sortField="first_name"
+          sortField="user.first_name"
         ></Column>
-        <Column
-          field="caption"
-          header="Caption"
-          body={(rowData: any) => (
-            <TruncatedText text={rowData.caption} maxLength={100} />
-          )}
-          sortable
-        ></Column>
-        <Column field="likes_count" header="Likes" sortable></Column>
-        <Column field="comments_count" header="Comments" sortable></Column>
-        <Column
-          field="createdAt"
-          header="Posted On"
-          body={(row) => getDate(row.createdAt)}
-          sortable
-        ></Column>
+        <Column field="status" header="Status" sortable></Column>
+        <Column field="likes_count" header="Post Likes" sortable></Column>
         <Column header="Actions" body={actionButtons}></Column>
       </DataTable>
     </div>
