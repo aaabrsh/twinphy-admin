@@ -11,6 +11,7 @@ import UploadImageInput from "../ui/UploadImageInput";
 import RoundInput from "../ui/RoundInput";
 import ReactQuill from "react-quill";
 import { convertTimeZone } from "../../../../utils/time";
+import { Calendar } from "primereact/calendar";
 
 export default function CompetitionForm() {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
@@ -45,6 +46,10 @@ export default function CompetitionForm() {
   const processFormData = (formData: Competition) => {
     const formDataCopy = JSON.parse(JSON.stringify(formData));
     const rounds = formDataCopy.rounds;
+
+    formDataCopy.result_date = convertTimeZone(
+      formDataCopy.result_date as Date
+    );
 
     for (let i = 0; i < rounds.length; i++) {
       let round = rounds[i];
@@ -97,6 +102,10 @@ export default function CompetitionForm() {
     if (formData.is_paid && formData.amount <= 0) {
       errors.amount =
         "payment amount must be greater that zero for paid competitions";
+    }
+
+    if (!formData.result_date) {
+      errors.result_date = "result date is required";
     }
 
     for (let i = 0; i < roundsNo; i++) {
@@ -185,6 +194,21 @@ export default function CompetitionForm() {
       roundsCopy[index] = { ...roundsCopy[index], [key]: value };
     }
     setFormData((f) => ({ ...f, rounds: roundsCopy }));
+  };
+
+  const getMinResultDate = () => {
+    const rounds = formData.rounds;
+    const lastRound = rounds[rounds.length - 1];
+    let lastDate = new Date();
+    if (lastRound && lastRound.end_date) {
+      lastDate = lastRound.end_date;
+    }
+
+    if (formData.result_date && formData.result_date < lastDate) {
+      setFormData((data) => ({ ...data, result_date: null }));
+    }
+
+    return lastDate;
   };
 
   return (
@@ -282,6 +306,22 @@ export default function CompetitionForm() {
                 />
               ))}
             </fieldset>
+          </div>
+
+          <div>
+            <span className="p-float-label">
+              <Calendar
+                inputId="result_date"
+                value={formData?.result_date}
+                onChange={(e) => onFormInputChange("result_date", e.value)}
+                className={`tw-w-full ${error?.result_date ? "p-invalid" : ""}`}
+                minDate={getMinResultDate()}
+              />
+              <label htmlFor="result_date">Result Date</label>
+            </span>
+            {error?.result_date && (
+              <small className="tw-text-red-500">{error.result_date}</small>
+            )}
           </div>
 
           <div>

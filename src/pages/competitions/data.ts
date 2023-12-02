@@ -5,6 +5,7 @@ export interface Competition {
   amount: number;
   type: "image" | "video" | "any";
   rounds: Round[];
+  result_date: Date | null;
 }
 
 export interface Round {
@@ -20,6 +21,7 @@ export const INITIAL_DATA: Competition = {
   amount: 0,
   type: "any",
   rounds: [],
+  result_date: null,
 };
 
 export type CompetitionStatus = "scheduled" | "started" | "ended" | "cancelled";
