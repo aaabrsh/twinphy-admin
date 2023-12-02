@@ -20,6 +20,7 @@ export default function CompetitorTableHeader({
       <div>
         {competitionInfo && (
           <div className="">
+            <p>Result Date: {getDate(competitionInfo.result_date)}</p>
             <p>Current Round: {competitionInfo.current_round}</p>
           </div>
         )}

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import CompetitionStatusSelector from "./components/ui/CompetitionStatusSelector";
 import { CompetitionChangedStatus, CompetitionStatus } from "./data";
 import TruncatedHTML from "../../components/TurncatedHTML";
+import { getDate } from "../../utils/time";
 
 export default function Competitions() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -256,6 +257,12 @@ export default function Competitions() {
         <Column field="rounds_count" header="Total Rounds" sortable></Column>
         <Column field="type" header="Post Types" sortable></Column>
         <Column field="status" header="Status" sortable></Column>
+        <Column
+          field="result_date"
+          header="Result Date"
+          sortable
+          body={(rowData) => getDate(rowData.result_date)}
+        ></Column>
         <Column
           header="Payment Amount"
           body={paymentAmountTemplate}
