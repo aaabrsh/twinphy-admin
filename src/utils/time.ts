@@ -38,3 +38,14 @@ export function getDateAndTime(dateStr: string): string {
 
   return formattedDate + " " + formattedTime;
 }
+
+export function convertTimeZone(
+  date: string | Date,
+  timeZoneString: string = "Asia/Kolkata"
+) {
+  return new Date(
+    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
+      timeZone: timeZoneString,
+    })
+  );
+}

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import UploadImageInput from "../ui/UploadImageInput";
 import RoundInput from "../ui/RoundInput";
 import ReactQuill from "react-quill";
+import { convertTimeZone } from "../../../../utils/time";
 
 export default function CompetitionForm() {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
@@ -37,8 +38,21 @@ export default function CompetitionForm() {
 
   const submitForm = () => {
     if (validateForm()) {
-      createCompetition({ image, formData });
+      createCompetition({ image, formData: processFormData(formData) });
     }
+  };
+
+  const processFormData = (formData: Competition) => {
+    const formDataCopy = JSON.parse(JSON.stringify(formData));
+    const rounds = formDataCopy.rounds;
+
+    for (let i = 0; i < rounds.length; i++) {
+      let round = rounds[i];
+      round.start_date = convertTimeZone(round.start_date as Date);
+      round.end_date = convertTimeZone(round.end_date as Date);
+    }
+
+    return formDataCopy;
   };
 
   const createCompetition = ({
