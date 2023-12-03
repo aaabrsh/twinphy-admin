@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { get, upload } from "../../services/api";
+import { create, get, upload } from "../../services/api";
 import { toast } from "react-toastify";
 import { getName } from "../../utils/getName";
 import {
@@ -7,6 +7,7 @@ import {
   handleProfileImageError,
 } from "../../utils/asset-paths";
 import { setUser } from "../../services/auth";
+import ToggleShowPassword from "./components/ui/ToggleShowPassword";
 
 interface BasicProfile {
   first_name: string;
@@ -24,12 +25,21 @@ export default function EditProfile() {
   };
 
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
   const [profileImg, setProfileImg] = useState<File | null>(null);
   const [originalProfileInfo, setOriginalProfileInfo] =
     useState<BasicProfile | null>(null);
   const [profileInfo, setProfileInfo] =
     useState<BasicProfile>(INITIAL_PROFILE_DATA);
   const [editFormErrors, setEditFormErrors] = useState<any>(null);
+  const [passwordErrors, setPasswordErrors] = useState<any>(null);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newConfirmPassword, setNewConfirmPassword] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showNewConfirmPassword, setShowNewConfirmPassword] = useState(false);
+
   const profileImgInputRef = useRef<any>();
 
   useEffect(() => {
@@ -125,6 +135,75 @@ export default function EditProfile() {
           e?.response?.data?.message ?? "Error! couldn't update user data"
         );
         setUpdateLoading(false);
+      });
+  };
+
+  function handlePasswordFormSubmit(e: any): void {
+    e.preventDefault();
+    if (validatePasswordForm()) {
+      changePassword({ old_password: oldPassword, new_password: newPassword });
+    }
+  }
+
+  const validatePasswordForm = () => {
+    const errors: any = {};
+
+    if (!oldPassword) {
+      errors.old_password = "current password is required";
+    } else if (oldPassword.length < 8) {
+      errors.old_password = "password length is too short";
+    }
+
+    if (!newPassword) {
+      errors.new_password = "new password is required";
+    } else if (newPassword.length < 8) {
+      errors.new_password = "password length is too short";
+    }
+
+    if (!newConfirmPassword) {
+      errors.confirm_password = "password confirmation is required";
+    } else if (newConfirmPassword.length < 8) {
+      errors.confirm_password = "password length is too short";
+    }
+
+    if (newPassword !== newConfirmPassword) {
+      errors.new_password = "passwords don't match";
+      errors.confirm_password = "passwords don't match";
+    }
+
+    if (oldPassword === newPassword) {
+      errors.old_password = "old and new passwords can't be the same";
+      errors.new_password = "old and new passwords can't be the same";
+    }
+
+    setPasswordErrors(errors);
+
+    return Object.keys(errors).length > 0 ? false : true;
+  };
+
+  const changePassword = (payload: {
+    old_password: string;
+    new_password: string;
+  }) => {
+    setPasswordLoading(true);
+    create("admin/password", payload)
+      .then((res) => {
+        toast.success(res.message ?? "password changed successfully");
+        setOldPassword("");
+        setNewPassword("");
+        setNewConfirmPassword("");
+        setShowOldPassword(false);
+        setShowNewPassword(false);
+        setShowNewConfirmPassword(false);
+        setPasswordErrors(null);
+        setPasswordLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! couldn't change password"
+        );
+        setPasswordLoading(false);
       });
   };
 
@@ -333,7 +412,7 @@ export default function EditProfile() {
 
               <div className="tab-pane fade pt-3" id="profile-change-password">
                 {/* <!-- Change Password Form --> */}
-                <form>
+                <form onSubmit={handlePasswordFormSubmit}>
                   <div className="row mb-3">
                     <label
                       htmlFor="currentPassword"
@@ -342,12 +421,32 @@ export default function EditProfile() {
                       Current Password
                     </label>
                     <div className="col-md-8 col-lg-9">
-                      <input
-                        name="password"
-                        type="password"
-                        className="form-control"
-                        id="currentPassword"
-                      />
+                      <div className="input-group">
+                        <input
+                          id="currentPassword"
+                          name="password"
+                          className={`form-control ${
+                            passwordErrors?.old_password
+                              ? "!tw-border-red-600"
+                              : ""
+                          }`}
+                          type={showOldPassword ? "text" : "password"}
+                          value={oldPassword}
+                          onChange={(e) => setOldPassword(e.target.value)}
+                        />
+                        <ToggleShowPassword
+                          show={showOldPassword}
+                          error={passwordErrors?.old_password}
+                          toggleShowPassword={() =>
+                            setShowOldPassword((s) => !s)
+                          }
+                        />
+                        {passwordErrors?.old_password && (
+                          <div className="small text-danger w-100 py-1">
+                            {passwordErrors.old_password}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -359,12 +458,32 @@ export default function EditProfile() {
                       New Password
                     </label>
                     <div className="col-md-8 col-lg-9">
-                      <input
-                        name="newpassword"
-                        type="password"
-                        className="form-control"
-                        id="newPassword"
-                      />
+                      <div className="input-group">
+                        <input
+                          id="newPassword"
+                          name="newpassword"
+                          type={showNewPassword ? "text" : "password"}
+                          className={`form-control ${
+                            passwordErrors?.new_password
+                              ? "!tw-border-red-600"
+                              : ""
+                          }`}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                        <ToggleShowPassword
+                          show={showNewPassword}
+                          error={passwordErrors?.new_password}
+                          toggleShowPassword={() =>
+                            setShowNewPassword((s) => !s)
+                          }
+                        />
+                        {passwordErrors?.new_password && (
+                          <div className="small text-danger w-100 py-1">
+                            {passwordErrors.new_password}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -376,18 +495,48 @@ export default function EditProfile() {
                       Re-enter New Password
                     </label>
                     <div className="col-md-8 col-lg-9">
-                      <input
-                        name="renewpassword"
-                        type="password"
-                        className="form-control"
-                        id="renewPassword"
-                      />
+                      <div className="input-group">
+                        <input
+                          id="renewPassword"
+                          name="renewpassword"
+                          className={`form-control ${
+                            passwordErrors?.confirm_password
+                              ? "!tw-border-red-600"
+                              : ""
+                          }`}
+                          type={showNewConfirmPassword ? "text" : "password"}
+                          value={newConfirmPassword}
+                          onChange={(e) =>
+                            setNewConfirmPassword(e.target.value)
+                          }
+                        />
+                        <ToggleShowPassword
+                          show={showNewConfirmPassword}
+                          error={passwordErrors?.confirm_password}
+                          toggleShowPassword={() =>
+                            setShowNewConfirmPassword((s) => !s)
+                          }
+                        />
+                        {passwordErrors?.confirm_password && (
+                          <div className="small text-danger w-100 py-1">
+                            {passwordErrors.confirm_password}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
                   <div className="text-center">
-                    <button type="submit" className="btn btn-primary">
-                      Change Password
+                    <button
+                      disabled={passwordLoading}
+                      type="submit"
+                      className="btn btn-primary"
+                    >
+                      {passwordLoading ? (
+                        <span className="spinner-border spinner-border-sm"></span>
+                      ) : (
+                        <span>Change Password</span>
+                      )}
                     </button>
                   </div>
                 </form>
