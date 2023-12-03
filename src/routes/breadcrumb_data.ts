@@ -76,4 +76,11 @@ export const breadcrumb = {
       { isLink: false, text: "competitors" },
     ],
   },
+  self_profile: {
+    title: "Profile",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Edit Profile" },
+    ],
+  },
 };

@@ -6,7 +6,7 @@ import {
   handleProfileImageError,
 } from "../utils/asset-paths";
 import { get } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function Header() {
@@ -24,7 +24,7 @@ export default function Header() {
   };
 
   const logout = () => {
-    clearAuth()
+    clearAuth();
     get("auth/logout")
       .then(() => {
         navigate("/auth/login");
@@ -297,19 +297,19 @@ export default function Header() {
                 </li>
 
                 <li>
-                  <a
+                  <Link
                     className="dropdown-item d-flex align-items-center"
-                    href="users-profile.html"
+                    to="/edit-profile"
                   >
                     <i className="bi bi-person"></i>
                     <span>My Profile</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
 
-                <li>
+                {/* <li>
                   <a
                     className="dropdown-item d-flex align-items-center"
                     href="users-profile.html"
@@ -317,10 +317,10 @@ export default function Header() {
                     <i className="bi bi-gear"></i>
                     <span>Account Settings</span>
                   </a>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <hr className="dropdown-divider" />
-                </li>
+                </li> */}
 
                 {/* <li>
                   <a

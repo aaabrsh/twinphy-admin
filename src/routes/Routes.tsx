@@ -14,6 +14,7 @@ import StaticPages from "../pages/static pages/StaticPages";
 import Competitions from "../pages/competitions/Competitions";
 import Competitors from "../pages/competitions/Competitors";
 import CompetitionForm from "../pages/competitions/components/container/CompetitionForm";
+import EditProfile from "../pages/profile/EditProfile";
 
 export default function Router() {
   let loggedIn = isLoggedIn();
@@ -148,7 +149,14 @@ export default function Router() {
                   </Layout>
                 }
               />
-
+              <Route
+                path="/edit-profile"
+                element={
+                  <Layout breadcrumb={breadcrumb.self_profile}>
+                    <EditProfile />
+                  </Layout>
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </>
           ) : (
