@@ -9,6 +9,7 @@ import {
 import { setUser } from "../../services/auth";
 import TextInput from "./components/ui/TextInput";
 import PasswordInput from "./components/ui/PasswordInput";
+import UploadPhoto from "./components/ui/UploadPhoto";
 
 interface BasicProfile {
   first_name: string;
@@ -258,54 +259,14 @@ export default function EditProfile() {
                 {/* <!-- Profile Edit Form --> */}
                 <form onSubmit={handleEditFormSubmit}>
                   <div className="row mb-3">
-                    <label
-                      htmlFor="profileImage"
-                      className="col-md-4 col-lg-3 col-form-label"
-                    >
-                      Profile Image
-                    </label>
-                    <div className="col-md-8 col-lg-9">
-                      <img
-                        src={
-                          profileImg
-                            ? URL.createObjectURL(profileImg)
-                            : formatResourceURL(profileInfo.profile_img ?? "")
-                        }
-                        onError={handleProfileImageError}
-                        className="tw-h-[120px] tw-w-[120px]"
-                        style={{ objectFit: "cover" }}
-                      />
-                      <div className="pt-2 tw-flex tw-gap-2">
-                        <button
-                          type="button"
-                          className="btn btn-primary btn-sm"
-                          title="Upload new profile image"
-                          onClick={openProfileImgDialog}
-                        >
-                          <i className="bi bi-upload"></i>
-
-                          {/* Hidden Input Elements for profile_img upload */}
-                          <input
-                            type="file"
-                            accept="image/*"
-                            ref={profileImgInputRef}
-                            onChange={handleProfileImgChange}
-                            style={{ display: "none" }}
-                          />
-                        </button>
-
-                        {profileImg && (
-                          <button
-                            type="button"
-                            onClick={() => setProfileImg(null)}
-                            className="btn btn-danger btn-sm"
-                            title="Remove my profile image"
-                          >
-                            <i className="bi bi-trash"></i>
-                          </button>
-                        )}
-                      </div>
-                    </div>
+                    <UploadPhoto
+                      profileImg={profileImg}
+                      profileUrl={profileInfo.profile_img}
+                      profileImgInputRef={profileImgInputRef}
+                      openProfileImgDialog={openProfileImgDialog}
+                      handleProfileImgChange={handleProfileImgChange}
+                      setProfileImg={setProfileImg}
+                    />
                   </div>
 
                   <div className="row mb-3">
