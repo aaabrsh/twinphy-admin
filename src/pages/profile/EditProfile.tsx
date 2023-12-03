@@ -7,8 +7,8 @@ import {
   handleProfileImageError,
 } from "../../utils/asset-paths";
 import { setUser } from "../../services/auth";
-import ToggleShowPassword from "./components/ui/ToggleShowPassword";
 import TextInput from "./components/ui/TextInput";
+import PasswordInput from "./components/ui/PasswordInput";
 
 interface BasicProfile {
   first_name: string;
@@ -167,12 +167,12 @@ export default function EditProfile() {
       errors.confirm_password = "password length is too short";
     }
 
-    if (newPassword !== newConfirmPassword) {
+    if (oldPassword && newPassword && newPassword !== newConfirmPassword) {
       errors.new_password = "passwords don't match";
       errors.confirm_password = "passwords don't match";
     }
 
-    if (oldPassword === newPassword) {
+    if (oldPassword && newPassword && oldPassword === newPassword) {
       errors.old_password = "old and new passwords can't be the same";
       errors.new_password = "old and new passwords can't be the same";
     }
@@ -357,116 +357,41 @@ export default function EditProfile() {
                 {/* <!-- Change Password Form --> */}
                 <form onSubmit={handlePasswordFormSubmit}>
                   <div className="row mb-3">
-                    <label
-                      htmlFor="currentPassword"
-                      className="col-md-4 col-lg-3 col-form-label"
-                    >
-                      Current Password
-                    </label>
-                    <div className="col-md-8 col-lg-9">
-                      <div className="input-group">
-                        <input
-                          id="currentPassword"
-                          name="password"
-                          className={`form-control ${
-                            passwordErrors?.old_password
-                              ? "!tw-border-red-600"
-                              : ""
-                          }`}
-                          type={showOldPassword ? "text" : "password"}
-                          value={oldPassword}
-                          onChange={(e) => setOldPassword(e.target.value)}
-                        />
-                        <ToggleShowPassword
-                          show={showOldPassword}
-                          error={passwordErrors?.old_password}
-                          toggleShowPassword={() =>
-                            setShowOldPassword((s) => !s)
-                          }
-                        />
-                        {passwordErrors?.old_password && (
-                          <div className="small text-danger w-100 py-1">
-                            {passwordErrors.old_password}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <PasswordInput
+                      label="Current Password"
+                      value={oldPassword}
+                      name="currentPassword"
+                      error={passwordErrors?.old_password}
+                      showPasswordIcon={showOldPassword}
+                      togglePasswordIcon={() => setShowOldPassword((s) => !s)}
+                      setValue={setOldPassword}
+                    />
                   </div>
 
                   <div className="row mb-3">
-                    <label
-                      htmlFor="newPassword"
-                      className="col-md-4 col-lg-3 col-form-label"
-                    >
-                      New Password
-                    </label>
-                    <div className="col-md-8 col-lg-9">
-                      <div className="input-group">
-                        <input
-                          id="newPassword"
-                          name="newpassword"
-                          type={showNewPassword ? "text" : "password"}
-                          className={`form-control ${
-                            passwordErrors?.new_password
-                              ? "!tw-border-red-600"
-                              : ""
-                          }`}
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                        />
-                        <ToggleShowPassword
-                          show={showNewPassword}
-                          error={passwordErrors?.new_password}
-                          toggleShowPassword={() =>
-                            setShowNewPassword((s) => !s)
-                          }
-                        />
-                        {passwordErrors?.new_password && (
-                          <div className="small text-danger w-100 py-1">
-                            {passwordErrors.new_password}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <PasswordInput
+                      label="New Password"
+                      value={newPassword}
+                      name="newPassword"
+                      error={passwordErrors?.new_password}
+                      showPasswordIcon={showNewPassword}
+                      togglePasswordIcon={() => setShowNewPassword((s) => !s)}
+                      setValue={setNewPassword}
+                    />
                   </div>
 
                   <div className="row mb-3">
-                    <label
-                      htmlFor="renewPassword"
-                      className="col-md-4 col-lg-3 col-form-label"
-                    >
-                      Re-enter New Password
-                    </label>
-                    <div className="col-md-8 col-lg-9">
-                      <div className="input-group">
-                        <input
-                          id="renewPassword"
-                          name="renewpassword"
-                          className={`form-control ${
-                            passwordErrors?.confirm_password
-                              ? "!tw-border-red-600"
-                              : ""
-                          }`}
-                          type={showNewConfirmPassword ? "text" : "password"}
-                          value={newConfirmPassword}
-                          onChange={(e) =>
-                            setNewConfirmPassword(e.target.value)
-                          }
-                        />
-                        <ToggleShowPassword
-                          show={showNewConfirmPassword}
-                          error={passwordErrors?.confirm_password}
-                          toggleShowPassword={() =>
-                            setShowNewConfirmPassword((s) => !s)
-                          }
-                        />
-                        {passwordErrors?.confirm_password && (
-                          <div className="small text-danger w-100 py-1">
-                            {passwordErrors.confirm_password}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <PasswordInput
+                      label="Re-enter New Password"
+                      value={newConfirmPassword}
+                      name="renewPassword"
+                      error={passwordErrors?.confirm_password}
+                      showPasswordIcon={showNewConfirmPassword}
+                      togglePasswordIcon={() =>
+                        setShowNewConfirmPassword((s) => !s)
+                      }
+                      setValue={setNewConfirmPassword}
+                    />
                   </div>
 
                   <div className="text-center">
