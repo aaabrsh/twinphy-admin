@@ -8,6 +8,7 @@ import {
 } from "../../utils/asset-paths";
 import { setUser } from "../../services/auth";
 import ToggleShowPassword from "./components/ui/ToggleShowPassword";
+import TextInput from "./components/ui/TextInput";
 
 interface BasicProfile {
   first_name: string;
@@ -308,89 +309,31 @@ export default function EditProfile() {
                   </div>
 
                   <div className="row mb-3">
-                    <label
-                      htmlFor="first_name"
-                      className="col-md-4 col-lg-3 col-form-label"
-                    >
-                      First Name
-                    </label>
-                    <div className="col-md-8 col-lg-9">
-                      <input
-                        id="first_name"
-                        name="first_name"
-                        type="text"
-                        className={`form-control ${
-                          editFormErrors?.first_name ? "!tw-border-red-600" : ""
-                        }`}
-                        value={profileInfo.first_name}
-                        onChange={(e) =>
-                          handleEditFormInputChange(
-                            "first_name",
-                            e.target.value
-                          )
-                        }
-                      />
-                      {editFormErrors?.first_name && (
-                        <div className="small text-danger w-100 py-1">
-                          {editFormErrors.first_name}
-                        </div>
-                      )}
-                    </div>
+                    <TextInput
+                      label="First Name"
+                      name="first_name"
+                      value={profileInfo.first_name}
+                      handleEditFormInputChange={handleEditFormInputChange}
+                      error={editFormErrors?.first_name}
+                    />
                   </div>
                   <div className="row mb-3">
-                    <label
-                      htmlFor="last_name"
-                      className="col-md-4 col-lg-3 col-form-label"
-                    >
-                      Last Name
-                    </label>
-                    <div className="col-md-8 col-lg-9">
-                      <input
-                        id="last_name"
-                        name="last_name"
-                        type="text"
-                        className={`form-control ${
-                          editFormErrors?.last_name ? "!tw-border-red-600" : ""
-                        }`}
-                        value={profileInfo.last_name}
-                        onChange={(e) =>
-                          handleEditFormInputChange("last_name", e.target.value)
-                        }
-                      />
-                      {editFormErrors?.last_name && (
-                        <div className="small text-danger w-100 py-1">
-                          {editFormErrors.last_name}
-                        </div>
-                      )}
-                    </div>
+                    <TextInput
+                      label="Last Name"
+                      name="last_name"
+                      value={profileInfo.last_name}
+                      handleEditFormInputChange={handleEditFormInputChange}
+                      error={editFormErrors?.last_name}
+                    />
                   </div>
-
                   <div className="row mb-3">
-                    <label
-                      htmlFor="email"
-                      className="col-md-4 col-lg-3 col-form-label"
-                    >
-                      Email
-                    </label>
-                    <div className="col-md-8 col-lg-9">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        className={`form-control ${
-                          editFormErrors?.email ? "!tw-border-red-600" : ""
-                        }`}
-                        value={profileInfo.email}
-                        onChange={(e) =>
-                          handleEditFormInputChange("email", e.target.value)
-                        }
-                      />
-                      {editFormErrors?.email && (
-                        <div className="small text-danger w-100 py-1">
-                          {editFormErrors.email}
-                        </div>
-                      )}
-                    </div>
+                    <TextInput
+                      label="Email"
+                      name="email"
+                      value={profileInfo.email}
+                      handleEditFormInputChange={handleEditFormInputChange}
+                      error={editFormErrors?.email}
+                    />
                   </div>
 
                   <div className="text-center">
