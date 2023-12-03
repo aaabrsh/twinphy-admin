@@ -13,6 +13,7 @@ export default function Login() {
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [apiError, setApiError] = useState();
   const [sendingData, setSendingData] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (emailTouched) validateEmail();
@@ -169,20 +170,58 @@ export default function Login() {
                           <label htmlFor="password" className="form-label">
                             Password
                           </label>
-                          <input
-                            type="password"
-                            name="password"
-                            className={`form-control ${
-                              !passwordTouched
-                                ? ""
-                                : passwordError.length > 0
-                                ? style.invalid
-                                : style.valid
-                            }`}
-                            id="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                          />
+                          <div className="tw-flex input-group">
+                            <input
+                              type={showPassword ? "text" : "password"}
+                              name="password"
+                              className={`form-control ${
+                                !passwordTouched
+                                  ? ""
+                                  : passwordError.length > 0
+                                  ? style.invalid
+                                  : style.valid
+                              }`}
+                              id="password"
+                              value={password}
+                              onChange={handlePasswordChange}
+                            />
+                            <div
+                              className="input-group-append"
+                              onClick={() => setShowPassword((s) => !s)}
+                            >
+                              <button
+                                className="btn"
+                                type="button"
+                                id="togglePasswordButton"
+                                style={{
+                                  borderTopLeftRadius: "0px",
+                                  borderBottomLeftRadius: "0px",
+                                  borderColor: !passwordTouched
+                                    ? "#ddd"
+                                    : passwordError.length > 0
+                                    ? "var(--bs-form-invalid-border-color)"
+                                    : "var(--bs-form-valid-border-color)",
+                                  color: !passwordTouched
+                                    ? ""
+                                    : passwordError.length > 0
+                                    ? "var(--bs-form-invalid-border-color)"
+                                    : "var(--bs-form-valid-border-color)",
+                                }}
+                              >
+                                {showPassword ? (
+                                  <i
+                                    className="bi bi-eye-slash-fill"
+                                    aria-hidden="true"
+                                  ></i>
+                                ) : (
+                                  <i
+                                    className="bi bi-eye-fill"
+                                    aria-hidden="true"
+                                  ></i>
+                                )}
+                              </button>
+                            </div>
+                          </div>
                           {passwordError.length > 0 && (
                             <div className={style.error_text}>
                               {passwordError}
