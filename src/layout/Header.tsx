@@ -279,7 +279,8 @@ export default function Header() {
                   src={formatResourceURL(currentUser?.profile_img)}
                   onError={handleProfileImageError}
                   alt=""
-                  className="rounded-circle"
+                  className="rounded-circle tw-w-[36px] tw-h-[36px]"
+                  style={{ objectFit: "cover" }}
                 />
                 <span className="d-none d-md-block dropdown-toggle ps-2">
                   {getName(currentUser)}
