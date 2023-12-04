@@ -258,13 +258,25 @@ export default function Competitions() {
         <Column field="type" header="Post Types" sortable></Column>
         <Column field="status" header="Status" sortable></Column>
         <Column
+          field="start_date"
+          header="Start Date"
+          sortable
+          body={(rowData) => getDate(rowData.start_date)}
+        ></Column>
+        <Column
+          field="end_date"
+          header="End Date"
+          sortable
+          body={(rowData) => getDate(rowData.end_date)}
+        ></Column>
+        <Column
           field="result_date"
           header="Result Date"
           sortable
           body={(rowData) => getDate(rowData.result_date)}
         ></Column>
         <Column
-          header="Payment Amount"
+          header="Payment"
           body={paymentAmountTemplate}
           sortable
           sortField="amount"
