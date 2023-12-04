@@ -154,7 +154,6 @@ export default function Competitors() {
       .then((res) => {
         const rounds = res.data?.map((round: any) => ({
           ...round,
-          label: "Round " + round.number,
         }));
         setRounds(rounds);
         setCurrentRound(rounds[0] ?? {});

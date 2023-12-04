@@ -19,6 +19,7 @@ export default function RoundSelector({
             value={selectedRound}
             onChange={(e) => roundChanged(e.value)}
             options={rounds}
+            optionLabel="name"
             className="tw-min-w-[200px]"
           />
           <label htmlFor="provider">Select Round</label>
