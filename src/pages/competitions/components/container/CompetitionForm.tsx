@@ -23,6 +23,12 @@ export default function CompetitionForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (roundsArray.length > 0) {
+      setFormData((fd) => ({
+        ...fd,
+        rounds: fd.rounds.slice(0, roundsNo),
+      }));
+    }
     setRoundsArray(new Array<number>(roundsNo).fill(1));
   }, [roundsNo]);
 
@@ -111,6 +117,13 @@ export default function CompetitionForm() {
     for (let i = 0; i < roundsNo; i++) {
       const round = formData.rounds[i];
       const roundErrors = errors.rounds ?? [];
+
+      if (!round?.name) {
+        roundErrors[i] = {
+          ...roundErrors?.[i],
+          name: "round name is required",
+        };
+      }
 
       if (!round?.start_date) {
         roundErrors[i] = {

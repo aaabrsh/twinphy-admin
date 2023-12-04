@@ -9,6 +9,7 @@ export interface Competition {
 }
 
 export interface Round {
+  name: string;
   start_date: Date | null;
   end_date: Date | null;
   min_likes: number;

@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Calendar } from "primereact/calendar";
 import { Round } from "../../data";
 import { InputNumber } from "primereact/inputnumber";
+import { InputText } from "primereact/inputtext";
 
 export default function RoundInput({
   index,
@@ -21,6 +23,10 @@ export default function RoundInput({
     value: string | Date | number | null
   ) => void;
 }) {
+  useEffect(() => {
+    onRoundInputChange("name", index, "Round " + (index + 1));
+  }, []);
+
   const getNextDay = (date: Date) => {
     const tomorrow = new Date(date);
     tomorrow.setDate(date.getDate() + 1);
@@ -32,6 +38,23 @@ export default function RoundInput({
       <div className="tw-flex tw-flex-col tw-gap-7 tw-mb-5">
         <div className="dark-blue tw-font-bold">Round {index + 1}</div>
         <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-7">
+          <div>
+            <span className="p-float-label">
+              <InputText
+                id="name"
+                value={round?.name ?? "Round " + (index + 1)}
+                onChange={(e) =>
+                  onRoundInputChange("name", index, e.target.value)
+                }
+                className={`tw-w-full ${error?.name ? "p-invalid" : ""}`}
+                min={0}
+              />
+              <label htmlFor="name">Round Name</label>
+            </span>
+            {error?.name && (
+              <small className="tw-text-red-500">{error.name}</small>
+            )}
+          </div>
           <div>
             <span className="p-float-label">
               <InputNumber
