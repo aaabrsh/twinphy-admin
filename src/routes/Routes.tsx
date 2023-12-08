@@ -139,6 +139,17 @@ export default function Router() {
                 }
               />
               <Route
+                path="/competition/edit/:id"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.competition_form}
+                    activeLinks={["competition"]}
+                  >
+                    <CompetitionForm isEdit={true} />
+                  </Layout>
+                }
+              />
+              <Route
                 path="/competition/:id/user/list"
                 element={
                   <Layout

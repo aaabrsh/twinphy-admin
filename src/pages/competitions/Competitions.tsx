@@ -35,7 +35,7 @@ export default function Competitions() {
     if (status === "scheduled") {
       buttons.push({
         label: "Start",
-        icon: "bi bi-play-circle",
+        icon: "bi bi-play-circle-fill",
         command: () => {
           setNewStatus("started");
           setShowModal(true);
@@ -46,10 +46,17 @@ export default function Competitions() {
     if (status !== "cancelled" && status !== "ended") {
       buttons.push({
         label: "Cancel",
-        icon: "bi bi-x-circle",
+        icon: "bi bi-x-circle-fill",
         command: () => {
           setNewStatus("cancelled");
           setShowModal(true);
+        },
+      });
+      buttons.push({
+        label: "Edit",
+        icon: "bi bi-pencil-fill",
+        command: () => {
+          navigate("/competition/edit/" + selectedCompetition._id);
         },
       });
     }

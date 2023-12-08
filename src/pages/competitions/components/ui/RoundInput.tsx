@@ -10,6 +10,7 @@ export default function RoundInput({
   prev,
   error,
   is_last,
+  current_round,
   onRoundInputChange,
 }: {
   index: number;
@@ -17,6 +18,7 @@ export default function RoundInput({
   prev: Round | null;
   error: any;
   is_last: boolean;
+  current_round: number | null;
   onRoundInputChange: (
     key: string,
     index: number,
@@ -65,6 +67,7 @@ export default function RoundInput({
                 }
                 className={`tw-w-full ${error?.min_likes ? "p-invalid" : ""}`}
                 min={0}
+                disabled={current_round !== null && index + 1 < current_round}
               />
               <label htmlFor="min_likes">Minimum Likes Needed</label>
             </span>
@@ -84,6 +87,7 @@ export default function RoundInput({
                 minDate={
                   prev?.start_date ? getNextDay(prev?.start_date) : new Date()
                 }
+                disabled={current_round !== null && index + 1 <= current_round}
               />
               <label htmlFor="start_date">Start Date</label>
             </span>

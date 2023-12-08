@@ -1,11 +1,14 @@
 import { useRef, useEffect } from "react";
+import { formatResourceURL } from "../../../../utils/asset-paths";
 
 export default function UploadImageInput({
   image,
   onImageChange,
+  imageUrl,
 }: {
   image: File | null;
   onImageChange: (e: File | null) => void;
+  imageUrl: string;
 }) {
   const imageInputRef = useRef<any>();
 
@@ -33,20 +36,28 @@ export default function UploadImageInput({
         >
           Add Image (optional) +
         </button>
-        {image && (
+        {(image || imageUrl) && (
           <div className="m-3 tw-w-fit tw-relative">
             <img
               style={{ maxWidth: "100%" }}
-              src={URL.createObjectURL(image)}
+              src={
+                image
+                  ? URL.createObjectURL(image)
+                  : imageUrl
+                  ? formatResourceURL(imageUrl)
+                  : ""
+              }
             />
-            <div
-              className="tw-w-10 tw-h-10 tw-m-2 tw-absolute tw-top-0 tw-right-0 rounded-circle bg-danger tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
-              onClick={() => {
-                onImageChange(null);
-              }}
-            >
-              <i className="bi bi-x-lg text-white"></i>
-            </div>
+            {image && (
+              <div
+                className="tw-w-10 tw-h-10 tw-m-2 tw-absolute tw-top-0 tw-right-0 rounded-circle bg-danger tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
+                onClick={() => {
+                  onImageChange(null);
+                }}
+              >
+                <i className="bi bi-x-lg text-white"></i>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -4,23 +4,31 @@ import { InputText } from "primereact/inputtext";
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
-import { create } from "../../../../services/api";
+import { create, get, update } from "../../../../services/api";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UploadImageInput from "../ui/UploadImageInput";
 import RoundInput from "../ui/RoundInput";
 import ReactQuill from "react-quill";
 import { convertTimeZone } from "../../../../utils/time";
 import { Calendar } from "primereact/calendar";
 
-export default function CompetitionForm() {
+export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
   const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [roundsNo, setRoundsNo] = useState<number>(1);
   const [roundsArray, setRoundsArray] = useState<number[]>([]);
+  const [minRounds, setMinRounds] = useState(1);
   const navigate = useNavigate();
+  const params = useParams();
+
+  useEffect(() => {
+    if (isEdit) {
+      getCompetitionData(params.id ?? "");
+    }
+  }, []);
 
   useEffect(() => {
     if (roundsArray.length > 0) {
@@ -31,6 +39,20 @@ export default function CompetitionForm() {
     }
     setRoundsArray(new Array<number>(roundsNo).fill(1));
   }, [roundsNo]);
+
+  const getCompetitionData = (id: string) => {
+    get("competition/edit/" + id)
+      .then((res) => {
+        processFormDataForEdit(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! couldn't get competition Data"
+        );
+        navigate("/competition");
+      });
+  };
 
   const onFormInputChange = (
     key: string,
@@ -79,7 +101,11 @@ export default function CompetitionForm() {
     if (image) fd.append("file", image);
 
     setLoading(true);
-    create("competition/create", fd)
+    const request = isEdit
+      ? update("competition/edit/" + params.id, fd)
+      : create("competition/create", fd);
+
+    request
       .then((_) => {
         toast.success("competition created successfully");
         setLoading(false);
@@ -224,6 +250,21 @@ export default function CompetitionForm() {
     return lastDate;
   };
 
+  const processFormDataForEdit = (data: any) => {
+    data.end_date = new Date(data.end_date);
+    data.start_date = new Date(data.start_date);
+    data.result_date = new Date(data.result_date);
+
+    for (const round of data.rounds) {
+      round.start_date = new Date(round.start_date);
+      round.end_date = new Date(round.end_date);
+    }
+
+    setRoundsNo(data.rounds_count);
+    setFormData(data);
+    setMinRounds(data.current_round);
+  };
+
   return (
     <>
       <form
@@ -290,8 +331,14 @@ export default function CompetitionForm() {
               <InputNumber
                 inputId="roundsNo"
                 value={roundsNo}
-                onChange={(e) => setRoundsNo(e.value === null ? 1 : e.value)}
-                min={1}
+                onChange={(e) =>
+                  setRoundsNo(
+                    e.value === null || e.value < minRounds
+                      ? minRounds
+                      : e.value
+                  )
+                }
+                min={minRounds}
                 className={`tw-w-full`}
               />
               <label htmlFor="roundsNo">Number of Rounds</label>
@@ -316,6 +363,7 @@ export default function CompetitionForm() {
                   error={error.rounds?.[i]}
                   is_last={i === roundsNo - 1}
                   onRoundInputChange={onRoundDataChange}
+                  current_round={isEdit ? minRounds : null}
                 />
               ))}
             </fieldset>
@@ -379,7 +427,11 @@ export default function CompetitionForm() {
         </div>
 
         <div>
-          <UploadImageInput image={image} onImageChange={handleImageChange} />
+          <UploadImageInput
+            image={image}
+            onImageChange={handleImageChange}
+            imageUrl={isEdit ? (formData as any)["image"] : null}
+          />
         </div>
         <div className="tw-p-2 tw-flex tw-justify-end tw-gap-2 tw-mt-1">
           <button className="btn btn-secondary" type="reset">
