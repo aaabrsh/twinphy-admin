@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Competition, INITIAL_DATA } from "../../data";
+import { Competition, INITIAL_DATA, Round } from "../../data";
 import { InputText } from "primereact/inputtext";
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from "primereact/inputnumber";
@@ -15,6 +15,7 @@ import { Calendar } from "primereact/calendar";
 
 export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
+  const [originalData, setOriginalData] = useState<Competition>(INITIAL_DATA);
   const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,6 +39,25 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
       }));
     }
     setRoundsArray(new Array<number>(roundsNo).fill(1));
+
+    if (isEdit) {
+      const rounds: any[] = [];
+      for (let i = 0; i < roundsNo; i++) {
+        let round: any = formData.rounds[i];
+        let originalRound: any = originalData.rounds[i];
+
+        if (!round) round = {};
+        if (!round._id !== originalRound?._id) round._id = originalRound?._id;
+        if (!round.start_date) round.start_date = originalRound?.start_date;
+        if (!round.end_date) round.end_date = originalRound?.end_date;
+        if (round.min_likes === undefined)
+          round.min_likes = originalRound?.min_likes;
+
+        rounds.push(round);
+      }
+
+      setFormData((fd) => ({ ...fd, rounds: rounds as Round[] }));
+    }
   }, [roundsNo]);
 
   const getCompetitionData = (id: string) => {
@@ -106,8 +126,8 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
       : create("competition/create", fd);
 
     request
-      .then((_) => {
-        toast.success("competition created successfully");
+      .then((res) => {
+        toast.success(res.message ?? "competition created successfully");
         setLoading(false);
         navigate("/competition");
       })
@@ -262,6 +282,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
 
     setRoundsNo(data.rounds_count);
     setFormData(data);
+    setOriginalData(data);
     setMinRounds(data.current_round);
   };
 
@@ -363,7 +384,11 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
                   error={error.rounds?.[i]}
                   is_last={i === roundsNo - 1}
                   onRoundInputChange={onRoundDataChange}
-                  current_round={isEdit ? minRounds : null}
+                  current_round={
+                    isEdit && (formData as any)["status"] !== "scheduled"
+                      ? minRounds
+                      : null
+                  }
                 />
               ))}
             </fieldset>
