@@ -7,7 +7,7 @@ import { Dropdown } from "primereact/dropdown";
 import { create, get, update } from "../../../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import UploadImageInput from "../ui/UploadImageInput";
+import UploadImageInput from "../../../../components/UploadImageInput";
 import RoundInput from "../ui/RoundInput";
 import ReactQuill from "react-quill";
 import { convertTimeZone } from "../../../../utils/time";
@@ -456,6 +456,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
             image={image}
             onImageChange={handleImageChange}
             imageUrl={isEdit ? (formData as any)["image"] : null}
+            label="Add Image (optional) +"
           />
         </div>
         <div className="tw-p-2 tw-flex tw-justify-end tw-gap-2 tw-mt-1">

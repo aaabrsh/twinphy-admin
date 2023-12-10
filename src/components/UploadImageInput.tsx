@@ -1,14 +1,16 @@
 import { useRef, useEffect } from "react";
-import { formatResourceURL } from "../../../../utils/asset-paths";
+import { formatResourceURL } from "../utils/asset-paths";
 
 export default function UploadImageInput({
   image,
   onImageChange,
+  label,
   imageUrl,
 }: {
   image: File | null;
   onImageChange: (e: File | null) => void;
-  imageUrl: string;
+  label: string;
+  imageUrl?: string;
 }) {
   const imageInputRef = useRef<any>();
 
@@ -34,7 +36,7 @@ export default function UploadImageInput({
           style={{ background: "white", color: "rgb(58, 160, 255)" }}
           onClick={() => imageInputRef.current?.click()}
         >
-          Add Image (optional) +
+          {label}
         </button>
         {(image || imageUrl) && (
           <div className="m-3 tw-w-fit tw-relative">
