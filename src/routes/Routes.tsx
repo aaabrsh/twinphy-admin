@@ -15,6 +15,7 @@ import Competitions from "../pages/competitions/Competitions";
 import Competitors from "../pages/competitions/Competitors";
 import CompetitionForm from "../pages/competitions/components/container/CompetitionForm";
 import EditProfile from "../pages/profile/EditProfile";
+import Stickers from "../pages/stickers/Stickers";
 
 export default function Router() {
   let loggedIn = isLoggedIn();
@@ -157,6 +158,17 @@ export default function Router() {
                     activeLinks={["competition"]}
                   >
                     <Competitors />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/sticker"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.sticker}
+                    activeLinks={["sticker"]}
+                  >
+                    <Stickers />
                   </Layout>
                 }
               />

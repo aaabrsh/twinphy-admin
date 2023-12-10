@@ -83,4 +83,11 @@ export const breadcrumb = {
       { isLink: false, text: "Edit Profile" },
     ],
   },
+  sticker: {
+    title: "Stickers",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Stickers" },
+    ],
+  },
 };

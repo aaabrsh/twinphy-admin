@@ -98,6 +98,19 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
             </Link>
           </li>
 
+          {/* Stickers */}
+          <li className="nav-item">
+            <Link
+              className={`nav-link ${
+                activeLinks.includes("sticker") ? "" : "collapsed"
+              }`}
+              to="/sticker"
+            >
+              <i className="bx bx-certification"></i>
+              <span>Stickers</span>
+            </Link>
+          </li>
+
           {/* <li className="nav-heading">Pages</li> */}
           <li className="nav-item">
             <a
