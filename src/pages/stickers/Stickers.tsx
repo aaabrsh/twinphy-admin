@@ -186,6 +186,7 @@ export default function Stickers() {
           tableStyle={{ minWidth: "50rem" }}
         >
           <Column header="Image" body={imageBodyTemplate}></Column>
+          <Column field="type" header="type" sortable></Column>
           <Column field="position" header="Position" sortable></Column>
           <Column header="Actions" body={actionButtons}></Column>
         </DataTable>
