@@ -11,7 +11,7 @@ import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { Menu } from "primereact/menu";
 import StickerTableHeader from "./components/ui/StickerTableHeader";
 import { Dialog } from "primereact/dialog";
-import StickerForm from "./components/container/StickerForm";
+import StickerForm from "../../components/StickerForm";
 import { INITIAL_STICKER_DATA, Sticker } from "./data";
 
 export default function Stickers() {

@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { Sticker, fullLineTypePositions, smallTypePositions } from "../../data";
+import {
+  Sticker,
+  fullLineTypePositions,
+  smallTypePositions,
+} from "../pages/stickers/data";
 import { Dropdown } from "primereact/dropdown";
 import { RadioButton } from "primereact/radiobutton";
-import UploadImageInput from "../../../../components/UploadImageInput";
+import UploadImageInput from "./UploadImageInput";
 
 export default function StickerForm({
   formData,
