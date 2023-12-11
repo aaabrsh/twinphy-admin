@@ -74,7 +74,7 @@ export default function Stickers() {
   const imageBodyTemplate = (rowData: any) => {
     return (
       <img
-        src={formatResourceURL(rowData.name)}
+        src={formatResourceURL(rowData.image)}
         onError={handleCompetitionImageError}
         className="tw-shadow-lg tw-rounded-lg"
         style={{ maxWidth: "500px" }}

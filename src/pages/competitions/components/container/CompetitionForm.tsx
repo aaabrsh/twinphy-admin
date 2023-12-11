@@ -12,6 +12,10 @@ import RoundInput from "../ui/RoundInput";
 import ReactQuill from "react-quill";
 import { convertTimeZone } from "../../../../utils/time";
 import { Calendar } from "primereact/calendar";
+import { INITIAL_STICKER_DATA, Sticker } from "../../../stickers/data";
+import { Dialog } from "primereact/dialog";
+import StickerForm from "../../../../components/StickerForm";
+import ShowStickers from "../ui/ShowStickers";
 
 export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
@@ -22,6 +26,9 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   const [roundsNo, setRoundsNo] = useState<number>(1);
   const [roundsArray, setRoundsArray] = useState<number[]>([]);
   const [minRounds, setMinRounds] = useState(1);
+  const [stickers, setStickers] = useState<Sticker[]>([]);
+  const [stickerData, setStickerData] = useState<Sticker>(INITIAL_STICKER_DATA);
+  const [showStickerFormModal, setShowStickerFormModal] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
 
@@ -99,6 +106,16 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
       formDataCopy.result_date as Date
     );
 
+    const processedStickers = stickers.map((sticker, i) => ({
+      index: i,
+      type: sticker.type,
+      position: sticker.position,
+    }));
+
+    formDataCopy.stickers = formDataCopy.has_sticker
+      ? [...processedStickers]
+      : [];
+
     for (let i = 0; i < rounds.length; i++) {
       let round = rounds[i];
       round.start_date = convertTimeZone(round.start_date as Date);
@@ -119,6 +136,13 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
 
     fd.append("data", JSON.stringify(formData));
     if (image) fd.append("file", image);
+    if (formData.has_sticker) {
+      stickers.forEach((sticker) => {
+        if (sticker.image) {
+          fd.append(`stickers`, sticker.image);
+        }
+      });
+    }
 
     setLoading(true);
     const request = isEdit
@@ -286,6 +310,26 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     setMinRounds(data.current_round);
   };
 
+  const addSticker = () => {
+    setStickers((s) => [...s, stickerData]);
+    closeStickerModal();
+  };
+
+  const closeStickerModal = () => {
+    setStickerData(INITIAL_STICKER_DATA);
+    setShowStickerFormModal(false);
+  };
+
+  const removeSticker = (index: number) => {
+    let stickersCopy = [...stickers];
+    stickersCopy = [
+      ...stickersCopy.slice(0, index),
+      ...stickersCopy.slice(index + 1),
+    ];
+
+    setStickers(stickersCopy);
+  };
+
   return (
     <>
       <form
@@ -296,7 +340,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
         }}
         onReset={resetForm}
       >
-        <div className="tw-flex tw-flex-col tw-gap-8">
+        <div className="tw-flex tw-flex-col tw-gap-8 tw-mb-5">
           <div>
             <span className="p-float-label tw-mt-5">
               <InputText
@@ -449,6 +493,44 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
               )}
             </div>
           )}
+
+          <div>
+            <span className="flex align-items-center">
+              <Checkbox
+                inputId="has_sticker"
+                name="has_sticker"
+                value={formData.has_sticker}
+                onChange={(e) => {
+                  onFormInputChange("has_sticker", e.checked);
+                  if (!e.checked) {
+                    setStickers([]);
+                  }
+                }}
+                checked={formData.has_sticker}
+              />
+              <label
+                htmlFor="has_sticker"
+                style={{ cursor: "pointer" }}
+                className="tw-ml-2"
+              >
+                Has Stickers
+              </label>
+            </span>
+          </div>
+
+          {formData.has_sticker && (
+            <div className="">
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowStickerFormModal(true)}
+                type="button"
+              >
+                + Add Sticker
+              </button>
+            </div>
+          )}
+
+          <ShowStickers stickers={stickers} removeSticker={removeSticker} />
         </div>
 
         <div>
@@ -474,6 +556,23 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
           </button>
         </div>
       </form>
+
+      {/* Sticker Form Modal */}
+      <Dialog
+        header="Change Account Status"
+        visible={showStickerFormModal}
+        onHide={closeStickerModal}
+        position="center"
+        style={{ width: "50vw" }}
+        breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+      >
+        <StickerForm
+          formData={stickerData}
+          setFormData={setStickerData}
+          submitForm={addSticker}
+          cancelForm={closeStickerModal}
+        />
+      </Dialog>
     </>
   );
 }
