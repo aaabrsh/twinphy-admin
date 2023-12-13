@@ -282,9 +282,18 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   const getMinResultDate = () => {
     const rounds = formData.rounds;
     const lastRound = rounds[rounds.length - 1];
-    let lastDate = new Date();
+    const today = new Date();
+    let lastDate = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() + 1
+    );
     if (lastRound && lastRound.end_date) {
-      lastDate = lastRound.end_date;
+      lastDate = new Date(
+        lastRound.end_date.getFullYear(),
+        lastRound.end_date.getMonth(),
+        lastRound.end_date.getDate() + 1
+      );
     }
 
     if (formData.result_date && formData.result_date < lastDate) {
