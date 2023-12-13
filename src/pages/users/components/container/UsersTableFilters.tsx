@@ -13,7 +13,7 @@ export default function UsersTableFilters({
   const [last_name, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
+  const [contact_no, setContactNo] = useState("");
   const [provider, setProvider] = useState("");
   const [is_complete, setIsComplete] = useState("");
   const [status, setStatus] = useState("");
@@ -23,7 +23,7 @@ export default function UsersTableFilters({
     setLastName("");
     setUsername("");
     setEmail("");
-    setWhatsapp("");
+    setContactNo("");
     setProvider("");
     setIsComplete("");
     setIsComplete("");
@@ -50,8 +50,8 @@ export default function UsersTableFilters({
       query.email = email;
     }
 
-    if (whatsapp) {
-      query.whatsapp = whatsapp;
+    if (contact_no) {
+      query.contact_no = contact_no;
     }
 
     if (provider) {
@@ -116,15 +116,15 @@ export default function UsersTableFilters({
           <label htmlFor="email">Email</label>
         </span>
 
-        {/* Whatsapp */}
+        {/* Contact Number */}
         <span className="p-float-label tw-mt-5">
           <InputText
-            id="whatsapp"
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
-            className={whatsapp ? "tw-border-[#4154f1]" : ""}
+            id="contact_no"
+            value={contact_no}
+            onChange={(e) => setContactNo(e.target.value)}
+            className={contact_no ? "tw-border-[#4154f1]" : ""}
           />
-          <label htmlFor="whatsapp">WhatsApp</label>
+          <label htmlFor="contact_no">Contact Number</label>
         </span>
 
         {/* Provider */}

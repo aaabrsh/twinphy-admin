@@ -201,7 +201,7 @@ export default function UsersList() {
           sortable
         ></Column>
         <Column field="email" header="Email" sortable></Column>
-        <Column field="whatsapp" header="WhatsApp" sortable></Column>
+        <Column field="contact_no" header="Contact Number" sortable></Column>
         <Column
           header="Profile Provider"
           body={profileProviderTemplate}

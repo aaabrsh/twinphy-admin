@@ -162,8 +162,8 @@ export default function Profile() {
                   <span>{profile.email ?? "-"}</span>
                 </div>
                 <div className={style.textContainer}>
-                  <span className={style.label}>WhatsApp: </span>
-                  <span>{profile.whatsapp ?? "-"}</span>
+                  <span className={style.label}>Contact Number: </span>
+                  <span>{profile.contact_no ?? "-"}</span>
                 </div>
                 <div className={style.textContainer}>
                   <span className={style.label}>Joined On: </span>
