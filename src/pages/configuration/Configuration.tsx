@@ -4,11 +4,9 @@ import { create, get } from "../../services/api";
 import { toast } from "react-toastify";
 import {
   CONFIG_INITIAL_DATA,
-  CONFIG_METADATA_DATA,
   ConfigurationForm,
   ConfigurationFormError,
-  ConfigurationList,
-  ConfigurationMetadata,
+  ConfigurationData,
   ConfigurationTypes,
   ConfigurationValues,
   FileSizeDropdowns,
@@ -18,12 +16,10 @@ import { Dropdown } from "primereact/dropdown";
 
 export default function Configuration() {
   const [loading, setLoading] = useState(false);
-  const [originalData, setOriginalData] = useState<ConfigurationList[]>([]);
+  const [originalData, setOriginalData] = useState<ConfigurationData[]>([]);
   const [formData, setFormData] =
     useState<ConfigurationForm>(CONFIG_INITIAL_DATA);
   const [error, setError] = useState<ConfigurationFormError>();
-  const [metadata, setMetadata] =
-    useState<ConfigurationMetadata>(CONFIG_METADATA_DATA);
 
   useEffect(() => {
     getConfigurationData();
@@ -46,10 +42,10 @@ export default function Configuration() {
       });
   };
 
-  const processApiConfigurationData = (data: ConfigurationList[]) => {
+  const processApiConfigurationData = (data: ConfigurationData[]) => {
     const processedData: ConfigurationForm = CONFIG_INITIAL_DATA;
     for (const entry of data) {
-      processedData[entry.name] = entry.value;
+      processedData[entry.key] = entry;
     }
 
     setFormData(processedData);
@@ -59,16 +55,16 @@ export default function Configuration() {
     key: ConfigurationTypes,
     value: ConfigurationValues
   ) => {
-    setFormData((fd) => ({ ...fd, [key]: value }));
+    setFormData((fd) => ({ ...fd, [key]: { ...fd[key], value } }));
   };
 
   const onFormMetaDatatChange = (key: ConfigurationTypes, value: string) => {
-    setMetadata((fd) => ({ ...fd, [key]: value }));
+    setFormData((fd) => ({ ...fd, [key]: { ...fd[key], unit: value } }));
   };
 
   const submitForm = () => {
     if (validateForm()) {
-      updateConfiguration(formData, metadata);
+      updateConfiguration(formData);
     }
   };
 
@@ -76,7 +72,7 @@ export default function Configuration() {
     let errors: any = {};
 
     for (const key in formData) {
-      if (!(formData as any)[key]) {
+      if (!(formData as any)[key].value) {
         errors[key] = "required";
       }
     }
@@ -90,13 +86,9 @@ export default function Configuration() {
     processApiConfigurationData(originalData);
   };
 
-  const updateConfiguration = (
-    data: ConfigurationForm,
-    metadata: ConfigurationMetadata
-  ) => {
+  const updateConfiguration = (data: ConfigurationForm) => {
     setLoading(true);
-    const payload = { data, metadata };
-    create("configuration", payload)
+    create("configuration", { data })
       .then((res) => {
         toast.success(res.message ?? "Configuration data updated successfully");
         setLoading(false);
@@ -132,7 +124,7 @@ export default function Configuration() {
               <span className="p-float-label">
                 <InputNumber
                   inputId="max_image_upload_size"
-                  value={formData.max_image_upload_size}
+                  value={formData.max_image_upload_size?.value}
                   onChange={(e) =>
                     onFormInputChange("max_image_upload_size", e.value ?? 0)
                   }
@@ -148,7 +140,7 @@ export default function Configuration() {
               <span className="p-float-label">
                 <Dropdown
                   inputId="imageUploadSize"
-                  value={metadata.max_image_upload_size}
+                  value={formData.max_image_upload_size.unit}
                   onChange={(e) =>
                     onFormMetaDatatChange("max_image_upload_size", e.value)
                   }
@@ -169,7 +161,7 @@ export default function Configuration() {
               <span className="p-float-label">
                 <InputNumber
                   inputId="max_video_upload_size"
-                  value={formData.max_video_upload_size}
+                  value={formData.max_video_upload_size.value}
                   onChange={(e) =>
                     onFormInputChange("max_video_upload_size", e.value ?? 0)
                   }
@@ -185,7 +177,7 @@ export default function Configuration() {
               <span className="p-float-label">
                 <Dropdown
                   inputId="videoUploadSize"
-                  value={metadata.max_video_upload_size}
+                  value={formData.max_video_upload_size.unit}
                   onChange={(e) =>
                     onFormMetaDatatChange("max_video_upload_size", e.value)
                   }
@@ -206,7 +198,7 @@ export default function Configuration() {
               <span className="p-float-label">
                 <InputNumber
                   inputId="max_video_duration"
-                  value={formData.max_video_duration}
+                  value={formData.max_video_duration.value}
                   onChange={(e) =>
                     onFormInputChange("max_video_duration", e.value ?? 0)
                   }
@@ -220,7 +212,7 @@ export default function Configuration() {
               <span className="p-float-label">
                 <Dropdown
                   inputId="videoDuration"
-                  value={metadata.max_video_duration}
+                  value={formData.max_video_duration.unit}
                   onChange={(e) =>
                     onFormMetaDatatChange("max_video_duration", e.value)
                   }
@@ -243,7 +235,7 @@ export default function Configuration() {
           </button>
           <button disabled={loading} className="btn btn-primary" type="submit">
             {!loading ? (
-              <span>Submit</span>
+              <span>Update</span>
             ) : (
               <div className="spinner-border spinner-border-sm" role="status">
                 <span className="visually-hidden">Loading...</span>
