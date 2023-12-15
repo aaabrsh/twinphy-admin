@@ -90,4 +90,11 @@ export const breadcrumb = {
       { isLink: false, text: "Stickers" },
     ],
   },
+  configuration: {
+    title: "Configurations",
+    path: [
+      { isLink: true, to: "/dashboard", text: "Home" },
+      { isLink: false, text: "Configuration" },
+    ],
+  },
 };

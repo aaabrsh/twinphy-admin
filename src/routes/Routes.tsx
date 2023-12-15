@@ -16,6 +16,7 @@ import Competitors from "../pages/competitions/Competitors";
 import CompetitionForm from "../pages/competitions/components/container/CompetitionForm";
 import EditProfile from "../pages/profile/EditProfile";
 import Stickers from "../pages/stickers/Stickers";
+import Configuration from "../pages/configuration/Configuration";
 
 export default function Router() {
   let loggedIn = isLoggedIn();
@@ -177,6 +178,17 @@ export default function Router() {
                 element={
                   <Layout breadcrumb={breadcrumb.self_profile}>
                     <EditProfile />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/configuration"
+                element={
+                  <Layout
+                    breadcrumb={breadcrumb.configuration}
+                    activeLinks={["configuration"]}
+                  >
+                    <Configuration />
                   </Layout>
                 }
               />

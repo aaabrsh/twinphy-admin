@@ -155,6 +155,19 @@ export default function Sidebar({ activeLinks }: { activeLinks: string[] }) {
               </li>
             </ul>
           </li>
+
+          {/* Configuration */}
+          <li className="nav-item">
+            <Link
+              className={`nav-link ${
+                activeLinks.includes("configuration") ? "" : "collapsed"
+              }`}
+              to="/configuration"
+            >
+              <i className="bi bi-gear"></i>
+              <span>Configurations</span>
+            </Link>
+          </li>
         </ul>
       </aside>
     </>
