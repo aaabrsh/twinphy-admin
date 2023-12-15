@@ -26,12 +26,12 @@ export default function Configuration() {
     useState<ConfigurationMetadata>(CONFIG_METADATA_DATA);
 
   useEffect(() => {
-    getConfigurationData;
+    getConfigurationData();
   }, []);
 
   const getConfigurationData = () => {
     setLoading(true);
-    get("configuration/all/")
+    get("configuration/all")
       .then((res) => {
         setOriginalData(res.data);
         processApiConfigurationData(res.data);
