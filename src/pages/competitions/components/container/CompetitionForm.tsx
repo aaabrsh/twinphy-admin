@@ -106,11 +106,14 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
       formDataCopy.result_date as Date
     );
 
-    const processedStickers = stickers.map((sticker, i) => ({
-      index: i,
-      type: sticker.type,
-      position: sticker.position,
-    }));
+    const processedStickers = stickers
+      .filter((s) => !s._id)
+      .map((sticker, i) => ({
+        index: i,
+        type: sticker.type,
+        position: sticker.position,
+        _id: sticker._id,
+      }));
 
     formDataCopy.stickers = formDataCopy.has_sticker
       ? [...processedStickers]
@@ -138,7 +141,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     if (image) fd.append("file", image);
     if (formData.has_sticker) {
       stickers.forEach((sticker) => {
-        if (sticker.image) {
+        if (sticker.image && !sticker._id) {
           fd.append(`stickers`, sticker.image);
         }
       });
@@ -317,6 +320,10 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     setFormData(data);
     setOriginalData(data);
     setMinRounds(data.current_round);
+
+    if (data.has_sticker && data.stickers && data.stickers.length > 0) {
+      setStickers(data.stickers);
+    }
   };
 
   const addSticker = () => {

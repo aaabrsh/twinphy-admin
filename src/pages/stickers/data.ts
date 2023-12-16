@@ -2,6 +2,7 @@ export interface Sticker {
   image: File | null;
   position: smallPosition | fullLinePosition | null;
   type: "small" | "full-line";
+  _id?: string;
 }
 
 export type smallPosition =
