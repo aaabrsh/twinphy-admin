@@ -77,7 +77,7 @@ export default function Stickers() {
         src={formatResourceURL(rowData.image)}
         onError={handleCompetitionImageError}
         className="tw-shadow-lg tw-rounded-lg"
-        style={{ maxWidth: "500px" }}
+        style={{ maxWidth: "500px", maxHeight: "250px" }}
       />
     );
   };
@@ -146,7 +146,8 @@ export default function Stickers() {
 
     fd.append("file", formData.image as File);
     fd.append("type", formData.type);
-    fd.append("position", formData.position ?? "");
+    fd.append("position", formData.position ?? "top-left");
+    fd.append("usage_limit", formData.usage_limit.toString());
 
     setTableLoading(true);
     upload("sticker", fd, () => {}, "post")
@@ -188,6 +189,8 @@ export default function Stickers() {
           <Column header="Image" body={imageBodyTemplate}></Column>
           <Column field="type" header="type" sortable></Column>
           <Column field="position" header="Position" sortable></Column>
+          <Column field="usage_limit" header="Usage Limit" sortable></Column>
+          <Column field="usage_count" header="Usage Count" sortable></Column>
           <Column header="Actions" body={actionButtons}></Column>
         </DataTable>
 
