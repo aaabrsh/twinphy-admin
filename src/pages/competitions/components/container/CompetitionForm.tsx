@@ -113,6 +113,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
         type: sticker.type,
         position: sticker.position,
         _id: sticker._id,
+        usage_limit: sticker.usage_limit,
       }));
 
     formDataCopy.stickers = formDataCopy.has_sticker

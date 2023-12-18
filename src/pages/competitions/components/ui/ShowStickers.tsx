@@ -98,6 +98,10 @@ const SmallSticker = ({
         Position:{" "}
         <span className="text-primary fw-bold">{sticker.position}</span>
       </h6>
+      <h6>
+        Usage Limit:{" "}
+        <span className="text-primary fw-bold">{sticker.usage_limit}</span>
+      </h6>
     </div>
   );
 };
@@ -130,6 +134,10 @@ const FullLineSticker = ({
       <h6>
         Position:{" "}
         <span className="text-primary fw-bold">{sticker.position}</span>
+      </h6>
+      <h6>
+        Usage Limit:{" "}
+        <span className="text-primary fw-bold">{sticker.usage_limit}</span>
       </h6>
     </div>
   );
