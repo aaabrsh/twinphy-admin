@@ -3,6 +3,7 @@ export interface Sticker {
   position: smallPosition | fullLinePosition | null;
   type: "small" | "full-line";
   _id?: string;
+  usage_limit: number;
 }
 
 export type smallPosition =
@@ -26,4 +27,5 @@ export const INITIAL_STICKER_DATA: Sticker = {
   image: null,
   position: null,
   type: "small",
+  usage_limit: 0,
 };

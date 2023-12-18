@@ -7,6 +7,7 @@ import {
 import { Dropdown } from "primereact/dropdown";
 import { RadioButton } from "primereact/radiobutton";
 import UploadImageInput from "./UploadImageInput";
+import { InputNumber } from "primereact/inputnumber";
 
 export default function StickerForm({
   formData,
@@ -46,6 +47,10 @@ export default function StickerForm({
       errors.image = "image is required";
     }
 
+    if (formData.usage_limit === null) {
+      errors.usage_limit = "usage limit is required";
+    }
+
     if (
       formData.type === "small" &&
       !smallTypePositions.includes(formData.position ?? "")
@@ -79,7 +84,7 @@ export default function StickerForm({
   return (
     <>
       <div className="mb-5">
-        <div className="tw-flex tw-flex-col tw-gap-8 mb-5">
+        <div className="tw-flex tw-flex-col tw-gap-10 mb-4">
           <div>
             <label className="mb-2">Sticker Type</label>
             <div className="tw-flex tw-flex-wrap tw-gap-3">
@@ -126,6 +131,22 @@ export default function StickerForm({
             </span>
             {error.position && (
               <small className="tw-text-red-500">{error.position}</small>
+            )}
+          </div>
+
+          <div>
+            <span className="p-float-label">
+              <InputNumber
+                inputId="usage_limit"
+                value={formData.usage_limit}
+                onChange={(e) => onFormInputChange("usage_limit", e.value)}
+                className={`tw-w-full ${error.usage_limit ? "p-invalid" : ""}`}
+                min={0}
+              />
+              <label htmlFor="usage_limit">Usage Limit</label>
+            </span>
+            {error.usage_limit && (
+              <small className="tw-text-red-500">{error.usage_limit}</small>
             )}
           </div>
         </div>
