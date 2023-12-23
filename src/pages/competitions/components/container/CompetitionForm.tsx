@@ -290,13 +290,13 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     let lastDate = new Date(
       today.getFullYear(),
       today.getMonth(),
-      today.getDate() + 1
+      today.getDate()
     );
     if (lastRound && lastRound.end_date) {
       lastDate = new Date(
         lastRound.end_date.getFullYear(),
         lastRound.end_date.getMonth(),
-        lastRound.end_date.getDate() + 1
+        lastRound.end_date.getDate()
       );
     }
 
