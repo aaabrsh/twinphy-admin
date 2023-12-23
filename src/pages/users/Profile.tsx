@@ -149,6 +149,7 @@ export default function Profile() {
               className="tw-rounded-[50%]"
               style={{ width: "150px", height: "150px", objectFit: "cover" }}
             />
+            <div className="tw-text-center text-muted">{"@" + profile.username}</div>
           </div>
           <div className="tw-flex tw-flex-col tw-w-full tw-px-2">
             <div className="tw-flex-grow tw-flex tw-flex-col md:tw-flex-row">
