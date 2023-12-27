@@ -153,9 +153,18 @@ export default function StickerForm({
 
         <div>
           <UploadImageInput
-            image={formData.image}
+            image={
+              formData._id && typeof formData.image === "string"
+                ? null
+                : formData.image
+            }
             onImageChange={(image) => onFormInputChange("image", image)}
             label="Upload Sticker +"
+            imageUrl={
+              formData._id && typeof formData.image === "string"
+                ? (formData.image as string)
+                : ""
+            }
           />
           {error.image && (
             <small className="tw-text-red-500">{error.image}</small>

@@ -106,20 +106,6 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
       formDataCopy.result_date as Date
     );
 
-    const processedStickers = stickers
-      .filter((s) => !s._id)
-      .map((sticker, i) => ({
-        index: i,
-        type: sticker.type,
-        position: sticker.position,
-        _id: sticker._id,
-        usage_limit: sticker.usage_limit,
-      }));
-
-    formDataCopy.stickers = formDataCopy.has_sticker
-      ? [...processedStickers]
-      : [];
-
     for (let i = 0; i < rounds.length; i++) {
       let round = rounds[i];
       round.start_date = convertTimeZone(round.start_date as Date);
@@ -138,15 +124,36 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   }) => {
     const fd = new FormData();
 
-    fd.append("data", JSON.stringify(formData));
     if (image) fd.append("file", image);
     if (formData.has_sticker) {
+      const finalStickers: any[] = [];
+      let stickerIndex = 0;
       stickers.forEach((sticker) => {
-        if (sticker.image && !sticker._id) {
+        const s: any = {
+          type: sticker.type,
+          position: sticker.position,
+          usage_limit: sticker.usage_limit,
+        };
+
+        if (sticker._id) s._id = sticker._id;
+
+        if (
+          sticker.image &&
+          (!sticker._id || typeof sticker.image !== "string")
+        ) {
           fd.append(`stickers`, sticker.image);
+          s.index = stickerIndex;
+          stickerIndex++;
         }
+
+        finalStickers.push(s);
       });
+      (formData as any).stickers = [...finalStickers];
+    } else {
+      (formData as any).stickers = [];
     }
+
+    fd.append("data", JSON.stringify(formData));
 
     setLoading(true);
     const request = isEdit
@@ -328,7 +335,14 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   };
 
   const addSticker = () => {
-    setStickers((s) => [...s, stickerData]);
+    if (stickerData._id) {
+      const stickersCopy = stickers.map((s) =>
+        s._id === stickerData._id ? stickerData : s
+      );
+      setStickers(stickersCopy);
+    } else {
+      setStickers((s) => [...s, stickerData]);
+    }
     closeStickerModal();
   };
 
@@ -339,12 +353,22 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
 
   const removeSticker = (index: number) => {
     let stickersCopy = [...stickers];
-    stickersCopy = [
-      ...stickersCopy.slice(0, index),
-      ...stickersCopy.slice(index + 1),
-    ];
+
+    if (isEdit) {
+      stickersCopy[index] = (originalData as any).stickers?.[index];
+    } else {
+      stickersCopy = [
+        ...stickersCopy.slice(0, index),
+        ...stickersCopy.slice(index + 1),
+      ];
+    }
 
     setStickers(stickersCopy);
+  };
+
+  const handleStickerEdit = (sticker: Sticker) => {
+    setStickerData(sticker);
+    setShowStickerFormModal(true);
   };
 
   return (
@@ -556,7 +580,11 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
             </div>
           )}
 
-          <ShowStickers stickers={stickers} removeSticker={removeSticker} />
+          <ShowStickers
+            stickers={stickers}
+            removeSticker={removeSticker}
+            editSticker={handleStickerEdit}
+          />
         </div>
 
         <div className="tw-p-2 tw-flex tw-justify-end tw-gap-2 tw-mt-1">
