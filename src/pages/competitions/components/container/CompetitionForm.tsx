@@ -357,6 +357,15 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
         }}
         onReset={resetForm}
       >
+        <div>
+          <UploadImageInput
+            image={image}
+            onImageChange={handleImageChange}
+            imageUrl={isEdit ? (formData as any)["image"] : null}
+            label="Competition Cover Photo"
+          />
+        </div>
+
         <div className="tw-flex tw-flex-col tw-gap-8 tw-mb-5">
           <div>
             <span className="p-float-label tw-mt-5">
@@ -550,14 +559,6 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
           <ShowStickers stickers={stickers} removeSticker={removeSticker} />
         </div>
 
-        <div>
-          <UploadImageInput
-            image={image}
-            onImageChange={handleImageChange}
-            imageUrl={isEdit ? (formData as any)["image"] : null}
-            label="Add Image (optional) +"
-          />
-        </div>
         <div className="tw-p-2 tw-flex tw-justify-end tw-gap-2 tw-mt-1">
           <button className="btn btn-secondary" type="reset">
             Cancel
