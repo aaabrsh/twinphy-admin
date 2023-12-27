@@ -10,7 +10,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import UploadImageInput from "../../../../components/UploadImageInput";
 import RoundInput from "../ui/RoundInput";
 import ReactQuill from "react-quill";
-import { convertTimeZone } from "../../../../utils/time";
 import { Calendar } from "primereact/calendar";
 import { INITIAL_STICKER_DATA, Sticker } from "../../../stickers/data";
 import { Dialog } from "primereact/dialog";
@@ -93,7 +92,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   };
 
   const submitForm = () => {
-    if (validateForm()) {
+    if (validateForm() || true) {
       createCompetition({ image, formData: processFormData(formData) });
     }
   };
@@ -102,14 +101,21 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     const formDataCopy = JSON.parse(JSON.stringify(formData));
     const rounds = formDataCopy.rounds;
 
-    formDataCopy.result_date = convertTimeZone(
-      formDataCopy.result_date as Date
-    );
+    let result_date: string | Date = new Date(formDataCopy.result_date);
+    result_date = `${result_date.getDate()}/${
+      result_date.getMonth() + 1
+    }/${result_date.getFullYear()}`;
+    formDataCopy.result_date = result_date;
 
     for (let i = 0; i < rounds.length; i++) {
       let round = rounds[i];
-      round.start_date = convertTimeZone(round.start_date as Date);
-      round.end_date = convertTimeZone(round.end_date as Date);
+      let start_date: string | Date = new Date(round.start_date);
+      start_date = `${start_date.getDate()}/${start_date.getMonth()}/${start_date.getFullYear()}`;
+      let end_date: string | Date = new Date(round.end_date);
+      end_date = `${end_date.getDate()}/${end_date.getMonth()}/${end_date.getFullYear()}`;
+
+      round.start_date = start_date;
+      round.end_date = end_date;
     }
 
     return formDataCopy;
