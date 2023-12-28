@@ -271,20 +271,10 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
 
     if (key === "start_date") {
       let start_date = new Date(value as string);
-      start_date = new Date(
-        start_date.getFullYear(),
-        start_date.getMonth(),
-        start_date.getDate()
-      );
       roundsCopy[index] = { ...roundsCopy[index], [key]: start_date };
 
       if (roundsCopy[index - 1] && !isNaN((value as Date)?.getTime())) {
         let end_date = new Date(value as string);
-        end_date = new Date(
-          end_date.getFullYear(),
-          end_date.getMonth(),
-          end_date.getDate() - 1
-        );
         roundsCopy[index - 1] = {
           ...roundsCopy[index - 1],
           end_date,
