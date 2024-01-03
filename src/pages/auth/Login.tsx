@@ -113,7 +113,7 @@ export default function Login() {
                       className="logo d-flex align-items-center w-auto"
                     >
                       <img src="assets/img/logo.png" alt="" />
-                      <span className="d-none d-lg-block">Twinphy Admin</span>
+                      <span className="d-none d-lg-block">VidiBattle Admin</span>
                     </a>
                   </div>
 

@@ -50,7 +50,7 @@ export default function Header() {
         <div className="d-flex align-items-center justify-content-between">
           <a href="index.html" className="logo d-flex align-items-center">
             <img src="/assets/img/logo.png" alt="" />
-            <span className="d-none d-lg-block">Twinphy Admin</span>
+            <span className="d-none d-lg-block">VidiBattle Admin</span>
           </a>
           <i
             onClick={toggleSideBar}
