@@ -92,7 +92,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   };
 
   const submitForm = () => {
-    if (validateForm() || true) {
+    if (validateForm()) {
       createCompetition({ image, formData: processFormData(formData) });
     }
   };
