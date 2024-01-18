@@ -11,8 +11,11 @@ import {
   ConfigurationValues,
   FileSizeDropdowns,
   VideoDurationDropdowns,
+  formDataToValidateForRequired,
 } from "./configuration_data";
 import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import UploadImageInput from "../../components/UploadImageInput";
 
 export default function Configuration() {
   const [loading, setLoading] = useState(false);
@@ -20,6 +23,8 @@ export default function Configuration() {
   const [formData, setFormData] =
     useState<ConfigurationForm>(CONFIG_INITIAL_DATA);
   const [error, setError] = useState<ConfigurationFormError>();
+  const [images, setImages] =
+    useState<{ [key in ConfigurationTypes]?: File | null }>();
 
   useEffect(() => {
     getConfigurationData();
@@ -64,14 +69,14 @@ export default function Configuration() {
 
   const submitForm = () => {
     if (validateForm()) {
-      updateConfiguration(formData);
+      updateConfiguration(getFilesToUpload());
     }
   };
 
   const validateForm = () => {
     let errors: any = {};
 
-    for (const key in formData) {
+    for (const key of formDataToValidateForRequired) {
       if (!(formData as any)[key].value) {
         errors[key] = "required";
       }
@@ -82,13 +87,34 @@ export default function Configuration() {
     return Object.keys(errors).length > 0 ? false : true;
   };
 
-  const resetForm = () => {
-    processApiConfigurationData(originalData);
+  const getFilesToUpload = (): FormData => {
+    const fd = new FormData();
+
+    if (images?.loading_screen_image) {
+      fd.append("loading_screen_image", images?.loading_screen_image);
+    }
+
+    if (images?.home_bgd_desktop) {
+      fd.append("home_bgd_desktop", images?.home_bgd_desktop);
+    }
+
+    if (images?.home_bgd_mobile) {
+      fd.append("home_bgd_mobile", images?.home_bgd_mobile);
+    }
+
+    fd.append("data", JSON.stringify(formData));
+
+    return fd;
   };
 
-  const updateConfiguration = (data: ConfigurationForm) => {
+  const resetForm = () => {
+    processApiConfigurationData(originalData);
+    setImages({});
+  };
+
+  const updateConfiguration = (data: FormData) => {
     setLoading(true);
-    create("configuration", { data })
+    create("configuration", data)
       .then((res) => {
         toast.success(res.message ?? "Configuration data updated successfully");
         setLoading(false);
@@ -101,6 +127,15 @@ export default function Configuration() {
         );
         setLoading(false);
       });
+  };
+
+  const onImageChange = (key: ConfigurationTypes, file?: File | null) => {
+    setImages((i) => ({ ...i, [key]: file }));
+  };
+
+  const useDefaultLoadingScreen = () => {
+    onImageChange("loading_screen_image", null);
+    onFormInputChange("loading_screen_image", "default");
   };
 
   return (
@@ -124,7 +159,9 @@ export default function Configuration() {
               <span className="p-float-label">
                 <InputNumber
                   inputId="max_image_upload_size"
-                  value={formData.max_image_upload_size?.value}
+                  value={parseInt(
+                    formData.max_image_upload_size?.value as string
+                  )}
                   onChange={(e) =>
                     onFormInputChange("max_image_upload_size", e.value ?? 0)
                   }
@@ -161,7 +198,9 @@ export default function Configuration() {
               <span className="p-float-label">
                 <InputNumber
                   inputId="max_video_upload_size"
-                  value={formData.max_video_upload_size.value}
+                  value={parseInt(
+                    formData.max_video_upload_size.value as string
+                  )}
                   onChange={(e) =>
                     onFormInputChange("max_video_upload_size", e.value ?? 0)
                   }
@@ -198,7 +237,7 @@ export default function Configuration() {
               <span className="p-float-label">
                 <InputNumber
                   inputId="max_video_duration"
-                  value={formData.max_video_duration.value}
+                  value={parseInt(formData.max_video_duration.value as string)}
                   onChange={(e) =>
                     onFormInputChange("max_video_duration", e.value ?? 0)
                   }
@@ -227,6 +266,63 @@ export default function Configuration() {
               </small>
             )}
           </div>
+
+          <div>
+            <div className="tw-flex tw-flex-col gap-2">
+              <span className="p-float-label tw-mb-2">
+                <label>Loading Screen Image</label>
+              </span>
+              {formData["loading_screen_image"] &&
+                formData["loading_screen_image"].value !== "default" && (
+                  <div>
+                    <Button
+                      className="tw-rounded"
+                      onClick={useDefaultLoadingScreen}
+                    >
+                      Use Default Loading Screen
+                    </Button>
+                  </div>
+                )}
+              <UploadImageInput
+                image={images?.loading_screen_image ?? null}
+                onImageChange={(e) => onImageChange("loading_screen_image", e)}
+                label="Upload"
+                imageUrl={
+                  formData["loading_screen_image"]?.value === "default"
+                    ? ""
+                    : (formData["loading_screen_image"]?.value as string) ?? ""
+                }
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="tw-flex tw-flex-col gap-2">
+              <span className="p-float-label tw-mb-2">
+                <label>Background Image - Desktop</label>
+              </span>
+              <UploadImageInput
+                image={images?.home_bgd_desktop ?? null}
+                onImageChange={(e) => onImageChange("home_bgd_desktop", e)}
+                label="Upload"
+                imageUrl={formData["home_bgd_desktop"]?.value as string}
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="tw-flex tw-flex-col gap-2">
+              <span className="p-float-label tw-mb-2">
+                <label>Background Image - Mobile</label>
+              </span>
+              <UploadImageInput
+                image={images?.home_bgd_mobile ?? null}
+                onImageChange={(e) => onImageChange("home_bgd_mobile", e)}
+                label="Upload"
+                imageUrl={formData["home_bgd_mobile"]?.value as string}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="tw-p-2 tw-flex tw-justify-end tw-gap-2 tw-mt-1">
@@ -247,79 +343,3 @@ export default function Configuration() {
     </>
   );
 }
-
-// function PromptPlotCode() {
-//   return (
-//     <>
-//       <div className="flex h-screen w-full select-none overflow-hidden">
-//         <main
-//           className="my-1 flex-1 overflow-y-auto rounded-l-lg bg-gray-200 px-10 pt-2 pb-2
-//       transition duration-500 ease-in-out dark:bg-black"
-//         >
-//           <div className="min-h-screenbg-gray-200 rounded-xl pb-24 dark:bg-[#111827]">
-//             <div className="container mx-auto mt-8 max-w-3xl">
-//               <h1 className="px-6 pt-3 text-2xl font-bold text-gray-700 dark:text-white md:px-0">
-//                 Account Settings
-//               </h1>
-//               <ul className="mt-3 flex border-b border-gray-300 px-6 text-sm font-medium text-gray-600 dark:border-gray-500 md:px-0">
-//                 <li
-//                   className={`mr-8 hover:text-gray-900 dark:hover:text-gray-300 border-b-2 border-gray-800 text-gray-900 dark:border-white dark:text-white`}
-//                 >
-//                   <button className="inline-block py-4">Profile Info</button>
-//                 </li>
-
-//                 <li
-//                   className={`mr-8 hover:text-gray-900 dark:hover:text-gray-300 border-b-2 border-gray-800 text-gray-900 dark:border-white dark:text-white`}
-//                 >
-//                   <button className="inline-block py-4">Billing</button>
-//                 </li>
-//               </ul>
-//               <div className="mx-auto mt-8 flex w-full overflow-hidden rounded-lg rounded-b-none bg-white">
-//                 <div className="hidden w-1/3 bg-gray-100 p-8 dark:bg-gray-500 md:inline-block">
-//                   <h2 className="text-md mb-4 font-medium tracking-wide text-gray-700 dark:text-white">
-//                     Configurations
-//                   </h2>
-//                   <p className="text-sm text-gray-500 dark:text-white">
-//                     Update system-wide variables here
-//                   </p>
-//                 </div>
-//                 <div className="w-full md:w-2/3">
-//                   <hr className="border-gray-200" />
-//                   <form className="py-8 px-16 dark:bg-gray-300">
-//                     <input className="text-sm text-gray-600 dark:bg-gray-300 dark:text-black" />
-
-//                     <div className="flex">
-//                       <input
-//                         className="mt-2 block w-full rounded-lg border-2 border-gray-200 px-3 py-2 text-base text-gray-900 focus:border-indigo-500 focus:outline-none dark:border-gray-400 dark:bg-gray-300"
-//                         type="password"
-//                         required
-//                       />
-//                       <button className="mx-2 rounded bg-gray-700 px-2 text-white">
-//                         <svg
-//                           xmlns="http://www.w3.org/2000/svg"
-//                           fill="none"
-//                           viewBox="0 0 24 24"
-//                           strokeWidth={1.5}
-//                           stroke="currentColor"
-//                           className="h-6 w-6"
-//                         >
-//                           <path
-//                             strokeLinecap="round"
-//                             strokeLinejoin="round"
-//                             d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-//                           />
-//                         </svg>
-//                       </button>
-//                     </div>
-//                   </form>
-//                 </div>
-//               </div>
-
-//               {/* </form> */}
-//             </div>
-//           </div>
-//         </main>
-//       </div>
-//     </>
-//   );
-// }
