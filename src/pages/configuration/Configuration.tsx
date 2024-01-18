@@ -12,6 +12,7 @@ import {
   FileSizeDropdowns,
   VideoDurationDropdowns,
   formDataToValidateForRequired,
+  ImageConfigTypes,
 } from "./configuration_data";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
@@ -133,9 +134,9 @@ export default function Configuration() {
     setImages((i) => ({ ...i, [key]: file }));
   };
 
-  const useDefaultLoadingScreen = () => {
-    onImageChange("loading_screen_image", null);
-    onFormInputChange("loading_screen_image", "default");
+  const removeImageData = (key: ImageConfigTypes) => {
+    onImageChange(key, null);
+    onFormInputChange(key, "");
   };
 
   return (
@@ -272,26 +273,22 @@ export default function Configuration() {
               <span className="p-float-label tw-mb-2">
                 <label>Loading Screen Image</label>
               </span>
-              {formData["loading_screen_image"] &&
-                formData["loading_screen_image"].value !== "default" && (
-                  <div>
-                    <Button
-                      className="tw-rounded"
-                      onClick={useDefaultLoadingScreen}
-                    >
-                      Use Default Loading Screen
-                    </Button>
-                  </div>
-                )}
+              {formData["loading_screen_image"]?.value && (
+                <div>
+                  <Button
+                    className="tw-rounded mt-1"
+                    type="button"
+                    onClick={() => removeImageData("loading_screen_image")}
+                  >
+                    Use Default Loading Screen
+                  </Button>
+                </div>
+              )}
               <UploadImageInput
                 image={images?.loading_screen_image ?? null}
                 onImageChange={(e) => onImageChange("loading_screen_image", e)}
                 label="Upload"
-                imageUrl={
-                  formData["loading_screen_image"]?.value === "default"
-                    ? ""
-                    : (formData["loading_screen_image"]?.value as string) ?? ""
-                }
+                imageUrl={formData["loading_screen_image"]?.value as string}
               />
             </div>
           </div>
@@ -301,6 +298,17 @@ export default function Configuration() {
               <span className="p-float-label tw-mb-2">
                 <label>Background Image - Desktop</label>
               </span>
+              {formData["home_bgd_desktop"]?.value && (
+                <div>
+                  <Button
+                    className="tw-rounded mt-1"
+                    type="button"
+                    onClick={() => removeImageData("home_bgd_desktop")}
+                  >
+                    Remove Image
+                  </Button>
+                </div>
+              )}
               <UploadImageInput
                 image={images?.home_bgd_desktop ?? null}
                 onImageChange={(e) => onImageChange("home_bgd_desktop", e)}
@@ -315,6 +323,17 @@ export default function Configuration() {
               <span className="p-float-label tw-mb-2">
                 <label>Background Image - Mobile</label>
               </span>
+              {formData["home_bgd_mobile"]?.value && (
+                <div>
+                  <Button
+                    className="tw-rounded mt-1"
+                    type="button"
+                    onClick={() => removeImageData("home_bgd_mobile")}
+                  >
+                    Remove Image
+                  </Button>
+                </div>
+              )}
               <UploadImageInput
                 image={images?.home_bgd_mobile ?? null}
                 onImageChange={(e) => onImageChange("home_bgd_mobile", e)}

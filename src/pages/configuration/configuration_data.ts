@@ -43,7 +43,7 @@ export const CONFIG_INITIAL_DATA: ConfigurationForm = {
   },
   loading_screen_image: {
     key: "loading_screen_image",
-    value: "default",
+    value: "",
     metadata: {},
   },
   home_bgd_desktop: {
@@ -69,3 +69,8 @@ export const formDataToValidateForRequired: ConfigurationTypes[] = [
   "max_video_upload_size",
   "max_video_duration",
 ];
+
+export type ImageConfigTypes =
+  | "loading_screen_image"
+  | "home_bgd_desktop"
+  | "home_bgd_mobile";
