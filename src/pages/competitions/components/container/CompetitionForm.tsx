@@ -102,9 +102,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     const rounds = formDataCopy.rounds;
 
     let result_date: string | Date = new Date(formDataCopy.result_date);
-    result_date = `${result_date.getDate()}/${
-      result_date.getMonth() + 1
-    }/${result_date.getFullYear()}`;
+    result_date = `${result_date.getDate()}/${result_date.getMonth()}/${result_date.getFullYear()}`;
     formDataCopy.result_date = result_date;
 
     for (let i = 0; i < rounds.length; i++) {
