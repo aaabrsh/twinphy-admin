@@ -26,7 +26,7 @@ export default function RoundInput({
   ) => void;
 }) {
   useEffect(() => {
-    onRoundInputChange("name", index, "Round " + (index + 1));
+    onRoundInputChange("name", index, round?.name ?? "Round " + (index + 1));
   }, []);
 
   const getNextDay = (date: Date) => {
