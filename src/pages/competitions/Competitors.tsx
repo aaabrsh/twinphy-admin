@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import CompetitorTableHeader from "./components/container/CompetitorTableHeader";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dialog } from "primereact/dialog";
+import { getDate_0_indexed } from "../../utils/time";
 
 export default function Competitors() {
   const [tableLoading, setTableLoading] = useState(false);
@@ -188,6 +189,25 @@ export default function Competitors() {
       });
   };
 
+  const showResults = () => {
+    setTableLoading(true);
+
+    create("competition/show-results/" + params.id, {
+      result_date: getDate_0_indexed(new Date()),
+    })
+      .then(() => {
+        fetchPosts(0, limit, 1);
+        fetchRounds(params.id ?? "");
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(
+          e?.response?.data?.message ?? "Error! couldn't change result date"
+        );
+        setTableLoading(false);
+      });
+  };
+
   const closeReasonModal = () => {
     setShowReasonModal(false);
     setReason("");
@@ -251,6 +271,7 @@ export default function Competitors() {
             currentRound={currentRound}
             roundChanged={roundChanged}
             advanceRound={advanceRound}
+            showResults={showResults}
           />
         }
         selectionMode="single"

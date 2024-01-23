@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import RoundSelector from "../ui/RoundSelector";
-import { getDate } from "../../../../utils/time";
+import { getDate, isTodayEarlierThanDate } from "../../../../utils/time";
 
 export default function CompetitorTableHeader({
   rounds,
@@ -8,12 +8,14 @@ export default function CompetitorTableHeader({
   competitionInfo,
   roundChanged,
   advanceRound,
+  showResults,
 }: {
   rounds: any[];
   currentRound: any;
   competitionInfo: any;
   roundChanged: (round: number) => void;
   advanceRound: () => void;
+  showResults: () => void;
 }) {
   return (
     <>
@@ -46,6 +48,15 @@ export default function CompetitorTableHeader({
                 onClick={advanceRound}
               />
             )}
+            {competitionInfo?.status === "ended" &&
+              isTodayEarlierThanDate(competitionInfo?.result_date ?? "") && (
+                <Button
+                  label={"Show Results"}
+                  icon="bi bi-card-list"
+                  className="tw-h-10 rounded"
+                  onClick={showResults}
+                />
+              )}
           </div>
         </div>
         {currentRound && (

@@ -20,6 +20,12 @@ export function getDate(dateStr: string): string {
   return formattedDate;
 }
 
+export function getDate_0_indexed(dateStr: string | Date): string {
+  let date: string | Date = new Date(dateStr);
+  date = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+  return date;
+}
+
 export function getTime(dateStr: string) {
   const date = new Date(dateStr);
   let formattedTime = date.toLocaleTimeString().replace(/:\d{2}\s/, " ");
@@ -48,4 +54,13 @@ export function convertTimeZone(
       timeZone: timeZoneString,
     })
   );
+}
+
+export function isTodayEarlierThanDate(date: string | Date): boolean {
+  date = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  return date > today;
 }
