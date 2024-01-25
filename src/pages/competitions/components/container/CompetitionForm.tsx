@@ -20,6 +20,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   const [formData, setFormData] = useState<Competition>(INITIAL_DATA);
   const [originalData, setOriginalData] = useState<Competition>(INITIAL_DATA);
   const [image, setImage] = useState<File | null>(null);
+  const [image_long, setImageLong] = useState<File | null>(null);
   const [error, setError] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [roundsNo, setRoundsNo] = useState<number>(1);
@@ -93,7 +94,11 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
 
   const submitForm = () => {
     if (validateForm()) {
-      createCompetition({ image, formData: processFormData(formData) });
+      createCompetition({
+        image,
+        image_long,
+        formData: processFormData(formData),
+      });
     }
   };
 
@@ -122,13 +127,16 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   const createCompetition = ({
     formData,
     image,
+    image_long,
   }: {
     formData: Competition;
     image: File | null;
+    image_long: File | null;
   }) => {
     const fd = new FormData();
 
-    if (image) fd.append("file", image);
+    if (image) fd.append("image", image);
+    if (image_long) fd.append("image_long", image_long);
     if (formData.has_sticker) {
       const finalStickers: any[] = [];
       let stickerIndex = 0;
@@ -260,6 +268,10 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     setImage(file);
   };
 
+  const handleLongImageChange = (file: File | null) => {
+    setImageLong(file);
+  };
+
   const onRoundDataChange = (
     key: string,
     index: number,
@@ -380,7 +392,13 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
             image={image}
             onImageChange={handleImageChange}
             imageUrl={isEdit ? (formData as any)["image"] : null}
-            label="Competition Cover Photo"
+            label="Competition Cover Photo (4:3)"
+          />
+          <UploadImageInput
+            image={image_long}
+            onImageChange={handleLongImageChange}
+            imageUrl={isEdit ? (formData as any)["image_long"] : null}
+            label="Competition Cover Photo - Long (3:1)"
           />
         </div>
 
