@@ -250,7 +250,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
         };
       }
 
-      if (round?.percentage_to_advance == null) {
+      if (round?.percentage_to_advance == null && i < roundsNo - 1) {
         roundErrors[i] = {
           ...roundErrors?.[i],
           percentage_to_advance: "% value to advance users is required",

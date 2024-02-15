@@ -75,28 +75,34 @@ export default function RoundInput({
               <small className="tw-text-red-500">{error.min_likes}</small>
             )}
           </div>
-          <div>
-            <span className="p-float-label">
-              <InputNumber
-                inputId="percentage_to_advance"
-                value={round?.percentage_to_advance}
-                onChange={(e) =>
-                  onRoundInputChange("percentage_to_advance", index, e.value)
-                }
-                className={`tw-w-full ${
-                  error?.percentage_to_advance ? "p-invalid" : ""
-                }`}
-                min={1}
-                max={100}
-                prefix="%"
-                disabled={current_round !== null && index + 1 < current_round}
-              />
-              <label htmlFor="percentage_to_advance">Top % to Advance Forward</label>
-            </span>
-            {error?.percentage_to_advance && (
-              <small className="tw-text-red-500">{error.percentage_to_advance}</small>
-            )}
-          </div>
+          {!is_last && (
+            <div>
+              <span className="p-float-label">
+                <InputNumber
+                  inputId="percentage_to_advance"
+                  value={round?.percentage_to_advance}
+                  onChange={(e) =>
+                    onRoundInputChange("percentage_to_advance", index, e.value)
+                  }
+                  className={`tw-w-full ${
+                    error?.percentage_to_advance ? "p-invalid" : ""
+                  }`}
+                  min={1}
+                  max={100}
+                  prefix="%"
+                  disabled={current_round !== null && index + 1 < current_round}
+                />
+                <label htmlFor="percentage_to_advance">
+                  Top % to Advance Forward
+                </label>
+              </span>
+              {error?.percentage_to_advance && (
+                <small className="tw-text-red-500">
+                  {error.percentage_to_advance}
+                </small>
+              )}
+            </div>
+          )}
           <div>
             <span className="p-float-label">
               <Calendar
