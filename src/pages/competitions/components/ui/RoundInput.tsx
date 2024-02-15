@@ -77,6 +77,28 @@ export default function RoundInput({
           </div>
           <div>
             <span className="p-float-label">
+              <InputNumber
+                inputId="min_percentage"
+                value={round?.min_percentage}
+                onChange={(e) =>
+                  onRoundInputChange("min_percentage", index, e.value)
+                }
+                className={`tw-w-full ${
+                  error?.min_percentage ? "p-invalid" : ""
+                }`}
+                min={1}
+                max={100}
+                prefix="%"
+                disabled={current_round !== null && index + 1 < current_round}
+              />
+              <label htmlFor="min_percentage">Minimum % to Advance</label>
+            </span>
+            {error?.min_percentage && (
+              <small className="tw-text-red-500">{error.min_percentage}</small>
+            )}
+          </div>
+          <div>
+            <span className="p-float-label">
               <Calendar
                 inputId="start_date"
                 value={round?.start_date}

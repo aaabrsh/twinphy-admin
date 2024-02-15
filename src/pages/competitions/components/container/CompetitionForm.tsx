@@ -250,6 +250,13 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
         };
       }
 
+      if (round?.min_percentage == null) {
+        roundErrors[i] = {
+          ...roundErrors?.[i],
+          min_percentage: "minimum percentage is required",
+        };
+      }
+
       if (roundErrors.length > 0) {
         errors.rounds = roundErrors;
       }
