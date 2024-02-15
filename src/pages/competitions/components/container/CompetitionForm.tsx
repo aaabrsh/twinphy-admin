@@ -250,10 +250,10 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
         };
       }
 
-      if (round?.min_percentage == null) {
+      if (round?.percentage_to_advance == null) {
         roundErrors[i] = {
           ...roundErrors?.[i],
-          min_percentage: "minimum percentage is required",
+          percentage_to_advance: "% value to advance users is required",
         };
       }
 

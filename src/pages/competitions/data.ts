@@ -14,7 +14,7 @@ export interface Round {
   start_date: Date | null;
   end_date: Date | null;
   min_likes: number;
-  min_percentage: number;
+  percentage_to_advance: number;
 }
 
 export const INITIAL_DATA: Competition = {

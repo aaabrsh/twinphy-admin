@@ -78,23 +78,23 @@ export default function RoundInput({
           <div>
             <span className="p-float-label">
               <InputNumber
-                inputId="min_percentage"
-                value={round?.min_percentage}
+                inputId="percentage_to_advance"
+                value={round?.percentage_to_advance}
                 onChange={(e) =>
-                  onRoundInputChange("min_percentage", index, e.value)
+                  onRoundInputChange("percentage_to_advance", index, e.value)
                 }
                 className={`tw-w-full ${
-                  error?.min_percentage ? "p-invalid" : ""
+                  error?.percentage_to_advance ? "p-invalid" : ""
                 }`}
                 min={1}
                 max={100}
                 prefix="%"
                 disabled={current_round !== null && index + 1 < current_round}
               />
-              <label htmlFor="min_percentage">Minimum % to Advance</label>
+              <label htmlFor="percentage_to_advance">Top % to Advance Forward</label>
             </span>
-            {error?.min_percentage && (
-              <small className="tw-text-red-500">{error.min_percentage}</small>
+            {error?.percentage_to_advance && (
+              <small className="tw-text-red-500">{error.percentage_to_advance}</small>
             )}
           </div>
           <div>
