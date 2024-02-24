@@ -13,9 +13,27 @@ export function getDate(dateStr: string): string {
   const date = new Date(dateStr);
   if (!date) return "";
 
+  // generate a string in the following format DD/MM/YYYY
   const formattedDate = `${date.getDate()}/${
     date.getMonth() + 1
   }/${date.getFullYear()}`;
+
+  return formattedDate;
+}
+
+export function getDateWithTime(dateStr: string): string {
+  const date = new Date(dateStr);
+  if (!date) return "";
+
+  // generate a string in the following format DD/MM/YYYY, HH:MM (AM/PM)
+  const formattedDate = date.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
 
   return formattedDate;
 }
@@ -63,4 +81,23 @@ export function isTodayEarlierThanDate(date: string | Date): boolean {
   date.setHours(0, 0, 0, 0);
 
   return date > today;
+}
+
+export function getNextDay(date: Date | string) {
+  // use a copy variable (tomorrow) so that the original variable doesn't get mutated
+  const tomorrow = new Date(date);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow;
+}
+
+/**
+ * gets the next hour but resets the minute, second and millisecond values
+ * @param date
+ * @returns
+ */
+export function getNextHour_noMin(date: Date | string): Date {
+  // use a copy variable (nextHour) so that the original variable doesn't get mutated
+  const nextHour = new Date(date);
+  nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
+  return nextHour;
 }

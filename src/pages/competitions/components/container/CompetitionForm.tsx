@@ -104,23 +104,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
 
   const processFormData = (formData: Competition) => {
     const formDataCopy = JSON.parse(JSON.stringify(formData));
-    const rounds = formDataCopy.rounds;
-
-    let result_date: string | Date = new Date(formDataCopy.result_date);
-    result_date = `${result_date.getDate()}/${result_date.getMonth()}/${result_date.getFullYear()}`;
-    formDataCopy.result_date = result_date;
-
-    for (let i = 0; i < rounds.length; i++) {
-      let round = rounds[i];
-      let start_date: string | Date = new Date(round.start_date);
-      start_date = `${start_date.getDate()}/${start_date.getMonth()}/${start_date.getFullYear()}`;
-      let end_date: string | Date = new Date(round.end_date);
-      end_date = `${end_date.getDate()}/${end_date.getMonth()}/${end_date.getFullYear()}`;
-
-      round.start_date = start_date;
-      round.end_date = end_date;
-    }
-
+    // use this function if the data needs to be processed before sending it to the API
     return formDataCopy;
   };
 
@@ -260,6 +244,16 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
       if (roundErrors.length > 0) {
         errors.rounds = roundErrors;
       }
+
+      if (
+        i === roundsNo - 1 &&
+        formData.result_date &&
+        round.end_date &&
+        formData.result_date < round?.end_date
+      ) {
+        errors.result_date =
+          "result date and time must at least be equal to the end of the last round";
+      }
     }
 
     setError(errors);
@@ -287,14 +281,13 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
     const roundsCopy = formData.rounds;
 
     if (key === "start_date") {
-      let start_date = new Date(value as string);
-      roundsCopy[index] = { ...roundsCopy[index], [key]: start_date };
+      roundsCopy[index] = { ...roundsCopy[index], [key]: value as Date };
 
+      // update the end_date of the previous round
       if (roundsCopy[index - 1] && !isNaN((value as Date)?.getTime())) {
-        let end_date = new Date(value as string);
         roundsCopy[index - 1] = {
           ...roundsCopy[index - 1],
-          end_date,
+          end_date: value as Date,
         };
       }
     } else {
@@ -515,6 +508,9 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
                 onChange={(e) => onFormInputChange("result_date", e.value)}
                 className={`tw-w-full ${error?.result_date ? "p-invalid" : ""}`}
                 minDate={getMinResultDate()}
+                showTime
+                hourFormat="12"
+                stepMinute={60}
               />
               <label htmlFor="result_date">Result Date</label>
             </span>

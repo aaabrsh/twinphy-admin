@@ -3,6 +3,7 @@ import { Calendar } from "primereact/calendar";
 import { Round } from "../../data";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { getNextHour_noMin } from "../../../../utils/time";
 
 export default function RoundInput({
   index,
@@ -28,12 +29,6 @@ export default function RoundInput({
   useEffect(() => {
     onRoundInputChange("name", index, round?.name ?? "Round " + (index + 1));
   }, []);
-
-  const getNextDay = (date: Date) => {
-    const tomorrow = new Date(date);
-    tomorrow.setDate(date.getDate() + 1);
-    return tomorrow;
-  };
 
   return (
     <>
@@ -113,8 +108,14 @@ export default function RoundInput({
                 }
                 className={`tw-w-full ${error?.start_date ? "p-invalid" : ""}`}
                 minDate={
-                  prev?.start_date ? getNextDay(prev?.start_date) : new Date()
+                  prev?.start_date
+                    ? getNextHour_noMin(prev?.start_date)
+                    : getNextHour_noMin(new Date())
                 }
+                showTime
+                hourFormat="12"
+                stepMinute={60}
+                stepHour={1}
                 disabled={current_round !== null && index + 1 <= current_round}
               />
               <label htmlFor="start_date">Start Date</label>
@@ -136,9 +137,13 @@ export default function RoundInput({
                   className={`tw-w-full ${error?.end_date ? "p-invalid" : ""}`}
                   minDate={
                     round?.start_date
-                      ? getNextDay(round?.start_date)
-                      : new Date()
+                      ? getNextHour_noMin(round?.start_date)
+                      : getNextHour_noMin(new Date())
                   }
+                  showTime
+                  hourFormat="12"
+                  stepMinute={60}
+                  stepHour={1}
                 />
                 <label htmlFor="end_date">End Date</label>
               </span>
