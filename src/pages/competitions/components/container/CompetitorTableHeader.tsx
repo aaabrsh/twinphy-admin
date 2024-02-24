@@ -1,6 +1,9 @@
 import { Button } from "primereact/button";
 import RoundSelector from "../ui/RoundSelector";
-import { getDate, isTodayEarlierThanDate } from "../../../../utils/time";
+import {
+  getDateWithTime,
+  isTodayEarlierThanDate,
+} from "../../../../utils/time";
 
 export default function CompetitorTableHeader({
   rounds,
@@ -22,7 +25,7 @@ export default function CompetitorTableHeader({
       <div>
         {competitionInfo && (
           <div className="">
-            <p>Result Date: {getDate(competitionInfo.result_date)}</p>
+            <p>Result Date: {getDateWithTime(competitionInfo.result_date)}</p>
             <p>Current Round: {competitionInfo.current_round}</p>
           </div>
         )}
@@ -61,11 +64,25 @@ export default function CompetitorTableHeader({
         </div>
         {currentRound && (
           <div className="mt-3 text-muted tw-font-normal">
-            <span>Round:&nbsp;{currentRound.number},&nbsp;</span>
             <span>
-              Start Date:&nbsp;{getDate(currentRound.start_date)},&nbsp;
+              Round:&nbsp;
+              <span className="dark-blue">{currentRound.number}</span>
+              ,&nbsp;
             </span>
-            <span>End Date:&nbsp;{getDate(currentRound.end_date)}&nbsp;</span>
+            <span>
+              Start Date:&nbsp;
+              <span className="dark-blue tw-underline">
+                {getDateWithTime(currentRound.start_date)}
+              </span>
+              ,&nbsp;
+            </span>
+            <span>
+              End Date:&nbsp;
+              <span className="dark-blue tw-underline">
+                {getDateWithTime(currentRound.end_date)}
+              </span>
+              &nbsp;
+            </span>
           </div>
         )}
       </div>
