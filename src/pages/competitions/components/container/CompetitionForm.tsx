@@ -306,11 +306,7 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
       today.getDate()
     );
     if (lastRound && lastRound.end_date) {
-      lastDate = new Date(
-        lastRound.end_date.getFullYear(),
-        lastRound.end_date.getMonth(),
-        lastRound.end_date.getDate()
-      );
+      lastDate = lastRound.end_date;
     }
 
     if (formData.result_date && formData.result_date < lastDate) {

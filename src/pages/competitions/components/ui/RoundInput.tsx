@@ -110,7 +110,7 @@ export default function RoundInput({
                 minDate={
                   prev?.start_date
                     ? getNextHour_noMin(prev?.start_date)
-                    : getNextHour_noMin(new Date())
+                    : new Date()
                 }
                 showTime
                 hourFormat="12"
@@ -138,7 +138,7 @@ export default function RoundInput({
                   minDate={
                     round?.start_date
                       ? getNextHour_noMin(round?.start_date)
-                      : getNextHour_noMin(new Date())
+                      : new Date()
                   }
                   showTime
                   hourFormat="12"
