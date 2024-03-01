@@ -59,6 +59,8 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
         if (!round.end_date) round.end_date = originalRound?.end_date;
         if (round.min_likes === undefined)
           round.min_likes = originalRound?.min_likes;
+        if (round.percentage_to_advance === undefined)
+          round.percentage_to_advance = originalRound?.percentage_to_advance;
 
         rounds.push(round);
       }
@@ -68,12 +70,15 @@ export default function CompetitionForm({ isEdit }: { isEdit?: boolean }) {
   }, [roundsNo]);
 
   const getCompetitionData = (id: string) => {
+    setLoading(true);
     get("competition/edit/" + id)
       .then((res) => {
         processFormDataForEdit(res.data);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e);
+        setLoading(false);
         toast.error(
           e?.response?.data?.message ?? "Error! couldn't get competition Data"
         );
