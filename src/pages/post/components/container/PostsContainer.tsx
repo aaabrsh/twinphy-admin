@@ -118,7 +118,7 @@ export default function PostsContainer({ feed }: PostContainerProps) {
             <div className="tw-flex tw-flex-col md:tw-flex-row tw-mb-2">
               <div className="d-flex align-items-center tw-flex-grow">
                 <a
-                  onClick={() => navigate("/user/" + post.author._id)}
+                  onClick={() => navigate("/user/" + post.author.username)}
                   style={{ cursor: "pointer" }}
                 >
                   <img
@@ -132,7 +132,7 @@ export default function PostsContainer({ feed }: PostContainerProps) {
                 <div className="tw-flex tw-justify-center tw-flex-col ms-3">
                   <h6 className="title mb-0">
                     <a
-                      onClick={() => navigate("/user/" + post.author._id)}
+                      onClick={() => navigate("/user/" + post.author.username)}
                       style={{ cursor: "pointer" }}
                       className="dark-blue tw-font-bold"
                     >
