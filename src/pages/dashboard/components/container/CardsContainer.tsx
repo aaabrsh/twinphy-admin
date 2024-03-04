@@ -13,7 +13,7 @@ export default function CardsContainer({ data }: { data: any }) {
         <Card
           title="Competitions"
           value={data?.competitionsCount ?? 0}
-          icon="bi bi-cart"
+          icon="bi bi-trophy"
           card_class="sales-card"
         />
         <Card
