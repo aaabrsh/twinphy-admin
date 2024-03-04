@@ -1,9 +1,34 @@
 import { Dropdown } from "primereact/dropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getDateAndTime } from "../../../../utils/time";
+import { Link } from "react-router-dom";
+import { Button } from "primereact/button";
 
-export default function LatestCompetitions() {
+export default function LatestCompetitions({
+  data,
+}: {
+  data: { scheduled: any[]; started: any[]; ended: any[]; cancelled: any[] };
+}) {
   const filterOptions = ["scheduled", "started", "ended", "cancelled"];
   const [filter, setFilter] = useState("scheduled");
+  const [currentData, setCurrentData] = useState<any>([]);
+
+  useEffect(() => {
+    switch (filter) {
+      case "started":
+        setCurrentData(data?.started ?? []);
+        break;
+      case "ended":
+        setCurrentData(data?.ended ?? []);
+        break;
+      case "cancelled":
+        setCurrentData(data?.cancelled ?? []);
+        break;
+      case "scheduled":
+      default:
+        setCurrentData(data?.scheduled ?? []);
+    }
+  }, [filter]);
 
   return (
     <>
@@ -12,108 +37,74 @@ export default function LatestCompetitions() {
           <div className="card-body">
             <h5 className="card-title">Competitions</h5>
 
-            <div className="mb-2">
-              <span className="">
-                <div className="mb-1 tw-font-bold text-muted">
-                  Competition Status
-                </div>
-                <Dropdown
-                  value={filter}
-                  onChange={(e) => setFilter(e.value)}
-                  options={filterOptions}
-                  className={`tw-min-w-[200px] ${
-                    filterOptions ? "tw-border-[#4154f1]" : ""
-                  }`}
-                />
-              </span>
+            <div className="mb-2 tw-flex gap-2 tw-flex-col sm:tw-flex-row md:tw-items-end">
+              <div className="tw-flex-grow">
+                <span className="">
+                  <div className="mb-1 tw-font-bold text-muted">
+                    Competition Status
+                  </div>
+                  <Dropdown
+                    value={filter}
+                    onChange={(e) => setFilter(e.value)}
+                    options={filterOptions}
+                    className={`tw-min-w-[200px] ${
+                      filterOptions ? "tw-border-[#4154f1]" : ""
+                    }`}
+                  />
+                </span>
+              </div>
+              <div>
+                <Link to={"/competition"}>
+                  <Button
+                    className="tw-rounded"
+                    icon={"bi bi-arrow-right me-2"}
+                  >
+                    See All
+                  </Button>
+                </Link>
+              </div>
             </div>
 
-            <table className="table table-borderless datatable">
+            <table className="table table-borderless">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Customer</th>
-                  <th scope="col">Product</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">End Date</th>
+                  <th scope="col">Amount</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">
-                    <a href="#">#2457</a>
-                  </th>
-                  <td>Brandon Jacob</td>
-                  <td>
-                    <a href="#" className="text-primary">
-                      At praesentium minu
-                    </a>
-                  </td>
-                  <td>$64</td>
-                  <td>
-                    <span className="badge bg-success">Approved</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">#2147</a>
-                  </th>
-                  <td>Bridie Kessler</td>
-                  <td>
-                    <a href="#" className="text-primary">
-                      Blanditiis dolor omnis similique
-                    </a>
-                  </td>
-                  <td>$47</td>
-                  <td>
-                    <span className="badge bg-warning">Pending</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">#2049</a>
-                  </th>
-                  <td>Ashleigh Langosh</td>
-                  <td>
-                    <a href="#" className="text-primary">
-                      At recusandae consectetur
-                    </a>
-                  </td>
-                  <td>$147</td>
-                  <td>
-                    <span className="badge bg-success">Approved</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">#2644</a>
-                  </th>
-                  <td>Angus Grady</td>
-                  <td>
-                    <a href="#" className="text-primar">
-                      Ut voluptatem id earum et
-                    </a>
-                  </td>
-                  <td>$67</td>
-                  <td>
-                    <span className="badge bg-danger">Rejected</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">#2644</a>
-                  </th>
-                  <td>Raheem Lehner</td>
-                  <td>
-                    <a href="#" className="text-primary">
-                      Sunt similique distinctio
-                    </a>
-                  </td>
-                  <td>$165</td>
-                  <td>
-                    <span className="badge bg-success">Approved</span>
-                  </td>
-                </tr>
+                {currentData.length > 0 ? (
+                  currentData.map((row: any) => (
+                    <tr key={row._id}>
+                      <td className="text-primary tw-font-semibold">
+                        {row.name}
+                      </td>
+                      <td className="tw-font-semibold text-muted">
+                        {getDateAndTime(row.start_date)}
+                      </td>
+                      <td className="tw-font-semibold text-muted">
+                        {getDateAndTime(row.end_date)}
+                      </td>
+                      <td className="tw-font-semibold text-muted">
+                        <i className="bi bi-currency-rupee"></i>
+                        <span>{row.amount ?? 0}</span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <>
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="tw-text-center tw-font-semibold text-muted tw-text-lg"
+                      >
+                        No Data Found!
+                      </td>
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
           </div>

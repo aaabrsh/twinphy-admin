@@ -1,4 +1,12 @@
-export default function TopUsers() {
+import { Link } from "react-router-dom";
+import {
+  formatResourceURL,
+  handleProfileImageError,
+} from "../../../../utils/asset-paths";
+import { getName } from "../../../../utils/getName";
+import { Button } from "primereact/button";
+
+export default function TopUsers({ data }: { data: any[] }) {
   return (
     <>
       <div className="col-12">
@@ -9,91 +17,46 @@ export default function TopUsers() {
             <table className="table table-borderless">
               <thead>
                 <tr>
-                  <th scope="col">Preview</th>
-                  <th scope="col">Product</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Sold</th>
-                  <th scope="col">Revenue</th>
+                  <th scope="col">Profile Image</th>
+                  <th scope="col">Full Name</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Followers</th>
+                  <th scope="col">Total Posts</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">
-                    <a href="#">
-                      <img src="/assets/img/product-1.jpg" alt="" />
-                    </a>
-                  </th>
-                  <td>
-                    <a href="#" className="text-primary fw-bold">
-                      Ut inventore ipsa voluptas nulla
-                    </a>
-                  </td>
-                  <td>$64</td>
-                  <td className="fw-bold">124</td>
-                  <td>$5,828</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">
-                      <img src="/assets/img/product-2.jpg" alt="" />
-                    </a>
-                  </th>
-                  <td>
-                    <a href="#" className="text-primary fw-bold">
-                      Exercitationem similique doloremque
-                    </a>
-                  </td>
-                  <td>$46</td>
-                  <td className="fw-bold">98</td>
-                  <td>$4,508</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">
-                      <img src="/assets/img/product-3.jpg" alt="" />
-                    </a>
-                  </th>
-                  <td>
-                    <a href="#" className="text-primary fw-bold">
-                      Doloribus nisi exercitationem
-                    </a>
-                  </td>
-                  <td>$59</td>
-                  <td className="fw-bold">74</td>
-                  <td>$4,366</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">
-                      <img src="/assets/img/product-4.jpg" alt="" />
-                    </a>
-                  </th>
-                  <td>
-                    <a href="#" className="text-primary fw-bold">
-                      Officiis quaerat sint rerum error
-                    </a>
-                  </td>
-                  <td>$32</td>
-                  <td className="fw-bold">63</td>
-                  <td>$2,016</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <a href="#">
-                      <img src="/assets/img/product-5.jpg" alt="" />
-                    </a>
-                  </th>
-                  <td>
-                    <a href="#" className="text-primary fw-bold">
-                      Sit unde debitis delectus repellendus
-                    </a>
-                  </td>
-                  <td>$79</td>
-                  <td className="fw-bold">41</td>
-                  <td>$3,239</td>
-                </tr>
+                {data.map((row) => (
+                  <tr key={row._id}>
+                    <td scope="tw-text-center">
+                      <Link to={"/user/" + row.username}>
+                        <img
+                          alt=""
+                          src={formatResourceURL(row.profile_img)}
+                          onError={handleProfileImageError}
+                          className="tw-w-[32px] tw-h-[32px] tw-rounded-[50%] tw-mb-2 tw-block"
+                        />
+                      </Link>
+                    </td>
+                    <td>
+                      <Link to={"/user/" + row.username}>{getName(row)}</Link>
+                    </td>
+                    <td>
+                      <Link to={"/user/" + row.username}>@{row.username}</Link>
+                    </td>
+                    <td>{row.followers_count}</td>
+                    <td>{row.posts_count}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
+
+            <div className="mb-2">
+              <Link to={"/user/list"}>
+                <Button className="tw-rounded" icon={"bi bi-arrow-right me-2"}>
+                  See All
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
