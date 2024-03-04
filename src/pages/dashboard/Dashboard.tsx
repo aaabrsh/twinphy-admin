@@ -4,6 +4,7 @@ import LatestCompetitions from "./components/container/LatestCompetitions";
 import TopUsers from "./components/container/TopUsers";
 import { get } from "../../services/api";
 import { toast } from "react-toastify";
+import DashboardLoadingUI from "./components/ui/DashboardLoadingUI";
 
 export default function Dashboard() {
   const [apiData, setApiData] = useState<any>({});
@@ -34,8 +35,7 @@ export default function Dashboard() {
   };
 
   if (pageLoading) {
-    // TODO: add loading indicator
-    return <>Loading</>;
+    return <DashboardLoadingUI />;
   }
 
   return (
